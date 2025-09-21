@@ -58,7 +58,7 @@ MIDDLEWARE = [
 
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
+CSRF_TRUSTED_ORIGINS = ['https://shalala-e2sm.onrender.com', 'http://localhost:8000']
 
 
 ROOT_URLCONF = 'soilution.urls'
