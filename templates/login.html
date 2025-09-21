@@ -19,10 +19,9 @@
 
     body {
       margin: 0;
-      padding: 0;
+      padding-top: 12rem;
       font-family: Arial, sans-serif;
       background-color: white;
-      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -349,25 +348,31 @@
     }
 
     @media (max-width: 768px) {
+      body {
+        padding-top: 1rem;
+        overflow: hidden;
+      }
+
       .navbar {
         width: 18.4rem;
       }
 
       .or {
-        transform: translateX(calc(10.3rem - 100%));
+        transform: translateX(calc(11.3rem - 100%));
       }
 
       .login-form-dialog {
-        width: 88%;
-        max-width: 88% !important;
-        top: 40px;
+        width: 90%;
+        max-width: 90% !important;
+        height: 700px;
+        top: 80px;
         padding: 10px;
         margin: 10px 10px 10px 10px;
       }
 
-      .login-form-body {
+      /* .login-form-body {
         padding: 0 30px;
-      }
+      } */
 
       .login-form-title {
         font-size: 1.2rem;
@@ -387,8 +392,10 @@
 
       .login-form-footer {
         position: relative;
+        top: 10px;
         font-size: 12px;
-        margin-bottom: 40px;
+        /* z-index: 1000; */
+        /* margin-bottom: 40px; */
       }
 
       .d-flex p {
