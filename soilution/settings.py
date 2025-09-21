@@ -13,12 +13,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^e%_4=sw@puu+$h1_r)v*!$zngvz7886(!dlv4*g4j=7lx*3_a'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [*]
 
 ACCOUNT_ADAPTER = 'detector.adapter.CustomAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'detector.adapter.CustomSocialAccountAdapter'  # Replace with your actual app name
