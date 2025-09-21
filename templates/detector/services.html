@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services - Soilution</title>
+  <link rel="icon" type="image/png" href="{% static 'images/sll2.png' %}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <!-- <link rel="stylesheet" href="{% static 'css/services.css' %}" /> -->
+  <style>
+    @font-face {
+      font-family: "CustomFont";
+      src: url("{% static 'fonts/Boring-Sans.ttf' %}");
+      font-weight: bold;
+      font-style: normal;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("{% static 'images/s_bg3.png' %}");
+      background-size: 55% auto;
+      background-position: right calc(50% - 50%);
+      background-repeat: no-repeat;
+      /* background-position: top; */
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: -1;
+      } */
+
+    .navbar {
+      position: absolute;
+      top: 0;
+      left: -0.2rem;
+      width: 100%;
+      margin: 0;
+      padding: 1rem 4rem;
+      background-color: transparent;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .navbar-brand {
+      color: #2bdf78 !important;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+      color: #2bdf78 !important;
+      padding: 0.8rem 1.2rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      transition: color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover,
+    .navbar-nav .nav-item .nav-link.active {
+      color: #2bdf78 !important;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .navbar-nav .nav-item .nav-link.active {
+      color: #2bdf78 !important;
+      position: relative;
+    }
+
+    .navbar-nav .nav-item .nav-link.active::after {
+      content: "";
+      position: absolute;
+      width: 28%;
+      left: 13%;
+      bottom: 8px;
+      border-bottom: 2px solid #2bdf78;
+    }
+
+    .navbar .nav-item img {
+      border: 2px solid #fff;
+      background-color: #ddd;
+    }
+
+    .navbar .dropdown-menu {
+      border-radius: 0.375rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      right: 10rem;
+    }
+
+    .navbar-collapse {
+      justify-content: flex-end;
+    }
+
+    .container {
+      position: relative;
+      top: -60px;
+      width: 100%;
+      max-width: 82% !important;
+      padding: 0 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 1s ease;
+      text-align: center;
+    }
+
+    .div-section {
+      width: 100%;
+      padding: 0 15px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 1s ease;
+      text-align: center;
+    }
+
+    .about-us {
+      text-align: center;
+      color: #000;
+      font-size: 2.5rem;
+      font-weight: 800;
+      font-style: italic;
+      position: relative;
+      left: -25rem;
+    }
+
+    .lead {
+      font-size: 130px;
+    }
+
+    span {
+      font-family: "CustomFont";
+      font-size: 5rem;
+    }
+
+    .service-desc {
+      font-family: "Fraunces", serif;
+      width: 35rem;
+      font-size: 24px;
+      font-weight: 200;
+      color: #000;
+      letter-spacing: 1px;
+      position: relative;
+      left: 10rem;
+    }
+
+    .features {
+      font-size: 50px;
+      font-weight: 800;
+      color: #333;
+    }
+
+    .feature-item {
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 10px;
+      padding: 3.3rem;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    }
+
+    .feature-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 30px rgba(43, 223, 120, 0.671);
+    }
+
+    .feature-item img {
+      max-width: 100px;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-item h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 1rem;
+      cursor: default;
+    }
+
+    .feature-item p {
+      font-size: 1.2rem;
+      color: #555;
+      cursor: default;
+    }
+
+    footer {
+      position: relative;
+      background-color: black;
+      color: white;
+      padding: 40px 0;
+    }
+
+    .footer-container {
+      position: relative;
+      top: 30px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    .footer-about,
+    .footer-social,
+    .footer-support,
+    .footer-legal {
+      flex: 1;
+      padding: 10px;
+    }
+
+    .footer-links-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 65%;
+      position: relative;
+      left: -5rem;
+    }
+
+    .footer-support {
+      margin-right: 20px;
+    }
+
+    .footer-legal {
+      margin-right: -4rem;
+    }
+
+    .footer-about p,
+    .footer-support p {
+      font-size: 14px;
+    }
+
+    .footer-about h3 {
+      font-size: 3rem;
+    }
+
+    .footer-about p {
+      font-size: 1.2rem;
+    }
+
+    .footer-support,
+    .footer-legal {
+      margin-left: 240px;
+    }
+
+    .footer-support a {
+      color: #2bdf78;
+    }
+
+    .footer-social ul,
+    .footer-legal ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .footer-social li,
+    .footer-legal li {
+      margin-bottom: 10px;
+    }
+
+    .footer-social a,
+    .footer-legal a {
+      text-decoration: none;
+      color: #333;
+    }
+
+    .footer-social a:hover,
+    .footer-legal a:hover {
+      color: #2bdf78;
+    }
+
+    .footer-bottom {
+      position: relative;
+      bottom: -40px;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+
+    #logo-img {
+      max-width: 100%;
+      height: 80px;
+      width: 100px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        background-position: calc(100% - 50%) calc(100% - 20%);
+      }
+
+      .navbar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4rem;
+        z-index: 9999;
+        padding: 20px 30px;
+        background-color: white;
+        box-shadow: none;
+      }
+
+      .navbar-brand {
+        font-size: 22px;
+      }
+
+      .nav-item {
+        text-align: left;
+      }
+
+      .navbar-toggler {
+        position: inherit;
+        right: 20px;
+        margin: 0;
+        border: none;
+      }
+
+      .navbar-toggler:focus,
+      .navbar-toggler:focus-visible,
+      .navbar-toggler:focus-within,
+      .navbar-toggler:active {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      .navbar-brand img {
+        width: 150px;
+        height: 6%0px;
+      }
+
+      .navbar-toggler-icon {
+        display: none;
+      }
+
+      .custom-toggler-icon {
+        width: 24px;
+        height: auto;
+      }
+
+      .navbar-nav .nav-item .nav-link {
+        color: white !important;
+        position: relative;
+        /* padding: 0.5rem 1.2rem; */
+        font-size: 16px;
+        font-weight: 400;
+      }
+
+      .navbar-nav .nav-item .nav-link.active {
+        color: #2bdf78 !important;
+        position: relative;
+      }
+
+      .navbar-nav .nav-item .nav-link.active::after {
+        content: "";
+        position: absolute;
+        width: 5%;
+        left: 20px;
+        bottom: 8px;
+        border-bottom: 2px solid #2bdf78;
+      }
+
+      .navbar-collapse {
+        position: relative;
+        top: -10px;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 5px;
+      }
+
+      .navbar-brand {
+        position: relative;
+        top: -10px;
+        left: -1.58px;
+      }
+
+      #logo-img {
+        width: 45px;
+        height: 35px;
+      }
+
+      .lead {
+        font-size: 32px;
+        left: 0;
+      }
+
+      .service-desc {
+        font-size: 14px;
+        padding: 0 5px 0 5px;
+        left: 0;
+        width: 21rem;
+      }
+
+      .container {
+        padding: 0;
+      }
+
+      .features {
+        font-size: 25px;
+      }
+
+      .feature-item h3 {
+        font-size: 16px;
+      }
+
+      .feature-item p {
+        font-size: 14px;
+      }
+
+      footer {
+        position: relative;
+      }
+
+      .footer-links-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        left: 0;
+      }
+
+      .footer-about img {
+        width: 10rem;
+      }
+
+      .footer-about p {
+        font-size: 12px;
+        padding: 0 0 20px 0;
+      }
+
+      .footer-about,
+      .footer-support,
+      .footer-legal {
+        padding: 0 0 0 40px;
+        margin: 0;
+      }
+
+      .footer-support h3,
+      .footer-legal h3 {
+        font-size: 16px;
+      }
+
+      .footer-support p,
+      .footer-legal ul {
+        font-size: 12px;
+      }
+
+      .feature-item {
+        /* margin: 0 2px; */
+        padding: 45px 25px;
+      }
+
+      .about-us {
+        position: relative;
+        top: -4rem;
+        left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- hero section -->
+  <div class="div-section" id="home">
+    <nav class="navbar navbar-expand-lg navbar-light" id="navbar" style="transition: background-color 0.3s ease-in-out">
+      <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'images/sl.png' %}" alt="logo" width="65px"
+          height="50px" id="logo-img" /></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <img src="{% static 'images/hamburger2.png' %}" alt="hamburger icon" class="custom-toggler-icon" />
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about' %}">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/services/' %}active{% endif %}"
+              href="{% url 'services' %}">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Sign in</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="about-us" data-aos="fade-up" data-aos-delay="100">
+      <span class="lead">Our Services</span>
+      <p class="service-desc">
+        Your Solution for Optimized Crop Growth through Soil Monitoring
+      </p>
+    </div>
+  </div>
+
+  <!-- features section -->
+  <div class="container mt-5 mb-5" id="features" data-aos="fade-up" data-aos-delay="100">
+    <section class="mt-5">
+      <h2 class="mb-5 text-center features">Features</h2>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="feature-item">
+            <img src="{% static 'images/ground (2).png' %}" alt="soil feature image" class="img-fluid mb-3" />
+            <h3>Real-Time Soil Monitoring</h3>
+            <p>
+              Get instant readings of essential soil factors such as pH,
+              moisture, temperature, and nutrient levels, all available in
+              real-time to make quick decisions.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="feature-item">
+            <img src="{% static 'images/plant-a-tree (1).png' %}" alt="soil feature image" class="img-fluid mb-3" />
+            <h3>Smart Recommendations</h3>
+            <p>
+              Based on the soil data, Soilution provides personalized
+              recommendations on how to improve soil health and optimize crop
+              growth through tailored advice.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="feature-item">
+            <img src="{% static 'images/progress (1).png' %}" alt="soil feature image" class="img-fluid mb-3" />
+            <h3>Historical Data Tracking</h3>
+            <p>
+              Track your soil’s health over time to identify trends, monitor
+              improvement, and adjust strategies for sustainable growth,
+              giving you a clearer view of long-term progress.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="feature-item">
+            <img src="{% static 'images/analytics (1).png' %}" alt="soil feature image" class="img-fluid mb-3" />
+            <h3>Soil Nutrient Analysis</h3>
+            <p>
+              Soilution offers detailed analysis of soil nutrient levels,
+              allowing you to adjust fertilization and improve nutrient
+              management for optimal crop health and yields.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- second feature section -->
+  <div class="container mt-5" id="benefit" data-aos="fade-up" data-aos-delay="200">
+    <section>
+      <h2 class="mb-5 text-center features">
+        Benefits of <br />
+        using Soilution
+      </h2>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="feature-item">
+            <img src="{% static 'images/growth (1).png' %}" alt="soil feature image" class="img-fluid mb-3" />
+            <h3>Improved Crop Yields</h3>
+            <p>
+              Optimize your soil conditions and ensure your crops receive
+              exactly what they need for maximum growth.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="feature-item">
+            <img src="{% static 'images/subsidy (1).png' %}" alt="soil feature image" class="img-fluid mb-3" />
+            <h3>Cost-Effective Farming</h3>
+            <p>
+              Reduce the need for expensive fertilizers and chemicals by using
+              the precise data provided by our sensors.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="feature-item">
+            <img src="{% static 'images/save-the-world (1).png' %}" alt="soil feature image" class="img-fluid mb-3" />
+            <h3>Environmental Sustainability</h3>
+            <p>
+              Use less water and fewer chemicals, promoting a more
+              eco-friendly approach to farming.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="feature-item">
+            <img src="{% static 'images/check-mark (2).png' %}" alt="soil feature image" class="img-fluid mb-3" />
+            <h3>Enhanced Decision-Making</h3>
+            <p>
+              Make informed decisions based on accurate, real-time soil data
+              to enhance your farming practices.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-about">
+        <img src="{% static 'images/slll.png' %}" alt="" />
+        <p class="footer-sassy">
+          Empowering Your Soil <br />for Optimal Growth
+        </p>
+      </div>
+
+      <div class="footer-links-container">
+        <div class="footer-support">
+          <h3>Customer Support</h3>
+          <p>
+            Email:
+            <a href="#">soilution42@gmail.com</a>
+          </p>
+          <p>Phone: <a href="#">+63 9784 324 5766</a></p>
+        </div>
+
+        <div class="footer-legal">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Soilution. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // navbar-dropdown collapse
+    document.addEventListener("DOMContentLoaded", function () {
+      const navbar = document.getElementById("navbar");
+      const navbarToggle = document.querySelector(".navbar-toggler");
+      const navbarCollapse = document.getElementById("navbarNav");
+
+      function closeNavbarIfClickedOutside(event) {
+        if (
+          !navbar.contains(event.target) &&
+          !navbarToggle.contains(event.target)
+        ) {
+          if (navbarCollapse.classList.contains("show")) {
+            navbarToggle.click();
+          }
+        }
+      }
+
+      document.addEventListener("click", closeNavbarIfClickedOutside);
+    });
+
+    //animate on scroll
+    AOS.init({
+      duration: 1000,
+      easing: "ease-in-out",
+      once: true,
+      offset: 120,
+    });
+  </script>
+</body>
+
+</html>

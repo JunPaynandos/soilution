@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soilution</title>
+  <link rel="icon" type="image/png" href="{% static 'images/sll2.png' %}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=check_circle" />
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <!-- <link rel="stylesheet" href="{% static 'css/index.css' %}" /> -->
+  <style>
+    html {
+      height: 100%;
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("{% static 'images/s_bg1.png' %}");
+      background-size: 60% auto;
+      background-position: calc(100% + 15%) calc(50% + 10%);
+      background-repeat: no-repeat;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .material-symbols-outlined {
+      font-size: 2rem;
+      color: #2bdf78;
+      margin-right: 10px;
+      margin-top: 0;
+    }
+
+    .container {
+      width: 100%;
+      padding: 0 15px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 1s ease;
+      /* overflow: hidden; */
+    }
+
+    .container2 {
+      width: 100%;
+      padding: 0 8rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 1s ease;
+      /* overflow: hidden; */
+    }
+
+    .container3 {
+      width: 100%;
+      padding: 0 8rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 1s ease;
+      /* overflow: hidden; */
+    }
+
+    .hero-content {
+      position: relative;
+      top: 2rem;
+      text-align: left;
+      color: #fff;
+      left: -15rem;
+    }
+
+    .hero-content h5,
+    .hero-content h1,
+    .hero-desc {
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    .hero-content h5 {
+      color: #2bdf78;
+      font-size: 1.6rem;
+      font-weight: 500;
+      animation-delay: 100ms;
+    }
+
+    .hero-content h1.main-title {
+      font-size: 6.5rem;
+      font-weight: 800;
+      animation-delay: 400ms;
+      color: #001819;
+    }
+
+    .hero-content h1.main-title-2 {
+      font-size: 6.5rem;
+      font-weight: 800;
+      animation-delay: 600ms;
+      animation-duration: 1s;
+      color: #001819;
+    }
+
+    .hero-content p.hero-desc {
+      font-size: 1.8rem;
+      font-weight: 500;
+      animation-delay: 800ms;
+      animation-duration: 1s;
+      color: #001819;
+    }
+
+    .buttons-container {
+      display: flex;
+      position: relative;
+      top: 2rem;
+      gap: 30px;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+      animation-delay: 1000ms;
+      left: -15rem;
+    }
+
+    .cta-button a {
+      text-decoration: none;
+      font-size: 1.6rem;
+      font-weight: bolder;
+      padding: 24px 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.3s ease;
+      z-index: 1;
+    }
+
+    .cta-button.green a {
+      background-color: #2bdf78;
+      color: #fff;
+      border: 2px solid #fff;
+    }
+
+    .cta-button.green a::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0%;
+      height: 100%;
+      background-color: #fff;
+      transition: all 0.4s ease;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    .cta-button.green a:hover {
+      color: #2bdf78;
+      border: 2px solid #2bdf78;
+    }
+
+    .cta-button.green a:hover::after {
+      width: 105%;
+    }
+
+    .cta-button.transparent a {
+      background-color: transparent;
+      color: #fff;
+      border: 2px solid #fff;
+    }
+
+    .cta-button.transparent a::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0%;
+      height: 100%;
+      background-color: #fff;
+      transition: all 0.4s ease;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    .cta-button.transparent a:hover::after {
+      width: 105%;
+    }
+
+    .cta-button img,
+    .cta-button.two img {
+      max-width: 30px;
+      margin-left: 10px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* .navbar {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        height: 3.8rem;
+        margin: 0;
+        padding: 1rem 4rem;
+        background-color: white;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s ease-in-out;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 2000;
+      } */
+
+    .navbar {
+      position: absolute;
+      top: 0;
+      left: -0.2rem;
+      width: 100%;
+      margin: 0;
+      padding: 1rem 4rem;
+      background-color: transparent;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+      color: #2bdf78 !important;
+      padding: 0.8rem 1.2rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      transition: color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover,
+    .navbar-nav .nav-item .nav-link.active {
+      color: #2bdf78 !important;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .navbar-nav .nav-item .nav-link.active {
+      color: #2bdf78 !important;
+      position: relative;
+    }
+
+    .navbar-nav .nav-item .nav-link.active::after {
+      content: "";
+      position: absolute;
+      width: 28%;
+      left: 18%;
+      bottom: 8px;
+      border-bottom: 2px solid #2bdf78;
+    }
+
+    .navbar .nav-item img {
+      border: 2px solid #fff;
+      background-color: #ddd;
+    }
+
+    .navbar .dropdown-menu {
+      border-radius: 0.375rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      right: 10rem;
+    }
+
+    .navbar-collapse {
+      justify-content: flex-end;
+    }
+
+    .about-thumb img {
+      width: 85%;
+      height: 35rem;
+      border-radius: 8px;
+    }
+
+    .about-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .section-title1 h1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 5rem;
+      font-weight: 800;
+      color: black;
+      gap: 20px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .section-title h1 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 5rem;
+      font-weight: 800;
+      color: black;
+      gap: 20px;
+      margin-bottom: 30px;
+      position: relative;
+      top: -8rem;
+    }
+
+    .service-card .service-image {
+      transition: transform 0.3s ease, filter 0.3s ease;
+      object-fit: cover;
+    }
+
+    .service-card:hover .service-image {
+      transform: scale(1.1);
+    }
+
+    .soil-icon {
+      position: relative;
+      top: 5px;
+      width: 60px;
+      height: 55px;
+    }
+
+    .service-card {
+      display: flex;
+      flex-direction: column;
+      height: 40rem;
+      position: relative;
+      overflow: visible;
+      background-color: white;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      border: 2px solid #2bdf78;
+      border-radius: 10px;
+    }
+
+    .card {
+      gap: 60px;
+    }
+
+    .service-card .card-body {
+      flex-grow: 1;
+    }
+
+    .service-title {
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      flex-direction: row;
+      width: 18rem;
+    }
+
+    .service-image {
+      position: relative;
+      top: -45px;
+      width: 20rem;
+      aspect-ratio: 1;
+      margin: 10px auto 0;
+      display: block;
+    }
+
+    .card-title {
+      position: relative;
+      top: -65px;
+      font-size: 34px;
+      font-weight: 800;
+      width: 100%;
+      text-align: center;
+    }
+
+    .card-text {
+      position: relative;
+      top: -65px;
+      font-size: 20px;
+      text-align: center;
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .soil-testing {
+      font-family: Arial, sans-serif;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 0;
+    }
+
+    .box {
+      position: relative;
+      top: -80px;
+      width: 40rem;
+      height: 12rem;
+    }
+
+    .soil-title {
+      position: relative;
+      top: 5px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: black;
+      margin-bottom: 15px;
+    }
+
+    .soil-text {
+      font-size: 1.3rem;
+      line-height: 1.6;
+      color: black;
+    }
+
+    .box .soil-title,
+    .box .soil-text {
+      text-align: left;
+    }
+
+    .icon-title-container {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      color: #faba0c;
+      margin-right: 10px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .box-1,
+    .box-3 {
+      margin-left: auto;
+    }
+
+    .box-2,
+    .box-4 {
+      margin-left: 0;
+    }
+
+    .col-md-6 {
+      flex: 0 0 48%;
+      max-width: 48%;
+    }
+
+    footer {
+      background-color: black;
+      color: white;
+      padding: 40px 0;
+    }
+
+    .footer-container {
+      position: relative;
+      top: 30px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    .footer-links-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 65%;
+      position: relative;
+      left: -5rem;
+    }
+
+    .footer-support {
+      margin-right: 20px;
+      /* Optional: Space between child divs */
+    }
+
+    .footer-legal {
+      margin-right: -4rem;
+      /* Optional: Space between child divs */
+    }
+
+    .footer-about,
+    .footer-social,
+    .footer-support,
+    .footer-legal {
+      flex: 1;
+      padding: 10px;
+    }
+
+    .footer-about p,
+    .footer-support p {
+      font-size: 14px;
+    }
+
+    /* .footer-about img {
+      width: 25rem;
+    } */
+
+    .footer-about h3 {
+      font-size: 5rem;
+    }
+
+    .footer-about p {
+      font-size: 1.2rem;
+    }
+
+    .footer-support,
+    .footer-legal {
+      margin-left: 240px;
+    }
+
+    .footer-support a {
+      color: #2bdf78;
+    }
+
+    .footer-social ul,
+    .footer-legal ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .footer-social li,
+    .footer-legal li {
+      margin-bottom: 10px;
+    }
+
+    .footer-social a,
+    .footer-legal a {
+      text-decoration: none;
+      color: #333;
+    }
+
+    .footer-social a:hover,
+    .footer-legal a:hover {
+      color: #2bdf78;
+    }
+
+    .footer-bottom {
+      position: relative;
+      bottom: -40px;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+
+    #logo-img {
+      max-width: 100%;
+      height: 80px;
+      width: 100px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        background-image: none;
+        overflow-x: hidden;
+      }
+
+      .navbar {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 100%;
+        height: 4rem;
+        transform: translateX(-50%);
+        z-index: 9999;
+        background-color: white;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 20px 30px;
+        justify-content: space-between;
+      }
+
+      .navbar-brand {
+        position: relative;
+        top: -10px;
+        left: -1.58px;
+      }
+
+      .navbar-toggler {
+        position: inherit;
+        right: 0;
+        margin: 0;
+        border: none;
+        right: 20px;
+      }
+
+      #logo-img {
+        /* position: absolute; */
+        width: 45px;
+        height: 35px;
+      }
+
+      .custom-toggler-icon {
+        width: 24px;
+        height: auto;
+        border: none;
+      }
+
+      .custom-toggler-icon:focus {
+        outline: none;
+      }
+
+      .navbar-nav .nav-item .nav-link.active::after {
+        content: "";
+        position: absolute;
+        width: 5%;
+        left: 20px;
+        bottom: 8px;
+        border-bottom: 2px solid #2bdf78;
+      }
+
+      /* .hero-content {
+          position: relative;
+          top: -5px;
+          padding: 0 0 0 70px;
+          width: 28rem;
+        }
+
+        .col-lg-12 {
+          padding: 0;
+          margin: 0;
+          width: 25.5rem;
+        } */
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        /* min-height: 100vh;  */
+        padding: 0 15px;
+        overflow: hidden;
+      }
+
+
+      .hero-content {
+        position: relative;
+        top: 0;
+        left: 0;
+        text-align: center;
+        color: #fff;
+      }
+
+      .buttons-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      .sub-title {
+        font-size: 16px !important;
+      }
+
+      #first-title,
+      #second-title {
+        font-size: 38px;
+      }
+
+      #hero-desc {
+        font-size: 18px !important;
+        width: 21rem;
+      }
+
+      #hero-desc br {
+        display: none;
+      }
+
+      /* .buttons-container {
+          position: absolute;
+          top: 25.5rem;
+          left: 24px;
+          padding: 0;
+          margin: 0;
+        } */
+
+      .section-title h1,
+      .section-title span,
+      .section-title1 h1,
+      .section-title span {
+        position: relative;
+        top: -4.5rem;
+        font-size: 35px;
+        font-weight: 800;
+      }
+
+      .section-title img {
+        position: relative;
+        top: -2px;
+        width: 24px;
+        height: 24px;
+      }
+
+      /* .box-container {
+        position: relative;
+        top: -60px;
+        padding: 0;
+        width: 100%;
+      } */
+
+      /* .box {
+        position: relative;
+        left: 0px;
+        margin: 0;
+        width: 25rem;
+      } */
+
+      #soiltext {
+        text-align: justify;
+      }
+
+      footer {
+        position: relative;
+        /* top: 30rem; */
+      }
+
+      .footer-about p {
+        font-size: 12px;
+        padding: 0 0 20px 0;
+      }
+
+      .footer-about img {
+        width: 10rem;
+      }
+
+      .footer-about,
+      .footer-support,
+      .footer-legal {
+        padding: 0 0 0 40px;
+        margin: 0;
+      }
+
+      .footer-support h3,
+      .footer-legal h3 {
+        font-size: 16px;
+      }
+
+      .footer-support p,
+      .footer-legal ul {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      /* #home {
+        height: 100vh;
+      } */
+
+      .cta-button a {
+        font-size: 1.3rem;
+        padding: 20px 26px;
+
+      }
+
+      /* .navbar-toggler {
+        position: inherit;
+
+
+      } */
+
+      .navbar-toggler:focus,
+      .navbar-toggler:focus-visible,
+      .navbar-toggler:focus-within,
+      .navbar-toggler:active {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      #logo-img {
+        /* position: inherit; */
+        top: -9px;
+        left: -1.5px;
+      }
+
+      #logo-img:active {
+        outline: none;
+      }
+
+      /* service area */
+      /* .service-area {
+        position: relative;
+        padding: 0;
+        margin: 0;
+        top: -25rem;
+      }*/
+
+      .service-card {
+        /* margin-bottom: 65px;
+        padding: 15px; */
+        height: 30rem;
+      }
+
+      .container2 {
+        padding: 0 30px;
+      }
+
+      .container3 {
+        position: relative;
+        padding: 0 25px !important;
+        /* margin-bottom: 70px; */
+      }
+
+      .card-body {
+        position: relative;
+        /* top: -35px; */
+        padding: 10px;
+        /* Adjust card body padding */
+      }
+
+      .card-title {
+        top: -100px;
+        font-size: 24px;
+      }
+
+      .card-text {
+        top: -100px;
+        font-size: 20px;
+        width: 100%;
+      }
+
+      .service-image {
+        position: relative;
+        top: -6rem;
+        max-width: 15rem;
+        height: auto;
+      }
+
+      /* Adjust the number of columns for smaller screens */
+      .carousel-inner .row {
+        flex-wrap: wrap;
+      }
+
+      .col-md-4,
+      .col-12 {
+        flex: 1 1 100%;
+        /* Stack cards vertically on mobile */
+        max-width: 100%;
+        /* Ensure cards take full width */
+      }
+
+      .carousel {
+        top: -40px;
+      }
+
+      .card {
+        padding-top: 50px;
+        margin-bottom: 45px;
+      }
+
+      /* SPAN */
+      .section-title .section-text {
+        position: relative;
+        top: 1.5rem;
+        font-size: 35px;
+        font-weight: 800;
+      }
+
+      .last-st {
+        flex-basis: 100%;
+        text-align: center;
+      }
+
+      .box-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        top: 0;
+        width: 100%;
+        /* keep grid column behavior */
+        padding: 0;
+        /* top: 0; */
+        position: relative;
+        /* margin-bottom: 5rem; */
+      }
+
+      .box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        margin-bottom: 2rem;
+        width: 100%;
+        /* make it responsive */
+      }
+
+      .footer-links-container {
+        display: flex;
+        top: 0;
+        justify-content: space-between;
+        width: 100%;
+        left: 0;
+
+      }
+
+      .footer-support {
+        text-align: left;
+      }
+
+      .footer-legal {
+        text-align: left;
+        position: absolute;
+        right: 90px;
+      }
+
+      .footer-bottom {
+        margin-top: 50px;
+      }
+
+      .navbar-collapse {
+        position: relative;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 5px;
+      }
+
+      .navbar-nav .nav-item .nav-link {
+        color: white !important;
+        position: relative;
+        font-size: 16px;
+        font-weight: 400;
+      }
+
+      .navbar-nav .nav-item .nav-link.active {
+        color: #2bdf78 !important;
+        position: relative;
+      }
+
+      .navbar-nav .nav-item .nav-link.active::after {
+        border-bottom: 2px solid #2bdf78;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- hero section -->
+  <div class="container" id="home">
+    <nav class="navbar navbar-expand-lg navbar-light" id="navbar" style="transition: background-color 0.3s ease-in-out">
+      <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'images/sl.png' %}" alt="logo"
+          id="logo-img" /></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <img src="{% static 'images/hamburger2.png' %}" alt="hamburger icon" class="custom-toggler-icon" />
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about' %}">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Sign in</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row align-items-center">
+      <div>
+        <div class="hero-content">
+          <h5 class="sub-title" style="animation-delay: 100ms">
+            Smart Soil Detection
+          </h5>
+          <h1 class="main-title" id="first-title" style="animation-delay: 400ms">
+            Healthy Soil,
+          </h1>
+          <h1 class="main-title-2" id="second-title" style="animation-delay: 600ms; animation-duration: 1s">
+            Healthy Growth
+          </h1>
+          <p class="hero-desc" id="hero-desc" style="animation-delay: 800ms; animation-duration: 1000ms">
+            Harness IoT technology to monitor soil conditions in real time —
+            <br />
+            detect nutrient levels, pH, moisture, and more to optimize
+            <br />
+            crop growth, ensure sustainability, and boost yields.
+          </p>
+        </div>
+        <div class="buttons-container">
+          <div class="cta-button green" style="animation-delay: 1000ms">
+            <a href="{% url 'login' %}"> Get Started</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guide Section -->
+  <div class="service-area div-section" id="services">
+    <div class="container2" style="position: relative; top: 2rem">
+      <div class="row">
+        <div class="section-title1">
+          <h1>
+            <span class="section-text" data-aos="fade-right" data-aos-delay="200">Connect,</span>
+            <span class="section-text" data-aos="fade-up" data-aos-delay="300">click,</span>
+            <span class="section-text last-st" data-aos="fade-left" data-aos-delay="600">done.</span>
+          </h1>
+        </div>
+        <div class="col-12 py-4">
+          <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <div class="row">
+                  <div class="col-md-4 col-12 mb-3">
+                    <div class="card service-card" data-aos="fade-up" data-aos-delay="400">
+                      <div class="line"></div>
+                      <img class="img-fluid service-image" alt="100%x280" src="{% static 'images/step1g.png' %}" />
+                      <div class="card-body">
+                        <h4 class="card-title">Connect IoT Device</h4>
+                        <p class="card-text">
+                          Ensure your soil sensor is connected to your device
+                          via bluetooth or usb
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12 mb-3">
+                    <div class="card service-card" data-aos="fade-up" data-aos-delay="400">
+                      <div class="line"></div>
+                      <img class="img-fluid service-image" alt="100%x280" src="{% static 'images/step2g.png' %}" />
+                      <div class="card-body card-two">
+                        <h4 class="card-title">Start Detection</h4>
+                        <p class="card-text">
+                          Click the Start Detection button to <br />begin soil
+                          analysis
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12 mb-3">
+                    <div class="card service-card" data-aos="fade-up" data-aos-delay="400">
+                      <div class="line"></div>
+                      <img class="img-fluid service-image" alt="100%x280" src="{% static 'images/step3g.png' %}" />
+                      <div class="card-body">
+                        <h4 class="card-title">View Real-Time Data</h4>
+                        <p class="card-text">
+                          Monitor live updates of pH, moisture, nutrients, and
+                          more
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Soil Testing Section -->
+  <div class="soil-testing">
+    <div class="container3">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-12 text-center mt-5 mb-5" data-aos="fade-up" data-aos-delay="100">
+          <div class="section-title">
+            <h1>
+              <img class="soil-icon" src="{% static 'images/plant.png' %}" alt="soil" />
+              Soil Testing
+            </h1>
+          </div>
+        </div>
+
+        <div class="box-container col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+          <div class=" box box-1 p-4">
+            <div class="icon-title-container">
+              <span class="material-symbols-outlined"> check_circle </span>
+              <div class="text-container">
+                <h5 class="soil-title">Smart Soil Monitoring</h5>
+                <p class="soil-text" id="soiltext">
+                  Utilize IoT technology to monitor soil conditions in real
+                  time. Track pH, moisture, nutrient levels, and more to
+                  optimize crop growth and soil health.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box-container col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="box box-2 p-4">
+            <div class="icon-title-container">
+              <span class="material-symbols-outlined"> check_circle </span>
+              <div class="text-container">
+                <h5 class="soil-title">Why should I test soil?</h5>
+                <p class="soil-text" id="soiltext">
+                  Soil testing helps identify nutrient imbalances, pH issues,
+                  and moisture levels, enabling you to make informed decisions
+                  for healthier crops and higher yields.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box-container col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="box box-3 p-4">
+            <div class="icon-title-container">
+              <span class="material-symbols-outlined"> check_circle </span>
+              <div class="text-container">
+                <h5 class="soil-title">What is soil classification?</h5>
+                <p class="soil-text" id="soiltext">
+                  Soil classification involves categorizing soil based on its
+                  properties, such as texture, composition, and fertility, to
+                  better understand its suitability for various crops.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box-container col-md-6 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="box box-4 p-4">
+            <div class="icon-title-container">
+              <span class="material-symbols-outlined"> check_circle </span>
+              <div class="text-container">
+                <h5 class="soil-title">How does IoT benefit agriculture?</h5>
+                <p class="soil-text" id="soiltext">
+                  IoT devices provide real-time data, improving
+                  decision-making for farmers. By continuously monitoring soil
+                  and environmental conditions, farmers can optimize crop care
+                  and enhance sustainability.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-about">
+        <img src="{% static 'images/slll.png' %}" alt="" />
+        <p>Empowering Your Soil <br />for Optimal Growth</p>
+      </div>
+
+      <div class="footer-links-container">
+        <div class="footer-support">
+          <h3>Customer Support</h3>
+          <p>
+            Email:
+            <a href="{% url 'contact_support' %}">soilution42@gmail.com</a>
+          </p>
+          <p>Phone: <a href="#">+63 9784 324 5766</a></p>
+        </div>
+
+        <div class="footer-legal">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Soilution. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // animate on scroll
+    AOS.init({
+      duration: 800,
+      easing: "ease-in-out",
+      once: true,
+      offset: 200,
+    });
+
+    // navbar-dropdown collapse
+    document.addEventListener("DOMContentLoaded", function () {
+      const navbar = document.getElementById("navbar");
+      const navbarToggle = document.querySelector(".navbar-toggler");
+      const navbarCollapse = document.getElementById("navbarNav");
+
+      function closeNavbarIfClickedOutside(event) {
+        if (
+          !navbar.contains(event.target) &&
+          !navbarToggle.contains(event.target)
+        ) {
+          if (navbarCollapse.classList.contains("show")) {
+            navbarToggle.click();
+          }
+        }
+      }
+
+      document.addEventListener("click", closeNavbarIfClickedOutside);
+    });
+
+    // resize the soil testing container
+    function toggleColClass() {
+      const boxes = document.querySelectorAll(".box-container");
+      const screenWidth = window.innerWidth;
+
+      boxes.forEach((box) => {
+        if (screenWidth < 992) {
+          box.classList.remove("col-md-6");
+          box.classList.add("col-12");
+        } else {
+          box.classList.add("col-md-6");
+          box.classList.remove("col-12");
+        }
+      });
+    }
+
+    window.addEventListener("load", toggleColClass);
+
+    window.addEventListener("resize", toggleColClass);
+  </script>
+  <script>
+    function updateAosDelay() {
+      const isMobile = window.innerWidth <= 768; // Adjust breakpoint as needed
+      const cards = document.querySelectorAll(".service-card");
+
+      cards.forEach((card) => {
+        if (isMobile) {
+          // Reduce delay for mobile (e.g., 200ms)
+          card.setAttribute("data-aos-delay", "100");
+        } else {
+          // Reset to original delay for desktop (e.g., 400ms)
+          card.setAttribute("data-aos-delay", "400");
+        }
+      });
+    }
+
+    // Run on page load
+    window.addEventListener("load", updateAosDelay);
+
+    // Run on window resize to handle screen size changes dynamically
+    window.addEventListener("resize", updateAosDelay);
+  </script>
+</body>
+
+</html>
