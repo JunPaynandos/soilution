@@ -127,7 +127,7 @@
     }
 
     #searchBar {
-      width: 344px;
+      width: 338px;
     }
 
     #searchBar:focus {
@@ -223,7 +223,7 @@
 
       #searchIcon {
         position: absolute;
-        right: -9.5rem;
+        right: -1rem;
         top: 50%;
         transform: translateY(-50%);
         font-size: 1.5rem;
@@ -242,7 +242,7 @@
       #searchBar {
         position: absolute;
         top: 50%;
-        right: -9.5rem;
+        right: -1rem;
         /* Leave room for the icon */
         transform: translateY(-50%);
         width: 0;
@@ -255,7 +255,7 @@
       }
 
       #searchBar.active {
-        width: 315px;
+        width: 305px;
         opacity: 1;
         visibility: visible;
         transition: width 0.3s ease, opacity 0.3s ease;
@@ -280,13 +280,13 @@
       }
 
       #projectModal {
-        /* padding: 0 10px; */
+        padding: 0 10px;
         z-index: 1000;
       }
 
       #projectModal>div {
         width: 88% !important;
-        /* max-width: 300px !important; */
+        max-width: 300px !important;
         padding: 1.5rem !important;
       }
 
@@ -296,7 +296,7 @@
 
       .hr {
         position: absolute;
-        top: 7rem;
+        top: 7.3rem;
       }
 
       form {
@@ -312,7 +312,7 @@
       }
 
       .modal-desc {
-        font-size: 12px !important;
+        font-size: 11px !important;
       }
 
       .wsm {
@@ -351,7 +351,7 @@
 <body class="bg-white-100">
   <!-- Navbar -->
   <nav
-    class="bg-white-800 text-black p-1 flex justify-between items-center border-b border-solid border-[#aaa] p-2 pl-0 pr-0">
+    class="sticky top-0 bg-white-800 text-black flex justify-between items-center border-b border-solid border-[#aaa] p-2 pl-0 pr-0">
     <!-- left wrapper -->
     <div class="flex items-center ml-2 gap-2">
       <!-- Mobile toggle button -->
@@ -367,14 +367,14 @@
         </svg>
       </button>
 
-      <div class="flex items-center ml-2">
+      <div class="flex items-center">
         <a href="{% url 'admin_page' %}"><img src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" /></a>
       </div>
     </div>
 
     <!-- Profile Chip with Dropdown -->
     <div class="relative">
-      <div class="flex items-center space-x-2 text-white p-2 rounded-full cursor-pointer mr-7" id="profile-button">
+      <div class="flex items-center space-x-2 text-white p-2 rounded-full cursor-pointer mr-6" id="profile-button">
         <!-- Avatar -->
         <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
           {% if profile_picture_url %}
@@ -518,8 +518,7 @@
           onclick="toggleSearchBar()"></i>
 
         <!-- Search Bar -->
-        <input type="text"
-          class="md:w-[21.5rem] border border-gray-300 pl-14 p-4 transition-all duration-300 ease-in-out"
+        <input type="text" class="w-[21.5rem] border border-gray-300 pl-14 p-4 transition-all duration-300 ease-in-out"
           placeholder="Search for a workspace" id="searchBar" onkeyup="filterProjects()" autocomplete="off" />
       </div>
     </div>
@@ -534,7 +533,8 @@
         <div
           class="group bg-white shadow p-8 rounded-lg transition duration-300 border border-gray-300 hover:border-gray-400 hover:bg-gray-200 h-[180px] cursor-pointer project-item flex flex-col justify-between relative"
           data-id="{{ workspace.id }}">
-          <h6 class="font-semibold text-2xl project-name truncate w-80">
+          <h6
+            class="font-semibold text-xl md:text-2xl project-name truncate w-40 md:w-80 overflow-ellipsis whitespace-nowrap">
             {{ workspace.name }}
           </h6>
           <p
@@ -574,7 +574,7 @@
   </div>
 
   <!-- Preloader -->
-  <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">
+  <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-[1000]">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-20 h-20 animate-spin">
       <radialGradient id="a9" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)">
         <stop offset="0" stop-color="#888"></stop>
@@ -594,35 +594,36 @@
   </div>
 
   <!-- Modal -->
-  <div id="projectModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-[100]">
-    <div class="bg-white p-6 rounded-lg shadow-lg relative">
-      <button id="closeModalX" class="absolute top-2 right-2 text-2xl text-gray-500">
+  <div id="projectModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-[60]">
+    <div class="bg-white max-w-full p-8 rounded-lg shadow-2xl relative">
+      <button id="closeModalX" class="absolute top-2 right-2 text-3xl text-gray-500">
         &times;
       </button>
 
-      <h1 class="mb-4 new-workspace">New Workspace</h1>
-      <p class="workspace-desc">
+      <h1 class="text-2xl mb-4 new-workspace">New Workspace</h1>
+      <p class="workspace-desc mb-4 text-gray-600 text-lg">
         Workspace organizes your process and makes soil management easier.
       </p>
-      <hr class="hr" />
+      <hr class="hr mb-6" />
       <form id="projectForm" method="POST" action="{% url 'add_workspace' %}">
-        <label class="mb-1 block">Name</label>
-        <input type="text" id="projectName" name="name" class="border p-2 rounded w-full mb-4" autocomplete="off"
-          required />
-        <label class="mb-1 block">Description
-          <span class="text-gray-500 text-sm">(optional | max. of 100 characters)</span></label>
-        <textarea id="projectDescription" name="description" class="border p-2 rounded w-full mb-2"
+        <label class="mb-2 block font-semibold text-md md:text-lg">Name</label>
+        <input type="text" id="projectName" name="name" class="border p-3 rounded w-full mb-6 text-lg"
+          autocomplete="off" required />
+        <label class="mb-2 block font-semibold text-md md:text-lg">Description
+          <span class="text-gray-500 text-xs md:text-lg modal-desc">(optional | max. of 100 characters)</span></label>
+        <textarea id="projectDescription" name="description" class="border p-6 rounded w-full mb-4 text-lg"
           autocomplete="off"></textarea>
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
 
         <div class="flex justify-between mt-4">
-          <button type="button" id="closeModal" class="text-black-500 px-4 py-2 rounded btn-cancel">
+          <button type="button" id="closeModal" class="text-black-500 px-5 py-3 rounded btn-cancel text-lg flex-1 mr-2">
             Cancel
           </button>
-          <button type="submit" class="px-4 py-2 rounded mr-2 btn-create">
+          <button type="submit" class="px-5 py-3 rounded btn-create text-lg flex-1 ml-2">
             Create
           </button>
         </div>
+
       </form>
     </div>
   </div>
@@ -713,7 +714,7 @@
               let newWorkspace = `
                   <a href="{% url 'admin_dashboard' %}?workspace=${response.workspace.id}">
                     <div
-                      class="group bg-white shadow p-4 rounded-lg transition duration-300 border border-gray-300 hover:border-gray-400 hover:bg-gray-200 h-[130px] cursor-pointer project-item flex flex-col justify-between relative"
+                      class="group bg-white shadow p-8 rounded-lg transition duration-300 border border-gray-300 hover:border-gray-400 hover:bg-gray-200 h-[180px] cursor-pointer project-item flex flex-col justify-between relative"
                       data-id="${response.workspace.id}" data-created-at="${response.workspace.created_at}"
                     >
                       <h6 class="font-semibold text-lg project-name">${response.workspace.name}</h6>

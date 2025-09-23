@@ -1,8 +1,8 @@
-<div class="flex-1 px-6 bg-white ml-14 group-hover:ml-52 transition-all duration-300 ease-in-out">
+<div class="flex-1 px-6 bg-white group-hover:ml-52 transition-all duration-300 ease-in-out">
   <div class="min-h-screen flex items-center justify-center px-4">
-    <div class="w-full max-w-7xl bg-white p-8 -mt-40">
-      <div class="flex items-center gap-6 mb-8">
-        <div class="w-28 h-28 rounded-full overflow-hidden border-2 border-gray-300">
+    <div class="w-full max-w-7xl bg-white -mt-40">
+      <div class="flex flex-col md:flex-row items-center gap-6 mb-8 mt-[10rem] md:mt-0">
+        <div class="w-28 h-28 rounded-full overflow-hidden border-2 border-gray-300 mb-4 md:mb-0">
           {% if profile_picture_url %}
           <img src="{{ profile_picture_url }}" alt="Profile Image" class="w-full h-full object-cover" />
           {% else %}
@@ -11,7 +11,7 @@
           </div>
           {% endif %}
         </div>
-        <div>
+        <div class="text-center sm:text-left">
           <h2 class="text-3xl font-semibold text-gray-800">
             {{ user.first_name }} {{ user.last_name }}
           </h2>

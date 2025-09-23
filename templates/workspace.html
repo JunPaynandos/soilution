@@ -127,7 +127,7 @@
     }
 
     #searchBar {
-      width: 344px;
+      width: 338px;
     }
 
     #searchBar:focus {
@@ -200,6 +200,11 @@
       font-size: 45px;
     } */
 
+    nav {
+      background-color: white;
+      z-index: 1000;
+    }
+
     @media (max-width: 768px) {
       .content-section {
         padding: 0 30px;
@@ -231,13 +236,12 @@
 
       #searchIcon {
         position: absolute;
-        right: -1rem;
-        top: 50%;
+        /* right: -1rem;
+        top: 50%; */
         transform: translateY(-50%);
         font-size: 1.5rem;
         cursor: pointer;
         padding: 14px 10px;
-        /* border: 1px solid transparent; */
         transition: border-color 0.3s ease;
         z-index: 2;
       }
@@ -251,7 +255,7 @@
       #searchBar {
         position: absolute;
         top: 50%;
-        right: -1rem;
+        /* right: -1rem; */
         /* Leave room for the icon */
         transform: translateY(-50%);
         width: 0;
@@ -264,7 +268,7 @@
       }
 
       #searchBar.active {
-        width: 305px;
+        width: 510px;
         opacity: 1;
         visibility: visible;
         transition: width 0.3s ease, opacity 0.3s ease;
@@ -305,7 +309,7 @@
 
       .hr {
         position: absolute;
-        top: 7rem;
+        top: 7.3rem;
       }
 
       form {
@@ -321,7 +325,7 @@
       }
 
       .modal-desc {
-        font-size: 12px !important;
+        font-size: 11px !important;
       }
 
       .wsm {
@@ -335,6 +339,66 @@
       .wsm p {
         font-size: 16px !important;
       }
+
+      nav {
+        z-index: 1000;
+      }
+    }
+
+    @media (max-width: 452px) {
+      #searchIcon {
+        right: -5rem;
+      }
+
+      #searchBar {
+        right: -4.8rem;
+      }
+
+      #searchBar.active {
+        width: 360px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      #searchIcon {
+        right: -2rem;
+      }
+
+      #searchBar {
+        right: -1.8rem;
+      }
+
+      #searchBar.active {
+        width: 318px;
+      }
+    }
+
+    @media (max-width: 370px) {
+      #searchIcon {
+        right: -1rem;
+      }
+
+      #searchBar {
+        right: -1rem;
+      }
+
+      #searchBar.active {
+        width: 305px;
+      }
+    }
+
+    @media (max-width: 320px) {
+      #searchIcon {
+        right: 1.6rem;
+      }
+
+      #searchBar {
+        right: 1.6rem;
+      }
+
+      #searchBar.active {
+        width: 260px;
+      }
     }
   </style>
 </head>
@@ -342,14 +406,14 @@
 <body class="bg-white-100">
   <!-- Navbar -->
   <nav
-    class="bg-white-800 text-black p-1 flex justify-between items-center border-b border-solid border-[#aaa] p-2 pl-0 pr-0">
-    <div class="flex items-center ml-2">
+    class="bg-white sticky top-0 text-black p-1 flex justify-between items-center border-b border-solid border-[#aaa] p-2 pl-0 pr-0">
+    <div class="flex items-center ml-7 sm:ml-2">
       <a href="{% url 'workspace' %}"><img src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" /></a>
     </div>
 
     <!-- Profile Chip with Dropdown -->
     <div class="relative">
-      <div class="flex items-center space-x-2 text-white p-2 rounded-full cursor-pointer mr-4" id="profile-button">
+      <div class="flex items-center space-x-2 text-white p-2 rounded-full cursor-pointer mr-5" id="profile-button">
         <!-- Avatar -->
         <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
           {% if profile_picture_url %}
@@ -364,8 +428,7 @@
       </div>
 
       <!-- Dropdown Menu -->
-      <div id="profile-dropdown"
-        class="absolute right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-6">
+      <div id="profile-dropdown" class="absolute right-0 hidden bg-white text-black rounded shadow-md w-48 p-1 mr-6">
         <ul class="py-2">
           <li class="px-4 py-2 text-m text-black-600">
             <strong>{{ user.first_name }}</strong> <br />
@@ -391,20 +454,21 @@
   <!-- Content Section -->
   <div class="w-full mx-auto sm:px-16 md:px-32 mt-8 mb-16 content-section">
     <!-- <h2 class="text-6xl font-bold mb-5 overview">Overview</h2> -->
-    <h2 class="text-3xl sm:text-3xl md:text-6xl font-semibold mb-12 mt-20">Workspace</h2>
+    <h2 class="text-3xl sm:text-3xl md:text-4xl lg:text-6xl font-semibold mb-12 mt-20">Workspace</h2>
 
     <div class="flex items-center gap-4 mb-4">
-      <button class="text-white px-4 py-2 md:px-8 md:py-4 rounded btn-cw" id="openModal">
+      <button class="text-white px-4 py-2 md:px-8 md:py-4 rounded btn-cw md:right-[8rem]" id="openModal">
         <span class="block md:hidden text-xl font-bold">+</span> <!-- Show only on small screens -->
         <span class="hidden md:inline">New Workspace</span>
       </button>
       <div class="relative search">
         <!-- Magnifying Glass Icon -->
-        <i class="bi bi-search absolute text-gray-500 cursor-pointer" style="font-size: 0.9rem" id="searchIcon"
-          onclick="toggleSearchBar()"></i>
+        <i class="bi bi-search absolute text-gray-500 cursor-pointer md:right-[-14rem] lg:right-[17.5rem]"
+          style="font-size: 0.9rem" id="searchIcon" onclick="toggleSearchBar()"></i>
 
         <!-- Search Bar -->
-        <input type="text" class="w-[21.5rem] border border-gray-300 pl-14 p-4 transition-all duration-300 ease-in-out"
+        <input type="text"
+          class="w-[21.5rem] border border-gray-300 pl-14 p-4 transition-all duration-300 ease-in-out md:right-[-14rem]"
           placeholder="Search for a workspace" id="searchBar" onkeyup="filterProjects()" autocomplete="off" />
       </div>
     </div>
@@ -420,11 +484,11 @@
           class="group bg-white shadow p-8 rounded-lg transition duration-300 border border-gray-300 hover:border-gray-400 hover:bg-gray-200 h-[180px] cursor-pointer project-item flex flex-col justify-between relative"
           data-id="{{ workspace.id }}">
           <h6
-            class="font-semibold text-xl md:text-2xl project-name truncate w-40 md:w-80 overflow-ellipsis whitespace-nowrap">
+            class="font-semibold text-xl md:text-2xl project-name truncate w-40 md:w-20 lg:w-[8rem] xl:w-60 pb-3 overflow-ellipsis whitespace-nowrap">
             {{ workspace.name }}
           </h6>
           <p
-            class="text-gray-500 text-lg mt-2 project-description overflow-hidden overflow-ellipsis whitespace-normal break-words flex-grow max-w-[85%]">
+            class="text-gray-500 text-sm lg:text-[18px] project-description overflow-hidden w-full overflow-ellipsis whitespace-normal break-words flex-grow max-w-[85%]">
             <span id="description">
               {% if workspace.description %} {{ workspace.description }} {% else %}{% endif %}
             </span>
@@ -492,23 +556,24 @@
       </p>
       <hr class="hr mb-6" />
       <form id="projectForm" method="POST" action="{% url 'add_workspace' %}">
-        <label class="mb-2 block font-semibold text-lg">Name</label>
+        <label class="mb-2 block font-semibold text-md md:text-lg">Name</label>
         <input type="text" id="projectName" name="name" class="border p-3 rounded w-full mb-6 text-lg"
           autocomplete="off" required />
-        <label class="mb-2 block font-semibold text-lg">Description
-          <span class="text-gray-500 text-sm modal-desc">(optional | max. of 100 characters)</span></label>
+        <label class="mb-2 block font-semibold text-md md:text-lg">Description
+          <span class="text-gray-500 text-xs md:text-lg modal-desc">(optional | max. of 100 characters)</span></label>
         <textarea id="projectDescription" name="description" class="border p-6 rounded w-full mb-4 text-lg"
           autocomplete="off"></textarea>
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
 
         <div class="flex justify-between mt-4">
-          <button type="button" id="closeModal" class="text-black-500 px-5 py-3 rounded btn-cancel text-lg">
+          <button type="button" id="closeModal" class="text-black-500 px-5 py-3 rounded btn-cancel text-lg flex-1 mr-2">
             Cancel
           </button>
-          <button type="submit" class="px-5 py-3 rounded mr-2 btn-create text-lg">
+          <button type="submit" class="px-5 py-3 rounded btn-create text-lg flex-1 ml-2">
             Create
           </button>
         </div>
+
       </form>
     </div>
   </div>
@@ -705,7 +770,7 @@
       // Toggle the search bar visibility
       searchBar.classList.toggle("active");
 
-      const isSmallScreen = window.innerWidth < 768; // Tailwind's 'md' breakpoint is 768px
+      const isSmallScreen = window.innerWidth <= 768; // Tailwind's 'md' breakpoint is 768px
 
       if (isSmallScreen) {
         // If on small screens, toggle icon and styling

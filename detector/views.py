@@ -36,6 +36,8 @@ from django.views.decorators.csrf import csrf_protect
 import time
 from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import EmailMultiAlternatives
+from django.core.paginator import Paginator
+from django.db import connection
 import json
 import os
 
@@ -412,11 +414,38 @@ def reports(request):
         if selected_workspace:
             request.session['selected_workspace_id'] = selected_workspace.id
 
+    # Get the page number from the GET request (default is 1)
+    page_number = request.GET.get('page', 1)
+
+    # SQL query to get the crop history data (paginated)
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT * FROM detector_crophistory 
+            WHERE workspace_id = %s
+            ORDER BY recommendation_date DESC
+            LIMIT %s OFFSET %s
+        """, [selected_workspace.id, 10, (int(page_number) - 1) * 10])
+        crop_history = cursor.fetchall()
+
+    # Get the total number of records for pagination
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT COUNT(*) FROM detector_crophistory 
+            WHERE workspace_id = %s
+        """, [selected_workspace.id])
+        total_records = cursor.fetchone()[0]
+
+    # Set up paginator with the total number of records
+    paginator = Paginator(crop_history, 10)  # 10 items per page
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'profile_picture_url': profile_picture_url,
         'workspace': user_workspaces,
         'selected_workspace': selected_workspace,
         'user': user,
+        'page_obj': page_obj,
+        'total_records': total_records
     }
 
     return render(request, 'reports.html', context)
@@ -1159,10 +1188,19 @@ def pending_users(request):
         })
     return JsonResponse({'count': 0, 'users': []}, status=401)
 
+# def pending_accounts(request):
+#     pending_users = User.objects.filter(is_active=False)
+#     # return JsonResponse({'users': list(pending_users)})
+#     return render(request, 'admin/pending_accounts.html', {'users': pending_users})
+
 def pending_accounts(request):
     pending_users = User.objects.filter(is_active=False)
-    # return JsonResponse({'users': list(pending_users)})
-    return render(request, 'admin/pending_accounts.html', {'users': pending_users})
+    paginator = Paginator(pending_users, 10)  # Show 10 users per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin/pending_accounts.html', {'page_obj': page_obj})
 
 def get_pending_accounts(request):
     if request.method == "GET":
@@ -1254,9 +1292,21 @@ def delete_user(request, user_id):
 @login_required
 @user_passes_test(is_admin)
 def user_list(request):
-    # users = User.objects.all()
-    users = User.objects.filter(profile__role='user')
-    return render(request, 'admin/user_list.html', {'users': users})
+    user_queryset = User.objects.filter(profile__role='user').order_by('username')
+    
+    paginator = Paginator(user_queryset, 10)  # Show 10 users per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'admin/user_list.html', {
+        'page_obj': page_obj,
+        'users': page_obj.object_list,  # For compatibility with your template
+    })
+
+# def user_list(request):
+#     # users = User.objects.all()
+#     users = User.objects.filter(profile__role='user')
+#     return render(request, 'admin/user_list.html', {'users': users})
 
 # @login_required
 # @user_passes_test(is_admin)

@@ -1,5 +1,26 @@
 {
   "dependencies": {
     "tailwind-scrollbar": "^4.0.2"
-  }
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.13"
+  },
+  "name": "soilution",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JunPaynandos/shalala-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JunPaynandos/shalala-/issues"
+  },
+  "homepage": "https://github.com/JunPaynandos/shalala-#readme"
 }

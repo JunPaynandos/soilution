@@ -237,7 +237,7 @@
 
         <!-- Dropdown -->
         <div id="notification-dropdown"
-          class="absolute right-[-20px] mt-2 w-72 bg-white border border-gray-200 rounded shadow-lg hidden">
+          class="absolute right-[-20px] mt-2 w-72 bg-white border border-gray-400 rounded shadow-lg hidden">
           <div class="p-4 border-b text-sm font-semibold text-gray-700">
             Notifications
           </div>
@@ -269,7 +269,7 @@
 
         <!-- Dropdown Menu -->
         <div id="profile-dropdown"
-          class="absolute right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-2">
+          class="absolute  right-[-8px] md:right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-2">
           <ul class="py-2">
             <li class="px-4 py-2 text-m text-black-600">
               <strong>{{ user.first_name }}</strong> <br />
@@ -313,8 +313,9 @@
 
   <div class="container mx-auto p-6 account-container">
     <!-- Account Settings Card -->
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg md:mt-52">
-      <h2 class="text-2xl font-semibold text-gray-700 mb-6 account-title text-center md:text-left">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg md:mt-[5rem] lg:mt-[8rem] xl:mt-52">
+      <h2
+        class="text-2xl font-semibold text-gray-700 mb-6 account-title text-center md:text-left relative left-0 md:left-1 lg:-left-0">
         Account Settings
       </h2>
 
@@ -329,11 +330,11 @@
             <div class="flex-shrink-0 w-full md:w-auto flex flex-col items-center md:items-start">
               {% if profile_picture_url %}
               <img id="profilePicPreview" src="{{ profile_picture_url }}" alt="Profile Picture"
-                class="w-32 h-32 rounded-full object-cover border-2 border-gray-300 mb-4 md:mb-0" />
+                class="w-32 h-32 rounded-full object-cover border-2 border-gray-300 mb-4 md:mb-0 relative left-0 md:left-[2rem]" />
               {% endif %}
 
-              <label for="profile_picture"
-                class="flex items-center justify-center space-x-2 px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-200 w-32">
+              <label for=" profile_picture"
+                class="flex items-center mt-0 sm:mt-4 justify-center space-x-2 px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-200 w-32 relative left-0 md:left-6">
                 <svg width="20px" height="20px" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"
                   class="text-gray-500">
                   <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -353,7 +354,8 @@
               <!-- Hidden File Input -->
               <input type="file" name="profile_picture" id="profile_picture" class="hidden" accept="image/*" />
 
-              <p class="text-sm text-gray-500 mt-2 text-center md:text-left opt-text">
+              <p
+                class="text-sm text-gray-500 relative left-0 sm:left-[-3.8rem] md:left-[-1.5rem] lg:left-[-2rem] xl:left-[-1.9rem] mt-2 text-center md:text-left opt-text">
                 Choose a new profile picture (optional)
               </p>
             </div>
@@ -401,7 +403,6 @@
       </form>
     </div>
   </div>
-
 
   <!-- Preloader -->
   <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">

@@ -85,7 +85,6 @@
       #notification-dropdown {
         position: absolute;
         right: -4rem !important;
-        z-index: 1000;
       }
 
       #loader svg {
@@ -134,7 +133,9 @@
       </button>
 
       <div class="flex items-center ml-0">
-        <a href="{% url 'workspace' %}"><img src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" /></a>
+        <a href="{% if user.profile.role == 'admin' %}{% url 'admin_page' %}{% else %}{% url 'workspace' %}{% endif %}">
+          <img src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" />
+        </a>
       </div>
     </div>
 
@@ -260,7 +261,7 @@
 
         <!-- Dropdown -->
         <div id="notification-dropdown"
-          class="absolute right-[-20px] mt-2 w-72 bg-white border border-gray-200 rounded shadow-lg hidden">
+          class="absolute right-[-20px] mt-2 w-72 bg-white border border-gray-400 rounded shadow-lg hidden">
           <div class="p-4 border-b text-sm font-semibold text-gray-700">
             Notifications
           </div>
@@ -292,7 +293,7 @@
 
         <!-- Dropdown Menu -->
         <div id="profile-dropdown"
-          class="absolute right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-2">
+          class="absolute right-[-8px] md:right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-2">
           <ul class="py-2">
             <li class="px-4 py-2 text-m text-black-600">
               <strong>{{ user.first_name }}</strong> <br />
@@ -524,8 +525,8 @@
   <!-- modal -->
   <div id="confirmation-modal"
     class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 px-4 sm:px-8">
-    <div class="bg-white p-6 rounded-md shadow-lg w-full sm:w-1/3">
-      <h4 class="text-lg sm:text-xl font-semibold mb-4 text-center sm:text-left">
+    <div class="bg-white p-6 rounded-md shadow-lg w-full sm:w-1/3 md:w-1/2 xl:w-1/3">
+      <h4 class=" text-lg sm:text-xl font-semibold mb-4 text-center sm:text-left">
         Are you sure you want to delete this workspace?
       </h4>
       <p class="mb-6 text-gray-600 text-center sm:text-left">

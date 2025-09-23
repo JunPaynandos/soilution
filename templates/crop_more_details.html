@@ -19,7 +19,7 @@
         <div class="flex items-center ml-2 gap-2">
             <!-- Mobile toggle button -->
             <button id="sidebarToggle"
-                class="block md:hidden ml-auto p-2 text-gray-700 hover:text-black focus:outline-none z-30">
+                class="block xl:hidden ml-auto p-2 text-gray-700 hover:text-black focus:outline-none z-30">
                 <svg id="hamburgerIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -222,7 +222,7 @@
         <div id="sidebarBackdrop" class="fixed inset-0 hidden z-10"></div>
         <!-- Sidebar -->
         <div id="sidebar"
-            class="bg-white text-black w-14 min-h-screen fixed mt-[4.08rem] p-4 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out md:hover:w-52 group border-r border-solid border-[#aaa] group-hover:bg-white z-10">
+            class="bg-white text-black w-14 min-h-screen fixed mt-[4.08rem] p-4 transform -translate-x-full xl:translate-x-0 transition-all duration-300 ease-in-out xl:hover:w-52 group border-r border-solid border-[#aaa] group-hover:bg-white z-10">
             <nav>
                 <ul>
                     <li class="mt-2 mb-2 relative flex items-center space-x-4 text-black group cursor-pointer">
@@ -232,7 +232,7 @@
                                 <img src="{% static 'images/layers.png' %}" alt="" width="18" height="18" />
                             </div>
                             <span
-                                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
+                                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">
                                 Workspace
                             </span>
                         </a>
@@ -244,7 +244,7 @@
                                 <img src="{% static 'images/dashboard.png' %}" alt="" width="18" height="18" />
                             </div>
                             <span
-                                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
+                                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">
                                 Dashboard
                             </span>
                         </a>
@@ -256,7 +256,7 @@
                                 <img src="{% static 'images/info.png' %}" alt="" width="18" height="18" />
                             </div>
                             <span
-                                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
+                                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">
                                 Crop_details
                             </span>
                         </a>
@@ -268,7 +268,7 @@
                                 <img src="{% static 'images/bar-chart.png' %}" alt="" width="18" height="18" />
                             </div>
                             <span
-                                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">Reports
+                                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">Reports
                             </span>
                         </a>
                     </li>
@@ -279,7 +279,7 @@
                                 <img src="{% static 'images/settings.png' %}" alt="" width="18" height="18" />
                             </div>
                             <span
-                                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">Settings
+                                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">Settings
                             </span>
                         </a>
                     </li>
@@ -289,50 +289,49 @@
 
         <!-- Main Content -->
         <div class="container mx-auto px-4 py-10">
-            <!-- Crop Name -->
-            <h2 class="text-4xl font-bold mb-6 text-center">{{ crop_name|title }}</h2>
+            <!-- Responsive Flex Container -->
+            <div class="flex flex-col md:flex-row items-start md:space-x-10">
 
-            <!-- Image Section -->
-            <div class="mb-6 text-center">
-                <img src="{{ details.image_url }}" alt="{{ crop_name }} image"
-                    class="mx-auto w-full max-w-md h-64 object-contain rounded-lg shadow-lg">
-            </div>
+                <!-- Back Button -->
+                <div class="mt-6 text-center absolute top-[4rem] left-6 md:left-[6rem]">
+                    <a href="{% url 'crop_details' %}" class="text-blue-600 hover:underline text-sm md:text-md">
+                        ← Back to Crop List
+                    </a>
+                </div>
 
-            <!-- Crop Details -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <p class="mb-4">
-                    <strong class="text-lg">Description:</strong>
-                    <br>
-                    <span class="text-gray-700 leading-relaxed">{{ crop.description }}</span>
-                </p>
+                <!-- Image Section -->
+                <div class="w-full mt-0 md:mt-[10rem] md:w-1/2 mb-6 md:mb-0">
+                    <img src="{{ details.image_url }}" alt="{{ crop_name }} image"
+                        class="w-[15rem] sm:w-full h-[30rem] object-contain mx-auto">
+                </div>
 
-                <p class="mb-4">
-                    <strong class="text-lg">Climate:</strong>
-                    <br>
-                    <span class="text-gray-700 leading-relaxed">{{ crop.climate }}</span>
-                </p>
+                <!-- Text Section -->
+                <div class="w-full mt-[-9rem] md:mt-20 md:w-1/2">
+                    <!-- Crop Name -->
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6 ml-5">{{ crop_name|title }}</h2>
 
-                <p class="mb-4">
-                    <strong class="text-lg">Soil:</strong>
-                    <br>
-                    <span class="text-gray-700 leading-relaxed">{{ crop.soil }}</span>
-                </p>
-
-                <p class="mb-4">
-                    <strong class="text-lg">Harvest Time:</strong>
-                    <br>
-                    <span class="text-gray-700 leading-relaxed">{{ crop.harvest_time }}</span>
-                </p>
-            </div>
-
-            <!-- Back Button -->
-            <div class="mt-6 text-center">
-                <a href="{% url 'crop_details' %}" class="text-blue-600 hover:underline text-lg">
-                    ← Back to Crop List
-                </a>
+                    <!-- Crop Details -->
+                    <div class="bg-white p-6 text-justify">
+                        <p class="mb-4">
+                            <strong class="text-xl md:text-2xl">Description:</strong><br>
+                            <span class="text-gray-700 block indent-6 leading-relaxed">{{ crop.description }}</span>
+                        </p>
+                        <p class="mb-4">
+                            <strong class="text-xl md:text-2xl">Climate:</strong><br>
+                            <span class="text-gray-700 block indent-6 leading-relaxed">{{ crop.climate }}</span>
+                        </p>
+                        <p class="mb-4">
+                            <strong class="text-xl md:text-2xl">Soil:</strong><br>
+                            <span class="text-gray-700 block indent-6 leading-relaxed">{{ crop.soil }}</span>
+                        </p>
+                        <p class="mb-4">
+                            <strong class="text-xl md:text-2xl">Harvest Time:</strong><br>
+                            <span class="text-gray-700 block indent-6 leading-relaxed">{{ crop.harvest_time }}</span>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-
 
         <!-- Preloader -->
         <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">

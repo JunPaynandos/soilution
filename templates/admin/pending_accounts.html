@@ -13,6 +13,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    div.overflow-x-auto {
+      /* border: 1px solid #888 !important; */
+      max-width: 86vw !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch;
+    }
+
     #workspace-button {
       transition: background-color 0.3s ease;
     }
@@ -442,11 +449,11 @@
 
     <!-- Main Content -->
     <div
-      class="flex-1 px-40 px-6 lg:px-[14.5rem] py-6 mt-[6rem] md:mt-[8rem] ml-6 group-hover:ml-52 transition-all duration-300 ease-in-out">
+      class="flex-1 lg:px-[14.5rem] py-6 mt-[6rem] md:mt-[8rem] ml-6 group-hover:ml-52 transition-all duration-300 ease-in-out">
       <h1 class="text-2xl lg:text-3xl font-semibold text-gray-800 mb-6">Pending User Approvals</h1>
 
       <div class="w-full overflow-x-auto border border-gray-300 shadow-sm">
-        {% if users %}
+        {% if page_obj %}
         <table class="min-w-full text-sm text-left divide-y divide-gray-200">
           <thead class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
             <tr>
@@ -456,8 +463,8 @@
               <th class="px-4 py-3">Approve</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-100">
-            {% for user in users %}
+          <tbody id="user-table-body" class=" bg-white divide-y divide-gray-100">
+            {% for user in page_obj %}
             <tr class="hover:bg-gray-50 transition duration-200">
               <td class="px-4 py-3 whitespace-nowrap">{{ user.username }}</td>
               <td class="px-4 py-3 whitespace-nowrap">{{ user.email }}</td>
@@ -489,6 +496,54 @@
         </table>
         {% endif %}
       </div>
+
+      <div class="mt-6 flex flex-col items-center justify-between space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+        <!-- Page info -->
+        <div class="text-gray-600 text-sm">
+          Page <span class="font-semibold">{{ page_obj.number }}</span> of
+          <span class="font-semibold">{{ page_obj.paginator.num_pages }}</span>
+        </div>
+
+        <!-- Navigation buttons -->
+        <div class="flex flex-wrap justify-center gap-2 text-sm -ml-8">
+          {% if page_obj.has_previous %}
+          <a href="?page=1"
+            class="px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
+            « First
+          </a>
+          <a href="?page={{ page_obj.previous_page_number }}"
+            class="px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
+            ‹ Prev
+          </a>
+          {% else %}
+          <span class="px-3 py-1.5 rounded-md border border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed">
+            « First
+          </span>
+          <span class="px-3 py-1.5 rounded-md border border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed">
+            ‹ Prev
+          </span>
+          {% endif %}
+
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}"
+            class="px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
+            Next ›
+          </a>
+          <a href="?page={{ page_obj.paginator.num_pages }}"
+            class="px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
+            Last »
+          </a>
+          {% else %}
+          <span class="px-3 py-1.5 rounded-md border border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed">
+            Next ›
+          </span>
+          <span class="px-3 py-1.5 rounded-md border border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed">
+            Last »
+          </span>
+          {% endif %}
+        </div>
+      </div>
+
     </div>
 
 

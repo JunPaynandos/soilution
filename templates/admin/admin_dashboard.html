@@ -53,6 +53,62 @@
     }
 
     @media (max-width: 768px) {
+
+      #searchIcon {
+        position: absolute;
+        right: -1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 14px 10px;
+        /* border: 1px solid transparent; */
+        transition: border-color 0.3s ease;
+        z-index: 2;
+      }
+
+      #searchIcon:hover,
+      #searchIcon.active {
+        border-radius: 10px;
+        font-size: 1.5rem;
+      }
+
+      #searchBar {
+        position: absolute;
+        top: 50%;
+        right: -1rem;
+        /* Leave room for the icon */
+        transform: translateY(-50%);
+        width: 0;
+        opacity: 0;
+        visibility: hidden;
+        padding: 14px 10px;
+        transition: width 0.3s ease, opacity 0.3s ease, visibility 0s ease 0.3s;
+        background-color: white;
+        z-index: 1;
+      }
+
+      #searchBar.active {
+        width: 305px;
+        opacity: 1;
+        visibility: visible;
+        transition: width 0.3s ease, opacity 0.3s ease;
+        box-shadow: none;
+      }
+
+      /* Optional: border effect when inactive */
+      .relative:not(:has(#searchBar.active)) #searchIcon {
+        border-color: #ccc;
+        border-radius: 10px;
+        font-size: 1.5rem;
+      }
+
+      /* Optional: clear border when active */
+      .relative:has(#searchBar.active) #searchIcon {
+        border-color: transparent;
+        background-color: transparent;
+      }
+
       #inbox-sidebar {
         max-width: 84.5% !important;
       }
@@ -360,105 +416,118 @@
       </div>
 
       <!-- First row: 4 cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-        <div class="bg-white p-8 rounded shadow border border-solid border-[#ccc]">
+      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+        <div
+          class="bg-white p-2 md:p-8 pt-4 rounded shadow border border-solid border-[#ccc] h-[100px] sm:h-[180px] md:h-[130px]">
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-lg font-semibold ml-4">Soil Moisture</p>
-              <p class="text-2xl ml-4">
+            <div class="ml-3 mt-3 md:ml-0 md:mt-0">
+              <p class="text-xs md:text-2xl font-semibold md:ml-4">Soil Moisture</p>
+              <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
                 {{ esp32_data.moisture|default:"0" }}%
               </p>
             </div>
-            <img src="{% static 'images/sea.png' %}" alt="moisture_icon" class="w-16 h-16 object-contain mr-8" />
+            <img src="{% static 'images/sea.png' %}" alt="moisture_icon"
+              class="w-8 h-8 md:w-16 md:h-16 object-contain mr-2 md:mr-5 mt-4 md:mt-0 relative top-2 md:top-0 right-1 md:right-0" />
           </div>
         </div>
-        <div class="bg-white p-8 rounded shadow border border-solid border-[#ccc]">
+        <div
+          class="bg-white p-2 md:p-8 pt-4 rounded shadow border border-solid border-[#ccc]  h-[100px] sm:h-[180px] md:h-[130px]">
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-lg font-semibold ml-4">Temperature</p>
-              <p class="text-2xl ml-4">
+            <div class="ml-3 mt-3 md:ml-0 md:mt-0">
+              <p class="text-xs md:text-2xl font-semibold md:ml-4">Temperature</p>
+              <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
                 {{ esp32_data.temperature|default:"0" }}°C
               </p>
             </div>
             <img src="{% static 'images/thermometer3.png' %}" alt="thermometer_icon"
-              class="w-16 h-16 object-contain mr-8" />
+              class="w-8 h-8 md:w-16 md:h-16 object-contain mr-5 mt-4 md:mt-0 relative top-1 md:top-0 -right-2 md:right-0" />
           </div>
         </div>
-        <div class="bg-white p-8 rounded shadow border border-solid border-[#ccc]">
+        <div class=" bg-white p-2 md:p-8 pt-4 rounded shadow border border-solid border-[#ccc] h-[100px] sm:h-[180px]
+              md:h-[130px]">
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-lg font-semibold ml-4">Humidity</p>
-              <p class="text-2xl ml-4">
+            <div class="ml-3 mt-3 md:ml-0 md:mt-0">
+              <p class="text-xs md:text-2xl font-semibold md:ml-4">Humidity</p>
+              <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
                 {{ esp32_data.humidity|default:"0" }}%
               </p>
             </div>
-            <img src="{% static 'images/humidity.png' %}" alt="humidity_icon" class="w-16 h-16 object-contain mr-8" />
+            <img src="{% static 'images/humidity.png' %}" alt="humidity_icon"
+              class="w-8 h-8 md:w-16 md:h-16 object-contain mr-5 mt-4 md:mt-0 ml-7 md:ml-0" />
           </div>
         </div>
-        <div class="bg-white p-8 rounded shadow border border-solid border-[#ccc]">
+        <div
+          class="bg-white p-2 md:p-8 pt-4 rounded shadow border border-solid border-[#ccc]  h-[100px] sm:h-[180px] md:h-[130px]">
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-lg font-semibold ml-4">pH Level</p>
-              <p class="text-2xl ml-4">
+            <div class="ml-3 mt-3 md:ml-0 md:mt-0">
+              <p class="text-xs md:text-2xl font-semibold md:ml-4">pH Level</p>
+              <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
                 {{ esp32_data.pH|default:"0" }}
               </p>
             </div>
-            <img src="{% static 'images/windows.png' %}" alt="windows_icon" class="w-16 h-16 object-contain mr-8" />
+            <img src="{% static 'images/windows.png' %}" alt="windows_icon"
+              class="w-8 h-8 md:w-16 md:h-16 object-contain mr-2 mt-4 md:mt-0 ml-6 md:ml-0" />
           </div>
         </div>
       </div>
 
       <!-- Second row: 3 cards centered -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto mt-4">
+      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-6xl mx-auto mt-4">
         <!-- Nitrogen Card -->
-        <div class="bg-white p-8 rounded shadow border border-solid border-[#ccc]">
+        <div
+          class="bg-white p-2 md:p-8 pt-4 rounded shadow border border-solid border-[#ccc]  h-[100px] sm:h-[180px] md:h-[130px]">
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-lg font-semibold ml-4">Nitrogen</p>
-              <p class="text-2xl ml-4">
+            <div class="ml-3 mt-3 md:ml-0 md:mt-0">
+              <p class="text-xs md:text-2xl font-semibold md:ml-4">Nitrogen</p>
+              <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
                 {{ esp32_data.nitrogen|default:"0" }} mg/kg
               </p>
             </div>
-            <img src="{% static 'images/nitrogen.png' %}" alt="nitrogen_icon" class="w-16 h-16 object-contain mr-8" />
+            <img src="{% static 'images/nitrogen.png' %}" alt="nitrogen_icon"
+              class="w-9 h-9 md:w-16 md:h-16 object-contain mr-2 mt-4 md:mt-0 ml-4 md:ml-0" />
           </div>
         </div>
         <!-- Phosphorus Card -->
-        <div class="bg-white p-8 rounded shadow border border-solid border-[#ccc]">
+        <div
+          class="bg-white p-2 md:p-8 pt-4 rounded shadow border border-solid border-[#ccc]  h-[100px] sm:h-[180px] md:h-[130px]">
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-lg font-semibold ml-4">Phosphorus</p>
-              <p class="text-2xl ml-4">
+            <div class="ml-3 mt-3 md:ml-0 md:mt-0">
+              <p class="text-xs md:text-2xl font-semibold md:ml-4">Phosphorus</p>
+              <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
                 {{ esp32_data.phosphorus|default:"0" }} mg/kg
               </p>
             </div>
             <img src="{% static 'images/phosphorus.png' %}" alt="phosphorus_icon"
-              class="w-16 h-16 object-contain mr-8" />
+              class="w-10 h-10w-10 md:w-16 md:h-16 object-contain mr-5 mt-4 md:mt-0 ml-2 md:ml-0" />
           </div>
         </div>
         <!-- Potassium Card -->
-        <div class="bg-white p-8 rounded shadow border border-solid border-[#ccc]">
+        <div
+          class="bg-white p-2 md:p-8 pt-4 rounded shadow border border-solid border-[#ccc]  h-[100px] sm:h-[180px] md:h-[130px]">
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-lg font-semibold ml-4">Potassium</p>
-              <p class="text-2xl ml-4">
+            <div class="ml-3 mt-3 md:ml-0 md:mt-0">
+              <p class="text-xs md:text-2xl font-semibold md:ml-4">Potassium</p>
+              <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
                 {{ esp32_data.potassium|default:"0" }} mg/kg
               </p>
             </div>
-            <img src="{% static 'images/potassium.png' %}" alt="potassium_icon" class="w-16 h-16 object-contain mr-8" />
+            <img src="{% static 'images/potassium.png' %}" alt="potassium_icon"
+              class="w-8 h-8 md:w-16 md:h-16 object-contain mr-5 mt-4 md:mt-0 ml-5 md:ml-0" />
           </div>
         </div>
       </div>
 
       <div class="flex flex-col md:flex-row gap-4 w-full">
         <!-- Left Chart (70%) -->
-        <div class="card mt-12 bg-white border border-gray-300 rounded-lg shadow-lg p-4 md:w-[70%] flex flex-col">
+        <div
+          class="card mt-5 md:mt-12 bg-white border border-gray-300 rounded-lg shadow-lg p-4 md:w-[70%] flex flex-col">
           <h3 class="text-center">Crop Recommendation History</h3>
           <canvas id="cropHistoryChart" class="w-full h-80"></canvas>
         </div>
 
         <!-- Right Card (30%) -->
         <div
-          class="card dashboard-card mt-12 bg-white border border-gray-300 rounded-lg shadow-lg md:w-[30%] flex flex-col">
+          class="card dashboard-card mt-2 md:mt-12 bg-white border border-gray-300 rounded-lg shadow-lg md:w-[30%] flex flex-col">
 
           <div class="card-header text-black text-center p-4 rounded-t-lg border-b-2">
             <h4 class="text-xl font-semibold">Crop Recommendations</h4>

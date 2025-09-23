@@ -15,6 +15,16 @@
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
   <!-- <link rel="stylesheet" href="{% static 'css/index.css' %}" /> -->
   <style>
+    /* #navbarBackdrop {
+      width: 42rem;
+      height: 7rem;
+      background-color: rgba(0, 0, 0, 0.8);
+      position: absolute;
+      top: 0;
+      right: 0;
+
+    } */
+
     html {
       height: 100%;
       margin: 0;
@@ -991,6 +1001,7 @@
 <body>
   <!-- hero section -->
   <div class="container" id="home">
+    <div id="navbarBackdrop" class="z-1000"></div>
     <nav class="navbar navbar-expand-lg navbar-light" id="navbar" style="transition: background-color 0.3s ease-in-out">
       <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'images/sl.png' %}" alt="logo"
           id="logo-img" /></a>

@@ -72,7 +72,6 @@
       #notification-dropdown {
         position: absolute;
         right: -4rem !important;
-        z-index: 1000;
       }
 
       #loader svg {
@@ -98,6 +97,8 @@
         display: block;
       }
     }
+
+    @media (min-width: 768px) {}
   </style>
 </head>
 
@@ -109,7 +110,7 @@
     <div class="flex items-center ml-2 gap-2">
       <!-- Mobile toggle button -->
       <button id="sidebarToggle"
-        class="block md:hidden ml-auto p-2 text-gray-700 hover:text-black focus:outline-none z-30">
+        class="block xl:hidden ml-auto p-2 text-gray-700 hover:text-black focus:outline-none z-30">
         <svg id="hamburgerIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -121,8 +122,11 @@
       </button>
 
       <div class="flex items-center ml-0">
-        <a href="{% url 'workspace' %}"><img src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" /></a>
+        <a href="{% if user.profile.role == 'admin' %}{% url 'admin_page' %}{% else %}{% url 'workspace' %}{% endif %}">
+          <img src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" />
+        </a>
       </div>
+
     </div>
 
     <!-- right wrapper -->
@@ -247,7 +251,7 @@
 
         <!-- Dropdown -->
         <div id="notification-dropdown"
-          class="absolute right-[-20px] mt-2 w-72 bg-white border border-gray-200 rounded shadow-lg hidden">
+          class="absolute right-[-20px] mt-2 w-72 bg-white border border-gray-400 rounded shadow-lg hidden">
           <div class="p-4 border-b text-sm font-semibold text-gray-700">
             Notifications
           </div>
@@ -279,7 +283,7 @@
 
         <!-- Dropdown Menu -->
         <div id="profile-dropdown"
-          class="absolute right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-2">
+          class="absolute right-[-8px] md:right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-2">
           <ul class="py-2">
             <li class="px-4 py-2 text-m text-black-600">
               <strong>{{ user.first_name }}</strong> <br />
@@ -305,7 +309,7 @@
     <div id="sidebarBackdrop" class="fixed inset-0 hidden z-10"></div>
     <!-- Sidebar -->
     <div id="sidebar"
-      class="bg-white text-black w-14 min-h-screen fixed mt-[4.08rem] p-4 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out md:hover:w-52 group border-r border-solid border-[#aaa] group-hover:bg-white z-10">
+      class="bg-white text-black w-14 min-h-screen fixed mt-[4.08rem] p-4 transform -translate-x-full xl:translate-x-0 transition-all duration-300 ease-in-out xl:hover:w-52 group border-r border-solid border-[#aaa] group-hover:bg-white z-10">
       <nav>
         <ul>
           <li class="mt-2 mb-2 relative flex items-center space-x-4 text-black group cursor-pointer">
@@ -315,7 +319,7 @@
                 <img src="{% static 'images/layers.png' %}" alt="" width="18" height="18" />
               </div>
               <span
-                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
+                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">
                 Workspace
               </span>
             </a>
@@ -327,7 +331,7 @@
                 <img src="{% static 'images/dashboard.png' %}" alt="" width="18" height="18" />
               </div>
               <span
-                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
+                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">
                 Dashboard
               </span>
             </a>
@@ -339,7 +343,7 @@
                 <img src="{% static 'images/info.png' %}" alt="" width="18" height="18" />
               </div>
               <span
-                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
+                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">
                 Crop_details
               </span>
             </a>
@@ -351,7 +355,7 @@
                 <img src="{% static 'images/bar-chart.png' %}" alt="" width="18" height="18" />
               </div>
               <span
-                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">Reports
+                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">Reports
               </span>
             </a>
           </li>
@@ -362,7 +366,7 @@
                 <img src="{% static 'images/settings.png' %}" alt="" width="18" height="18" />
               </div>
               <span
-                class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">Settings
+                class="absolute left-4 pointer-events-none xl:pointer-events-auto opacity-0 xl:group-hover:opacity-100 transition-all">Settings
               </span>
             </a>
           </li>
