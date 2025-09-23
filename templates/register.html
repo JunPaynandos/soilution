@@ -221,7 +221,7 @@
 
     .login-with-google-btn {
       position: relative;
-      top: -15px;
+      top: 14px;
       transition: background-color 0.3s, box-shadow 0.3s;
       padding: 14px 16px 14px 28px;
       border: 1px solid #aaa;
@@ -267,11 +267,20 @@
 
     .hr {
       position: relative;
-      top: 12px;
+      top: 5px;
     }
 
     .or {
-      position: relative;
+      position: absolute;
+      top: 45rem;
+      left: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      color: #3d3d3d;
+      background-color: white;
+      padding: 0 8px 0 8px;
+      transform: translateX(-50%)
+        /* position: relative;
       top: -17px;
       display: flex;
       align-items: center;
@@ -282,7 +291,7 @@
       color: #3d3d3d;
       background: white;
       width: 40px;
-      transform: translateX(calc(18.3rem - 100%));
+      transform: translateX(calc(18.3rem - 100%)); */
     }
 
     .navbar {
@@ -303,7 +312,7 @@
       width: 100px;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1440px) {
       .navbar {
         position: absolute;
         top: 0;
@@ -369,7 +378,12 @@
       }
 
       .or {
-        transform: translateX(calc(10.6rem - 100%));
+        /* transform: translateX(calc(10.6rem - 100%)); */
+        position: absolute;
+        top: 39.3rem;
+        left: 50%;
+        height: 20px;
+        transform: translateX(-50%)
       }
 
       #logo-img {

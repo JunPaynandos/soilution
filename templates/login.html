@@ -266,7 +266,8 @@
 
     .login-with-google-btn {
       transition: background-color 0.3s, box-shadow 0.3s;
-
+      position: relative;
+      top: 40px;
       padding: 14px 16px 14px 28px;
       border: 1px solid #aaa;
       border-radius: 5px;
@@ -316,17 +317,15 @@
     }
 
     .or {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      bottom: -5px;
+      position: absolute;
+      top: 23.6rem;
+      left: 50%;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 700;
       color: #3d3d3d;
-      background: white;
-      width: 40px;
-      transform: translateX(calc(18.5rem - 100%));
+      background-color: white;
+      padding: 0 8px 0 8px;
+      transform: translateX(-50%)
     }
 
     .navbar {
@@ -347,7 +346,7 @@
       width: 100px;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1440px) {
       body {
         padding-top: 1rem;
         overflow: hidden;
@@ -358,7 +357,10 @@
       }
 
       .or {
-        transform: translateX(calc(10.6rem - 100%));
+        position: absolute;
+        top: 21.6rem;
+        left: 50%;
+        transform: translateX(-50%)
       }
 
       .login-form-dialog {
@@ -392,7 +394,7 @@
 
       .login-form-footer {
         position: relative;
-        top: 10px;
+        top: 35px;
         font-size: 12px;
       }
 

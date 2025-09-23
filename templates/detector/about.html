@@ -430,11 +430,12 @@ html, body {
     .footer-social a,
     .footer-legal a {
       text-decoration: none;
-      color: #333;
+      color: #2bdf78;
     }
 
     .footer-social a:hover,
     .footer-legal a:hover {
+      text-decoration: underline;
       color: #2bdf78;
     }
 
@@ -671,6 +672,29 @@ html, body {
       .footer-legal ul {
         font-size: 12px;
       }
+
+      .footer-support p {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    @media (min-width: 1024px) and (max-width:1440px) {
+      .footer-about {
+        padding-left: 60px;
+      }
+
+      .footer-links-container {
+        left: -2rem;
+      }
+
+      .footer-support {
+        margin-left: 80px;
+      }
+
+      .footer-legal {
+        margin-left: 20px;
+      }
     }
   </style>
 </head>
@@ -850,7 +874,9 @@ html, body {
     </div>
 
     <div class="footer-bottom">
-      <p>© 2025 Soilution. All Rights Reserved.</p>
+      <p>©
+        <script>document.write(new Date().getFullYear())</script> Soilution. All Rights Reserved.
+      </p>
     </div>
   </footer>
 

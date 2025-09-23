@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Disclaimer - Soilution</title>
+    <link rel="icon" type="image/png" href="{% static 'images/sll2.png' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <style>
+        .container {
+            position: relative;
+            top: 10rem;
+            min-height: 100vh;
+            margin-bottom: 15rem;
+        }
+
+        section {
+            padding: 0 80px;
+        }
+
+        section a {
+            color: #2bdf78;
+        }
+
+        section p,
+        section ul {
+            font-size: 20px;
+        }
+
+
+        section h2 {
+            font-size: 28px;
+        }
+
+        .navbar {
+            position: absolute;
+            top: 0;
+            left: -0.2rem;
+            width: 100%;
+            margin: 0;
+            padding: 1rem 4rem;
+            background-color: transparent;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .navbar-brand {
+            color: #2bdf78 !important;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            color: #2bdf78 !important;
+            padding: 0.8rem 1.2rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .navbar-nav .nav-item .nav-link:hover,
+        .navbar-nav .nav-item .nav-link.active {
+            color: #2bdf78 !important;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .navbar-nav .nav-item .nav-link.active {
+            color: #2bdf78 !important;
+            position: relative;
+        }
+
+        .navbar-nav .nav-item .nav-link.active::after {
+            content: "";
+            position: absolute;
+            width: 28%;
+            left: 13%;
+            bottom: 8px;
+            border-bottom: 2px solid #2bdf78;
+        }
+
+        .navbar .nav-item img {
+            border: 2px solid #fff;
+            background-color: #ddd;
+        }
+
+        .navbar .dropdown-menu {
+            border-radius: 0.375rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 10rem;
+        }
+
+        .navbar-collapse {
+            justify-content: flex-end;
+        }
+
+        footer {
+            position: relative;
+            background-color: black;
+            color: white;
+            padding: 40px 0;
+        }
+
+        .footer-container {
+            position: relative;
+            top: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .footer-about,
+        .footer-social,
+        .footer-support,
+        .footer-legal {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .footer-links-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 65%;
+            position: relative;
+            left: -5rem;
+        }
+
+        .footer-support {
+            margin-right: 20px;
+        }
+
+        .footer-legal {
+            margin-right: -4rem;
+        }
+
+        .footer-about p,
+        .footer-support p {
+            font-size: 14px;
+        }
+
+        .footer-about h3 {
+            font-size: 3rem;
+        }
+
+        .footer-about p {
+            font-size: 1.2rem;
+        }
+
+        .footer-support,
+        .footer-legal {
+            margin-left: 240px;
+        }
+
+        .footer-support a {
+            color: #2bdf78;
+        }
+
+        .footer-social ul,
+        .footer-legal ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .footer-social li,
+        .footer-legal li {
+            margin-bottom: 10px;
+        }
+
+        .footer-social a,
+        .footer-legal a {
+            text-decoration: none;
+            color: #2bdf78;
+        }
+
+        .footer-social a:hover,
+        .footer-legal a:hover {
+            text-decoration: underline;
+            color: #2bdf78;
+        }
+
+        .footer-bottom p {
+            position: relative;
+            bottom: -40px;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        #logo-img {
+            max-width: 100%;
+            height: 80px;
+            width: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4rem;
+                z-index: 9999;
+                padding: 20px 30px;
+                background-color: white;
+                box-shadow: none;
+            }
+
+            .navbar-brand {
+                font-size: 22px;
+            }
+
+            .nav-item {
+                text-align: left;
+            }
+
+            .navbar-toggler {
+                position: inherit;
+                right: 20px;
+                margin: 0;
+                border: none;
+            }
+
+            .navbar-toggler:focus,
+            .navbar-toggler:focus-visible,
+            .navbar-toggler:focus-within,
+            .navbar-toggler:active {
+                outline: none !important;
+                box-shadow: none !important;
+            }
+
+            .navbar-brand img {
+                width: 150px;
+                height: 6%0px;
+            }
+
+            .navbar-toggler-icon {
+                display: none;
+            }
+
+            .custom-toggler-icon {
+                width: 24px;
+                height: auto;
+            }
+
+            .navbar-nav .nav-item .nav-link {
+                color: white !important;
+                position: relative;
+                /* padding: 0.5rem 1.2rem; */
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            .navbar-nav .nav-item .nav-link.active {
+                color: #2bdf78 !important;
+                position: relative;
+            }
+
+            .navbar-nav .nav-item .nav-link.active::after {
+                content: "";
+                position: absolute;
+                width: 5%;
+                left: 20px;
+                bottom: 8px;
+                border-bottom: 2px solid #2bdf78;
+            }
+
+            .navbar-collapse {
+                position: relative;
+                top: -10px;
+                background-color: rgba(0, 0, 0, 0.6);
+                border-radius: 5px;
+            }
+
+            .navbar-brand {
+                position: relative;
+                top: -10px;
+                left: -1.58px;
+            }
+
+            #logo-img {
+                width: 45px;
+                height: 35px;
+            }
+
+            .container {
+                top: 8rem;
+            }
+
+            section {
+                padding: 0;
+            }
+
+            section h2 {
+                font-size: 20px;
+            }
+
+            section h2,
+            section p {
+                padding: 0 20px;
+            }
+
+            section ul {
+                padding: 0 20px 0 40px;
+            }
+
+            section p,
+            section ul,
+            .text-size {
+                font-size: 14px;
+            }
+
+            footer {
+                position: relative;
+            }
+
+            .footer-links-container {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                left: 0;
+            }
+
+            .footer-about img {
+                width: 10rem;
+            }
+
+            .footer-about p {
+                font-size: 12px;
+                padding: 0 0 20px 0;
+            }
+
+            .footer-about,
+            .footer-support,
+            .footer-legal {
+                padding: 0 0 0 40px;
+                margin: 0;
+            }
+
+            .footer-support h3,
+            .footer-legal h3 {
+                font-size: 16px;
+            }
+
+            .footer-support p,
+            .footer-legal ul {
+                font-size: 12px;
+            }
+
+            .footer-support p {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+
+        @media (min-width: 1024px) and (max-width:1440px) {
+            .footer-about {
+                padding-left: 60px;
+            }
+
+            .footer-links-container {
+                left: -2rem;
+            }
+
+            .footer-support {
+                margin-left: 80px;
+            }
+
+            .footer-legal {
+                margin-left: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <nav class="navbar navbar-expand-lg navbar-light" id="navbar" style="transition: background-color 0.3s ease-in-out">
+        <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'images/sl.png' %}" alt="logo" width="65px"
+                height="50px" id="logo-img" /></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <img src="{% static 'images/hamburger2.png' %}" alt="hamburger icon" class="custom-toggler-icon" />
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/services/' %}active{% endif %}"
+                        href="{% url 'services' %}">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Sign in</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container px-4">
+        <section class="text-justify">
+            <h2>Terms of Service</h2>
+            <p class="mb-5">Last Updated: September 1, 2025</p>
+
+            <h2 class="mb-4">General Terms</h2>
+            <p class="text-size" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;By using Soilution's services, you agree to comply with the following terms and
+                conditions. Please read
+                them carefully.
+            </p>
+
+            <h2 class="mt-5 mb-3">1. Acceptance of Terms</h2>
+            <p class="text" class="text" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;By accessing or using the Soilution services, including our IoT devices, web
+                portal, and
+                analytics dashboard, you agree to comply with and be legally bound by these Terms of Service ("Terms").
+                If
+                you do not agree to these Terms, you may not use our services.
+            </p>
+
+            <h2 class="mt-5 mb-3">2. Description of Service</h2>
+            <p class="text" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;Soilution provides smart soil monitoring and analytics through IoT devices that
+                measure key parameters
+                such
+                as nitrogen, phosphorus, potassium, pH, and moisture. Our platform offers actionable recommendations and
+                insights based on this data.
+            </p>
+
+            <h2 class="mt-5 mb-3">3. User Accounts</h2>
+            <p class="text" style="text-align: justify;">
+                To access some features, you must register for an account. You agree to:
+            </p>
+            <ul class="mb-4" class="text" style="text-align: justify;">
+                <li>Provide accurate and complete information during registration.</li>
+                <li>Maintain the confidentiality of your login credentials.</li>
+                <li>Notify us immediately of unauthorized account use.</li>
+            </ul>
+
+            <h2 class="mt-5 mb-3">4. User Obligations</h2>
+            <p class="text" style="text-align: justify;">
+                As a user, you agree not to:
+            </p>
+            <ul class="mb-4" class="text" style="text-align: justify;">
+                <li>Misuse, modify, or hack the Soilution platform.</li>
+                <li>Upload viruses or malicious code.</li>
+                <li>Use our devices in a manner that damages physical property or violates environmental laws.</li>
+                <li>Resell or sublicense access to our platform without written consent.</li>
+            </ul>
+
+            <h2 class="mt-5 mb-3">5. Device Usage</h2>
+            <p class="text" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;You are responsible for installing and maintaining the IoT hardware as per
+                provided guidelines.
+                Soilution is not responsible for data inaccuracies resulting from improper device use.
+            </p>
+
+            <h2 class="mt-5 mb-3">6. Intellectual Property</h2>
+            <p class="text" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;All content on the platform, including logos, source code, soil algorithms, data
+                visualizations, and
+                documentation, is the exclusive property of Soilution. You may not duplicate, distribute, or
+                reverse-engineer any part of the platform without written permission.
+            </p>
+
+            <h2 class="mt-5 mb-3">7. Termination</h2>
+            <p class="text" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;We may suspend or terminate your access if you breach these Terms, misuse the
+                services, or engage in
+                behavior harmful to other users or the platform. You may also cancel your account at any time.
+            </p>
+
+            <h2 class="mt-5 mb-3">8. Limitation of Liability</h2>
+            <p>
+                Soilution shall not be liable for:
+            </p>
+            <ul class="mb-4" class="text" style="text-align: justify;">
+                <li>Loss of crop yield or agricultural productivity.</li>
+                <li>Inaccuracies in soil data due to environmental factors.</li>
+                <li>Indirect or consequential damages related to use of the service.</li>
+            </ul>
+
+            <h2 class="mt-5 mb-3">9. Indemnification</h2>
+            <p class="text" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;You agree to indemnify and hold Soilution harmless from any claims, damages, or
+                expenses arising from
+                your
+                use of the service, violation of these Terms, or infringement of third-party rights.
+            </p>
+
+            <h2 class="mt-5 mb-3">10. Changes to Terms</h2>
+            <p class="text" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;We may update these Terms periodically. Continued use of the service after such
+                updates constitutes your
+                acceptance of the revised Terms.
+            </p>
+
+            <h2 class="mt-5 mb-3">11. Contact Us</h2>
+            <p class="text" style="text-align: justify;">
+                &nbsp;&nbsp;&nbsp;&nbsp;If you have any questions regarding these Terms, please contact us at<br>
+                Email:<a href="{% url 'contact_support' %}">
+                    soilution42@gmail.com</a>
+            </p>
+        </section>
+    </div>
+
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <img src="{% static 'images/slll.png' %}" alt="" />
+                <p class="footer-sassy" style="font-weight: 400;">
+                    Empowering Your Soil <br />for Optimal Growth
+                </p>
+            </div>
+
+            <div class="footer-links-container">
+                <div class="footer-support">
+                    <h3>Customer Support</h3>
+                    <p style="font-weight: 400;">
+                        Email:
+                        <a href="{% url 'contact_support' %}">soilution42@gmail.com</a>
+                    </p>
+                    <p style="font-weight: 400;">Phone: <a href="#">+63 9784 324 5766</a></p>
+                </div>
+
+                <div class="footer-legal">
+                    <h3>Legal</h3>
+                    <ul style="font-weight: 400;">
+                        <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                        <li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
+                        <li><a href="{% url 'disclaimer' %}">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>©
+                <script>document.write(new Date().getFullYear())</script> Soilution. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+</body>
+
+</html>

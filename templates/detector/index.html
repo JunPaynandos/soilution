@@ -514,12 +514,10 @@
 
     .footer-support {
       margin-right: 20px;
-      /* Optional: Space between child divs */
     }
 
     .footer-legal {
       margin-right: -4rem;
-      /* Optional: Space between child divs */
     }
 
     .footer-about,
@@ -534,10 +532,6 @@
     .footer-support p {
       font-size: 14px;
     }
-
-    /* .footer-about img {
-      width: 25rem;
-    } */
 
     .footer-about h3 {
       font-size: 5rem;
@@ -570,11 +564,12 @@
     .footer-social a,
     .footer-legal a {
       text-decoration: none;
-      color: #333;
+      color: #2bdf78;
     }
 
     .footer-social a:hover,
     .footer-legal a:hover {
+      text-decoration: underline;
       color: #2bdf78;
     }
 
@@ -764,7 +759,6 @@
 
       footer {
         position: relative;
-        /* top: 30rem; */
       }
 
       .footer-about p {
@@ -910,7 +904,7 @@
       }
 
       .last-st {
-        flex-basis: 100%;
+        /* flex-basis: 100%; */
         text-align: center;
       }
 
@@ -972,6 +966,11 @@
         font-size: 12px;
       }
 
+      .footer-support p {
+        display: flex;
+        flex-direction: column;
+      }
+
       .navbar-collapse {
         position: relative;
         top: 0;
@@ -993,6 +992,24 @@
 
       .navbar-nav .nav-item .nav-link.active::after {
         border-bottom: 2px solid #2bdf78;
+      }
+    }
+
+    @media (min-width: 1024px) and (max-width:1440px) {
+      .footer-about {
+        padding-left: 60px;
+      }
+
+      .footer-links-container {
+        left: -2rem;
+      }
+
+      .footer-support {
+        margin-left: 80px;
+      }
+
+      .footer-legal {
+        margin-left: 20px;
       }
     }
   </style>
@@ -1222,16 +1239,18 @@
         <div class="footer-legal">
           <h3>Legal</h3>
           <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Disclaimer</a></li>
+            <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+            <li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
+            <li><a href="{% url 'disclaimer' %}">Disclaimer</a></li>
           </ul>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <p>© 2025 Soilution. All Rights Reserved.</p>
+      <p>©
+        <script>document.write(new Date().getFullYear())</script> Soilution. All Rights Reserved.
+      </p>
     </div>
   </footer>
 

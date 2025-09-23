@@ -55,6 +55,15 @@ def about(request):
 def services(request):
     return render(request, 'detector/services.html')
 
+def privacy_policy(request):
+    return render(request, 'detector/privacy_policy.html')
+
+def terms_of_service(request):
+    return render(request, 'detector/terms_of_service.html')
+
+def disclaimer(request):
+    return render(request, 'detector/disclaimer.html')
+
 def contact_support(request):
     if request.method == 'POST':
         name = request.POST.get('name')
