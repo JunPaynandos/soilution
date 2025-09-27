@@ -54,6 +54,17 @@
       animation: fade-in-down 0.3s ease-out;
     }
 
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      /* IE/Edge */
+    }
+
     @media (max-width: 768px) {
       #inbox-sidebar {
         max-width: 84.5% !important;
@@ -157,75 +168,71 @@
             </button>
           </div>
 
-          <!-- Message List -->
-          <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
-            <!-- Conversations will load here via AJAX -->
-          </ul>
+          <!-- Body that grows to fill available space -->
+          <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Message List -->
+            <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
+              <!-- Conversations will load here via AJAX -->
+            </ul>
 
-          <div class="px-4 py-6 border-t bg-white text-right">
-            <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">Send us a
-              message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px] mr-1">
-                <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
-              </svg>
-            </button>
-          </div>
-
-          <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-3rem] h-full">
-            <label for="recipient-select"
-              class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select
-              Recipient</label>
-            <select id="recipient-select" class="w-full p-2 border border-gray-300 rounded-lg">
-              <option value="">Select someone to help</option>
-            </select>
-
-            <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
-            <textarea id="message-content" class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg" rows="4"
-              placeholder="Write your message..."></textarea>
-
-            <button id="send-message-btn"
-              class="bg-emerald-500 hover:bg-emerald-600 text-white py-2 px-6  rounded-lg cursor-pointer"
-              disabled>Send</button>
-          </div>
-
-          <!-- Message Thread -->
-          <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 mt-[-3rem] bg-gray-50">
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
-              ← Back
-            </button>
-            <!-- Messages will be dynamically loaded here -->
-            <p class="text-sm text-gray-500 text-center">
-              Select a conversation
-            </p>
-            <div id="typing-indicator" class="text-sm text-gray-500 italic px-4 py-1 hidden">
-              Typing...
+            <div class="px-4 py-6 border-t bg-white text-right">
+              <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">Send us a
+                message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px] mr-1">
+                  <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
+                </svg>
+              </button>
             </div>
+
+            <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-3rem] h-full">
+              <label for="recipient-select"
+                class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select
+                Recipient</label>
+              <select id="recipient-select"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <option value="">Select someone to help</option>
+              </select>
+
+              <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
+              <textarea id="message-content"
+                class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                rows="4" placeholder="Write your message..."></textarea>
+
+              <div class="flex justify-end mt-4">
+                <button id="send-message-btn"
+                  class="bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-8 rounded-lg cursor-pointer" disabled>
+                  Send
+                </button>
+              </div>
+            </div>
+
+            <!-- Message Thread -->
+            <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 mt-[-3rem] bg-gray-50">
+              <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
+                ← Back
+              </button>
+              <!-- Messages will be dynamically loaded here -->
+              <p class="text-sm text-gray-500 text-center">
+                Select a conversation
+              </p>
+              <div id="typing-indicator" class="text-sm text-gray-500 italic px-4 py-1 hidden">
+                Typing...
+              </div>
+            </div>
+
+            <!-- Message Input -->
+            <form id="chat-form" class="hidden p-3 border-t flex items-center sticky bottom-0 z-100 bg-white gap-2">
+              {% csrf_token %}
+              <textarea id="chat-input" placeholder="Type a message..."
+                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none overflow-y-scroll h-14 max-h-24 leading-snug text-md hide-scrollbar"
+                rows="1" style="white-space: pre-wrap; overflow-wrap: break-word;"></textarea>
+              <button type="submit"
+                class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                Send
+              </button>
+            </form>
           </div>
-
-          <!-- Message Input -->
-          <form id="chat-form" class="hidden p-3 border-t flex items-center sticky bottom-0 z-100 bg-white gap-2">
-            {% csrf_token %}
-            <!-- <text type="text" id="chat-input" placeholder="Type a message..."
-              class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              autocomplete="off" style="
-                  word-wrap: break-word;
-                  overflow-wrap: break-word;
-                  white-space: normal;
-                " /> -->
-            <textarea id="chat-input" placeholder="Type a message..."
-              class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none overflow-hidden h-16"
-              rows="1" style="min-height: 4rem;"></textarea>
-
-            <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full">
-              Send
-            </button>
-          </form>
         </div>
-
-        <!-- <div
-            id="inbox-backdrop"
-            class="fixed inset-0 bg-black bg-opacity-30 z-40 hidden"
-          ></div> -->
       </div>
 
       <!-- Notification Bell -->
@@ -708,50 +715,6 @@
         }
       });
 
-      // fetchPendingAccounts(); // initial fetch
-      // setInterval(fetchPendingAccounts, 5000);
-
-      // async function fetchPendingAccounts() {
-      //   const badge = document.getElementById("pending-badge");
-      //   const list = document.getElementById("notification-list");
-
-      //   try {
-      //     const response = await fetch("/dashboard/pending-accounts/data/");
-      //     const data = await response.json();
-
-      //     // Update dropdown list (only if dropdown exists)
-      //     if (list) {
-      //       list.innerHTML = "";
-
-      //       if (data.count > 0) {
-      //         data.users.forEach((user) => {
-      //           const li = document.createElement("li");
-      //           li.className = "p-4 text-gray-700";
-      //           li.textContent = `${user.username} (${user.email})`;
-      //           list.appendChild(li);
-      //         });
-      //       } else {
-      //         list.innerHTML = `<li class="p-4 text-gray-500 text-center">No pending accounts</li>`;
-      //       }
-      //     }
-
-      //     // Update badge
-      //     if (badge) {
-      //       if (data.count > 0) {
-      //         badge.classList.remove("hidden");
-      //         badge.innerText = data.count;
-      //       } else {
-      //         badge.classList.add("hidden");
-      //       }
-      //     }
-      //   } catch (error) {
-      //     console.error("Error fetching users:", error);
-      //     if (list) {
-      //       list.innerHTML = `<li class="p-4 text-red-500 text-center">Failed to load</li>`;
-      //     }
-      //   }
-      // }
-
       if (loader) {
         sidebarLinks.forEach((link) => {
           link.addEventListener("click", () => {
@@ -932,7 +895,7 @@
                   // Your message on the right
                   chatThread.append(`
                       <div class="flex justify-end">
-                        <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-green-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+                        <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-emerald-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
                           <span style="overflow-wrap:anywhere; white-space:pre-wrap; display:block; width:100%;">${msg.content}</span>
                           <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
                         </div>
@@ -977,7 +940,8 @@
       }
 
       const inboxSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/inbox/"
+        // "ws://" + window.location.host + "/ws/inbox/"
+        (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + "/ws/inbox/"
       );
       inboxSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
@@ -996,7 +960,7 @@
             if (isCurrentUser) {
               $("#chat-thread").append(`
                   <div class="flex justify-end">
-                    <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-green-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-emerald-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
                       <span style="word-wrap: break-word; overflow-wrap: break-word;">${msg.content}</span>
                       <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
                     </div>
@@ -1075,7 +1039,7 @@
               if (data.status === "ok") {
                 $("#chat-thread").append(`
                   <div class="flex justify-end">
-                    <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-green-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-emerald-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
                       <span style="word-wrap: break-word; overflow-wrap: break-word;">${message}</span>
                       <div class="text-xs text-right opacity-70 mt-1">${new Date().toLocaleTimeString(
                   [],
@@ -1229,7 +1193,7 @@
 
   </script>
 
-  <script>
+  <!-- <script>
     const chatInput = document.getElementById('chat-input');
 
     chatInput.addEventListener('input', () => {
@@ -1238,7 +1202,7 @@
       // Then set to scrollHeight to grow as needed
       chatInput.style.height = chatInput.scrollHeight + 'px';
     });
-  </script>
+  </script> -->
 
 
 </body>

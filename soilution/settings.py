@@ -175,7 +175,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
+         "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL')],
+        },
     },
+    
 }
 
 # AUTH_USER_MODEL = 'detector.CustomUser' 
