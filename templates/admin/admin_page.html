@@ -853,9 +853,11 @@
       inboxSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         if (data.type === "new_message") {
-          if (!currentUserId) {
-            updateInboxDropdown();
-          }
+          // if (!currentUserId) {
+          //   updateInboxDropdown();
+          // }
+
+          updateInboxDropdown();
 
           const msg = data.message;
           if (
