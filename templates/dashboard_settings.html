@@ -121,7 +121,7 @@
     <div class="flex items-center ml-2 gap-2">
       <!-- Mobile toggle button -->
       <button id="sidebarToggle"
-        class="block md:hidden ml-auto p-2 text-gray-700 hover:text-black focus:outline-none z-30">
+        class="block xl:hidden ml-auto p-2 text-gray-700 hover:text-black focus:outline-none z-30">
         <svg id="hamburgerIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -135,7 +135,6 @@
       <div class="flex items-center ml-0">
         <a href="{% if user.profile.role == 'admin' %}{% url 'admin_page' %}{% else %}{% url 'workspace' %}{% endif %}">
           <img src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" />
-        </a>
       </div>
     </div>
 
@@ -182,71 +181,71 @@
             </button>
           </div>
 
-          <!-- Message List -->
-          <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
-            <!-- Conversations will load here via AJAX -->
-          </ul>
+          <!-- Body that grows to fill available space -->
+          <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Message List -->
+            <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
+              <!-- Conversations will load here via AJAX -->
+            </ul>
 
-          <div class="px-4 py-2 border-t bg-white text-right">
-            <button id="compose-toggle-btn" class="inline-flex gap-1 text-sm text-blue-600 hover:underline">Send us a
-              message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px]">
-                <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
-              </svg>
-            </button>
-          </div>
-
-          <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-20px] h-full">
-            <label for="recipient-select"
-              class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select
-              Recipient</label>
-            <select id="recipient-select" class="w-full p-2 border border-gray-300 rounded-lg">
-              <option value="">Select someone to help</option>
-            </select>
-
-            <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
-            <textarea id="message-content" class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg" rows="4"
-              placeholder="Write your message..."></textarea>
-
-            <button id="send-message-btn"
-              class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-full cursor-pointer"
-              disabled>Send</button>
-          </div>
-
-          <!-- Message Thread -->
-          <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 bg-gray-50">
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
-              ← Back
-            </button>
-            <!-- Messages will be dynamically loaded here -->
-            <p class="text-sm text-gray-500 text-center">
-              Select a conversation
-            </p>
-            <div id="typing-indicator" class="text-sm text-gray-500 italic px-4 py-1 hidden">
-              Typing...
+            <div class="px-4 py-6 border-t bg-white text-right">
+              <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">Send us a
+                message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px] mr-1">
+                  <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
+                </svg>
+              </button>
             </div>
+
+            <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-3rem] h-full">
+              <label for="recipient-select"
+                class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select
+                Recipient</label>
+              <select id="recipient-select"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <option value="">Select someone to help</option>
+              </select>
+
+              <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
+              <textarea id="message-content"
+                class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                rows="4" placeholder="Write your message..."></textarea>
+
+              <div class="flex justify-end mt-4">
+                <button id="send-message-btn"
+                  class="bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-8 rounded-lg cursor-pointer" disabled>
+                  Send
+                </button>
+              </div>
+            </div>
+
+            <!-- Message Thread -->
+            <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 mt-[-3rem] bg-gray-50">
+              <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
+                ← Back
+              </button>
+              <!-- Messages will be dynamically loaded here -->
+              <p class="text-sm text-gray-500 text-center">
+                Select a conversation
+              </p>
+              <div id="typing-indicator" class="text-sm text-gray-500 italic px-4 py-1 hidden">
+                Typing...
+              </div>
+            </div>
+
+            <!-- Message Input -->
+            <form id="chat-form" class="hidden p-3 border-t flex items-center sticky bottom-0 z-100 bg-white gap-2">
+              {% csrf_token %}
+              <textarea id="chat-input" placeholder="Type a message..."
+                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none overflow-y-scroll h-14 max-h-24 leading-snug text-md hide-scrollbar"
+                rows="1" style="white-space: pre-wrap; overflow-wrap: break-word;"></textarea>
+              <button type="submit"
+                class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                Send
+              </button>
+            </form>
           </div>
-
-          <!-- Message Input -->
-          <form id="chat-form" class="hidden p-3 border-t flex items-center bg-white gap-2">
-            {% csrf_token %}
-            <input type="text" id="chat-input" placeholder="Type a message..."
-              class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              autocomplete="off" style="
-                  word-wrap: break-word;
-                  overflow-wrap: break-word;
-                  white-space: normal;
-                " />
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full">
-              Send
-            </button>
-          </form>
         </div>
-
-        <!-- <div
-            id="inbox-backdrop"
-            class="fixed inset-0 bg-black bg-opacity-30 z-40 hidden"
-          ></div> -->
       </div>
 
       <!-- Notification Bell -->
@@ -274,8 +273,7 @@
 
       <!-- Profile Chip with Dropdown -->
       <div class="relative">
-        <div class="flex items-center space-x-2 text-white p-2 rounded-full cursor-pointer profile-div"
-          id="profile-button">
+        <div class="flex items-center space-x-2 text-white p-2 rounded-full cursor-pointer" id="profile-button">
           <!-- Avatar -->
           <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
             {% with request.user.profile as my_profile %}
@@ -648,50 +646,6 @@
         }
       });
 
-      // fetchPendingAccounts(); // initial fetch
-      // setInterval(fetchPendingAccounts, 5000);
-
-      // async function fetchPendingAccounts() {
-      //   const badge = document.getElementById("pending-badge");
-      //   const list = document.getElementById("notification-list");
-
-      //   try {
-      //     const response = await fetch("/dashboard/pending-accounts/data/");
-      //     const data = await response.json();
-
-      //     // Update dropdown list (only if dropdown exists)
-      //     if (list) {
-      //       list.innerHTML = "";
-
-      //       if (data.count > 0) {
-      //         data.users.forEach((user) => {
-      //           const li = document.createElement("li");
-      //           li.className = "p-4 text-gray-700";
-      //           li.textContent = `${user.username} (${user.email})`;
-      //           list.appendChild(li);
-      //         });
-      //       } else {
-      //         list.innerHTML = `<li class="p-4 text-gray-500 text-center">No pending accounts</li>`;
-      //       }
-      //     }
-
-      //     // Update badge
-      //     if (badge) {
-      //       if (data.count > 0) {
-      //         badge.classList.remove("hidden");
-      //         badge.innerText = data.count;
-      //       } else {
-      //         badge.classList.add("hidden");
-      //       }
-      //     }
-      //   } catch (error) {
-      //     console.error("Error fetching users:", error);
-      //     if (list) {
-      //       list.innerHTML = `<li class="p-4 text-red-500 text-center">Failed to load</li>`;
-      //     }
-      //   }
-      // }
-
       if (loader) {
         sidebarLinks.forEach((link) => {
           link.addEventListener("click", () => {
@@ -790,6 +744,12 @@
                     </li>
                   `);
               });
+              // If the sidebar is open, clear badge + "New" highlights
+              if (!$("#inbox-sidebar").hasClass("hidden")) {
+                $("#inbox-toggle span.absolute").remove();
+                inboxList.find("li").removeClass("bg-green-50");
+                inboxList.find("span.text-green-600").remove();
+              }
             } else {
               inboxList.html(
                 '<p class="flex flex-col items-center justify-center h-full min-h-[200px] text-center text-lg text-gray-500 p-3">No messages<br><span class="text-sm mt-1">Messages from the team will be shown here</span></p>'
@@ -865,67 +825,36 @@
             chatThread.empty();
 
             if (data.messages && data.messages.length > 0) {
-              // data.messages.forEach((msg) => {
-              //   const isCurrentUser = msg.sender_id == currentUserId;
-
-              //   if (isCurrentUser) {
-              //     // Your message on the right
-              //     chatThread.append(`
-              //       <div class="flex justify-end">
-              //         <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-green-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
-              //           <span style="overflow-wrap:anywhere; white-space:pre-wrap; display:block; width:100%;">${msg.content}</span>
-              //           <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
-              //         </div>
-              //       </div>
-              //     `);
-              //   } else {
-              //     // Other user's message on the left
-              //     const avatar = msg.sender_avatar
-              //       ? `<img src="${msg.sender_avatar}" alt="Avatar" class="w-full h-full object-cover">`
-              //       : `<div class="bg-gray-400 text-white w-full h-full flex items-center justify-center text-xs font-semibold rounded-full">👤</div>`;
-
-              //     chatThread.append(`
-              //       <div class="flex items-start space-x-2 my-2">
-              //         <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-300">
-              //           ${avatar}
-              //         </div>
-              //         <div class="bg-gray-200 text-black max-w-[70%] px-4 py-2 rounded-lg" style="word-wrap: break-word; overflow-wrap: break-word;">
-              //           <span style="overflow-wrap:anywhere; white-space:pre-wrap; display:block; width:100%;">${msg.content}</span>
-              //           <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
-              //         </div>
-              //       </div>
-              //     `);
-              //   }
-              // });
-
               data.messages.forEach((msg) => {
-                if (msg.is_sender) {
-                  // Message from current user
-                  $("#chat-thread").append(`
-                    <div class="flex justify-end">
-                      <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-green-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;"">
-                        <span style="overflow-wrap:anywhere; white-space:pre-wrap; display:block; width:100%;">${msg.content}</span>
-                        <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
+                const isCurrentUser = msg.sender_id == currentUserId;
+
+                if (isCurrentUser) {
+                  // Your message on the right
+                  chatThread.append(`
+                      <div class="flex justify-end">
+                        <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-emerald-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+                          <span style="overflow-wrap:anywhere; white-space:pre-wrap; display:block; width:100%;">${msg.content}</span>
+                          <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
+                        </div>
                       </div>
-                    </div>
-                  `);
+                    `);
                 } else {
-                  // Message from the other user
+                  // Other user's message on the left
                   const avatar = msg.sender_avatar
                     ? `<img src="${msg.sender_avatar}" alt="Avatar" class="w-full h-full object-cover">`
                     : `<div class="bg-gray-400 text-white w-full h-full flex items-center justify-center text-xs font-semibold rounded-full">👤</div>`;
 
-                  $("#chat-thread").append(`
-                    <div class="flex items-start space-x-2 my-2">
-                      <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-300">
-                        ${avatar}
+                  chatThread.append(`
+                      <div class="flex items-start space-x-2 my-2">
+                        <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-gray-300">
+                          ${avatar}
+                        </div>
+                        <div class="bg-gray-200 text-black max-w-[70%] px-4 py-2 rounded-lg" style="word-wrap: break-word; overflow-wrap: break-word;">
+                          <span style="overflow-wrap:anywhere; white-space:pre-wrap; display:block; width:100%;">${msg.content}</span>
+                          <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
+                        </div>
                       </div>
-                      <div class="bg-gray-200 text-black max-w-[70%] px-4 py-2 rounded-lg" style="word-wrap: break-word; overflow-wrap: break-word;">
-                        <span style="overflow-wrap:anywhere; white-space:pre-wrap; display:block; width:100%;">${msg.content}</span>
-                        <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
-                      </div>
-                    </div>
-                  `);
+                    `);
                 }
               });
             } else {
@@ -948,26 +877,33 @@
       }
 
       const inboxSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/inbox/"
+        // "ws://" + window.location.host + "/ws/inbox/"
+        (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + "/ws/inbox/"
       );
       inboxSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         if (data.type === "new_message") {
-          if (!currentUserId) {
-            updateInboxDropdown();
-          }
+          // if (!currentUserId) {
+          //   updateInboxDropdown();
+          // }
+
+          updateInboxDropdown();
 
           const msg = data.message;
           if (
+            // currentChatUserId &&
+            // parseInt(currentChatUserId) === msg.sender_id
+
             currentChatUserId &&
-            parseInt(currentChatUserId) === msg.sender_id
+            (parseInt(currentChatUserId) === msg.sender_id ||
+              parseInt(currentChatUserId) === msg.recipient_id)
           ) {
             const isCurrentUser = msg.sender_id == currentUserId;
 
             if (isCurrentUser) {
               $("#chat-thread").append(`
                   <div class="flex justify-end">
-                    <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-green-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-emerald-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
                       <span style="word-wrap: break-word; overflow-wrap: break-word;">${msg.content}</span>
                       <div class="text-xs text-right opacity-70 mt-1">${msg.timestamp}</div>
                     </div>
@@ -1046,7 +982,7 @@
               if (data.status === "ok") {
                 $("#chat-thread").append(`
                   <div class="flex justify-end">
-                    <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-green-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    <div class="max-w-[70%] rounded-lg px-4 py-2 my-1 bg-emerald-500 text-white" style="word-wrap: break-word; overflow-wrap: break-word;">
                       <span style="word-wrap: break-word; overflow-wrap: break-word;">${message}</span>
                       <div class="text-xs text-right opacity-70 mt-1">${new Date().toLocaleTimeString(
                   [],
@@ -1096,7 +1032,7 @@
           .then(response => response.json())
           .then(data => {
             const admins = data.admins;
-            recipientSelect.innerHTML = '<option value="">Select one of our team to help you</option>';  // Reset dropdown
+            recipientSelect.innerHTML = '<option value="">Select one of our team to help</option>';  // Reset dropdown
 
             admins.forEach(admin => {
               recipientSelect.innerHTML += `<option value="${admin.id}">${admin.username}</option>`;
@@ -1165,6 +1101,27 @@
 
       // Load admin users when the page is loaded
       loadAdminUsers();
+    });
+  </script>
+
+  <!-- for sidebar toggle and badge clearing -->
+  <script>
+    $(document).ready(function () {
+      $("#inbox-toggle").on("click", function (e) {
+        e.preventDefault();
+
+        const sidebar = $("#inbox-sidebar");
+        const isOpen = !sidebar.hasClass("hidden");
+
+        if (isOpen) {
+          sidebar.addClass("hidden").removeClass("translate-x-0").addClass("translate-x-full");
+        } else {
+          sidebar.removeClass("hidden").removeClass("translate-x-full").addClass("translate-x-0");
+          $("#inbox-toggle span.absolute").remove();
+          $("#inbox-messages-list li").removeClass("bg-green-50");
+          $("#inbox-messages-list span.text-green-600").remove();
+        }
+      });
     });
   </script>
 

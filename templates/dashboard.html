@@ -65,6 +65,24 @@
       /* IE/Edge */
     }
 
+    /* Hide scrollbar for Chrome, Safari, Edge */
+    #inbox-messages-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    #inbox-messages-list {
+      scrollbar-width: none;
+    }
+
+    /* Hide scrollbar for all browsers, but still allow scroll */
+    #inbox-messages-list {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      overflow-y: auto;
+      /* Keep scrolling enabled */
+    }
+
     @media (max-width: 768px) {
       #inbox-sidebar {
         max-width: 84.5% !important;
@@ -813,6 +831,12 @@
                     </li>
                   `);
               });
+              // If the sidebar is open, clear badge + "New" highlights
+              if (!$("#inbox-sidebar").hasClass("hidden")) {
+                $("#inbox-toggle span.absolute").remove();
+                inboxList.find("li").removeClass("bg-green-50");
+                inboxList.find("span.text-green-600").remove();
+              }
             } else {
               inboxList.html(
                 '<p class="flex flex-col items-center justify-center h-full min-h-[200px] text-center text-lg text-gray-500 p-3">No messages<br><span class="text-sm mt-1">Messages from the team will be shown here</span></p>'
@@ -1164,6 +1188,27 @@
 
       // Load admin users when the page is loaded
       loadAdminUsers();
+    });
+  </script>
+
+  <!-- for sidebar toggle and badge clearing -->
+  <script>
+    $(document).ready(function () {
+      $("#inbox-toggle").on("click", function (e) {
+        e.preventDefault();
+
+        const sidebar = $("#inbox-sidebar");
+        const isOpen = !sidebar.hasClass("hidden");
+
+        if (isOpen) {
+          sidebar.addClass("hidden").removeClass("translate-x-0").addClass("translate-x-full");
+        } else {
+          sidebar.removeClass("hidden").removeClass("translate-x-full").addClass("translate-x-0");
+          $("#inbox-toggle span.absolute").remove();
+          $("#inbox-messages-list li").removeClass("bg-green-50");
+          $("#inbox-messages-list span.text-green-600").remove();
+        }
+      });
     });
   </script>
 
