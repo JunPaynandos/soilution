@@ -847,7 +847,8 @@
       }
 
       const inboxSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/inbox/"
+        // "ws://" + window.location.host + "/ws/inbox/"
+        (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + "/ws/inbox/"
       );
       inboxSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
@@ -858,8 +859,11 @@
 
           const msg = data.message;
           if (
+            // currentChatUserId &&
+            // parseInt(currentChatUserId) === msg.sender_id
             currentChatUserId &&
-            parseInt(currentChatUserId) === msg.sender_id
+            (parseInt(currentChatUserId) === msg.sender_id ||
+              parseInt(currentChatUserId) === msg.recipient_id)
           ) {
             const isCurrentUser = msg.sender_id == currentUserId;
 

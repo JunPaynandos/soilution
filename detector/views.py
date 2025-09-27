@@ -1586,6 +1586,7 @@ def message_thread(request, user_id):
 
     return JsonResponse({'messages': messages_data})
 
+#1
 @csrf_protect
 @login_required
 def send_message(request, receiver_id):
@@ -1644,6 +1645,72 @@ def send_message(request, receiver_id):
                 "sender_avatar": avatar_url,
             }
         })
+
+#2
+# @csrf_protect
+# @login_required
+# def send_message(request, receiver_id):
+#     if request.method == "POST" and request.user.is_authenticated:
+#         content = request.POST.get("message", "").strip()
+#         if not content:
+#             return JsonResponse({"status": "error", "error": "Empty message"})
+
+#         try:
+#             receiver = User.objects.get(id=receiver_id)
+#         except User.DoesNotExist:
+#             return JsonResponse({"status": "error", "error": "User not found"})
+
+#         msg = Message.objects.create(
+#             sender=request.user,
+#             receiver=receiver,
+#             content=content
+#         )
+
+#         # Format timestamp
+#         timestamp = timesince(msg.timestamp) + " ago"
+
+#         # Get sender profile and avatar
+#         profile = getattr(request.user, 'profile', None)
+#         avatar_url = None
+#         if profile and profile.get_profile_image():
+#             avatar_url = profile.get_profile_image() + "?v=" + str(int(time.time()))
+
+#         # WebSocket payload
+#         message_data = {
+#             "sender_id": request.user.id,
+#             "recipient_id": receiver.id,  # Add recipient_id for frontend filtering
+#             "sender": request.user.username,
+#             "content": msg.content,
+#             "timestamp": timestamp,
+#             "sender_avatar": avatar_url,
+#         }
+
+#         # Get channel layer
+#         channel_layer = get_channel_layer()
+
+#         # Send to receiver's WebSocket group
+#         async_to_sync(channel_layer.group_send)(
+#             f"user_{receiver.id}",
+#             {
+#                 "type": "new_message",
+#                 "message": message_data,
+#             }
+#         )
+
+#         # Send to sender's WebSocket group (important for live update on sender side)
+#         async_to_sync(channel_layer.group_send)(
+#             f"user_{request.user.id}",
+#             {
+#                 "type": "new_message",
+#                 "message": message_data,
+#             }
+#         )
+
+#         return JsonResponse({
+#             "status": "ok",
+#             "message": message_data
+#         })
+
 
 @login_required
 def load_conversation(request, sender_id):

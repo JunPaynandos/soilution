@@ -952,8 +952,12 @@
 
           const msg = data.message;
           if (
+            // currentChatUserId &&
+            // parseInt(currentChatUserId) === msg.sender_id
+
             currentChatUserId &&
-            parseInt(currentChatUserId) === msg.sender_id
+            (parseInt(currentChatUserId) === msg.sender_id ||
+              parseInt(currentChatUserId) === msg.recipient_id)
           ) {
             const isCurrentUser = msg.sender_id == currentUserId;
 
