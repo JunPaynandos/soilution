@@ -30,10 +30,20 @@ class Workspace(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     profile_image = models.URLField(max_length=200, blank=True, null=True)
-    role = models.CharField(max_length=50, choices=[('admin', 'Admin'), ('user', 'User')], default='user')
+    role = models.CharField(
+        max_length=50,
+        choices=[('admin', 'Admin'), ('user', 'User')],
+        default='user'
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')],
+        default='pending'
+    )
+    rejection_reason = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Profile for {self.user.username} - {self.role}"
+        return f"Profile for {self.user.username} - {self.role} ({self.status})"
 
     def get_profile_image(self):
         return self.profile_image
@@ -50,3 +60,32 @@ class Message(models.Model):
 
     def __str__(self):
         return f'Message from {self.sender} to {self.receiver}'
+
+class Log(models.Model):
+    CATEGORY_CHOICES = [
+        ('DEVICE', 'Device Logs'),
+        ('ACTIVITY', 'Activity Logs'),
+        ('SYSTEM', 'System Logs'),
+        ('USER', 'User Interactions'),
+        ('SECURITY', 'Security Events'),
+        ('NOTIFY', 'Notification Logs'),
+    ]
+
+    LEVEL_CHOICES = [
+        ('INFO', 'Info'),
+        ('WARNING', 'Warning'),
+        ('ERROR', 'Error'),
+        ('DEBUG', 'Debug'),
+    ]
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+    level = models.CharField(max_length=10, choices=LEVEL_CHOICES)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    message = models.TextField()
+    source = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f"[{self.get_category_display()}] {self.level} - {self.timestamp}"

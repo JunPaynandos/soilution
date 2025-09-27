@@ -38,6 +38,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator
 from django.db import connection
+from .models import Log
 import json
 import os
 
@@ -172,7 +173,7 @@ def crop_details(request):
             'soil': 'Rich, well-drained loamy soil',
             'harvest_time': 'Year-round in tropical zones'
         },
-        'Munggo': {
+        'munggo': {
             'description': 'A pulse crop rich in protein.',
             'climate': 'Warm, semi-arid',
             'soil': 'Loamy or sandy loam',
@@ -372,35 +373,53 @@ def crop_more_details(request, crop_name):
         return render(request, '404.html', {'message': 'Crop not found!'})
 
 
-def logs(request):
-    user = request.user
-    profile = user.profile
-    profile_picture_url = profile.get_profile_image()
+# def logs(request):
+#     user = request.user
+#     profile = user.profile
+#     profile_picture_url = profile.get_profile_image()
 
-    user_workspaces = Workspace.objects.filter(user=user)
+#     user_workspaces = Workspace.objects.filter(user=user)
 
-    selected_workspace = None
-    selected_workspace_id = request.session.get('selected_workspace_id')
+#     selected_workspace = None
+#     selected_workspace_id = request.session.get('selected_workspace_id')
 
-    if selected_workspace_id:
-        try:
-            selected_workspace = Workspace.objects.get(id=selected_workspace_id, user=user)
-        except Workspace.DoesNotExist:
-            del request.session['selected_workspace_id']
+#     if selected_workspace_id:
+#         try:
+#             selected_workspace = Workspace.objects.get(id=selected_workspace_id, user=user)
+#         except Workspace.DoesNotExist:
+#             del request.session['selected_workspace_id']
 
-    if not selected_workspace:
-        selected_workspace = user_workspaces.first()
-        if selected_workspace:
-            request.session['selected_workspace_id'] = selected_workspace.id
+#     if not selected_workspace:
+#         selected_workspace = user_workspaces.first()
+#         if selected_workspace:
+#             request.session['selected_workspace_id'] = selected_workspace.id
+
+#     context = {
+#         'profile_picture_url': profile_picture_url,
+#         'workspace': user_workspaces,
+#         'selected_workspace': selected_workspace,
+#         'user': user,
+#     }
+
+#     return render(request, 'logs.html', context)
+
+def admin_logs(request):
+    category = request.GET.get('category')
+    level = request.GET.get('level')
+
+    logs = Log.objects.all()
+
+    if category:
+        logs = logs.filter(category=category)
+    if level:
+        logs = logs.filter(level=level)
 
     context = {
-        'profile_picture_url': profile_picture_url,
-        'workspace': user_workspaces,
-        'selected_workspace': selected_workspace,
-        'user': user,
+        'logs': logs[:100],  # Limit to latest 100
+        'selected_category': category,
+        'selected_level': level,
     }
-
-    return render(request, 'logs.html', context)
+    return render(request, 'admin/admin_logs.html', context)
 
 def reports(request):
     user = request.user
@@ -792,15 +811,6 @@ def update_account(request):
         'next': next_url,
     }
 
-    # context = {
-    #     "form": form,
-    #     "user": user,
-    #     "profile_picture_url": profile.get_profile_image(),
-    #     "next": next_url,
-    #     "form_success": form_success,
-    #     "form_submitted": form_submitted,
-    # }
-
     return render(request, 'account_settings.html', context)
 
 def dashboard_settings(request):
@@ -1089,35 +1099,35 @@ def admin_crop_details(request):
 
     return render(request, 'admin/admin_crop_details.html', context)
 
-def admin_logs(request):
-    user = request.user
-    profile = user.profile
-    profile_picture_url = profile.get_profile_image()
+# def admin_logs(request):
+#     user = request.user
+#     profile = user.profile
+#     profile_picture_url = profile.get_profile_image()
 
-    user_workspaces = Workspace.objects.filter(user=user)
+#     user_workspaces = Workspace.objects.filter(user=user)
 
-    selected_workspace = None
-    selected_workspace_id = request.session.get('selected_workspace_id')
+#     selected_workspace = None
+#     selected_workspace_id = request.session.get('selected_workspace_id')
 
-    if selected_workspace_id:
-        try:
-            selected_workspace = Workspace.objects.get(id=selected_workspace_id, user=user)
-        except Workspace.DoesNotExist:
-            del request.session['selected_workspace_id']
+#     if selected_workspace_id:
+#         try:
+#             selected_workspace = Workspace.objects.get(id=selected_workspace_id, user=user)
+#         except Workspace.DoesNotExist:
+#             del request.session['selected_workspace_id']
 
-    if not selected_workspace:
-        selected_workspace = user_workspaces.first()
-        if selected_workspace:
-            request.session['selected_workspace_id'] = selected_workspace.id
+#     if not selected_workspace:
+#         selected_workspace = user_workspaces.first()
+#         if selected_workspace:
+#             request.session['selected_workspace_id'] = selected_workspace.id
 
-    context = {
-        'profile_picture_url': profile_picture_url,
-        'workspace': user_workspaces,
-        'selected_workspace': selected_workspace,
-        'user': user,
-    }
+#     context = {
+#         'profile_picture_url': profile_picture_url,
+#         'workspace': user_workspaces,
+#         'selected_workspace': selected_workspace,
+#         'user': user,
+#     }
 
-    return render(request, 'admin/admin_logs.html', context)
+#     return render(request, 'admin/admin_logs.html', context)
 
 def admin_reports(request):
     user = request.user
@@ -1234,28 +1244,131 @@ def get_pending_accounts(request):
     # Return an error if the method is not GET
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+# def handle_account_action(request):
+#     user_id = request.POST.get('user_id')
+#     action = request.POST.get('action')
+
+#     try:
+#         user = User.objects.get(id=user_id)
+#     except User.DoesNotExist:
+#         messages.error(request, "User not found.")
+#         return redirect('pending_accounts')
+
+#     if action == 'approve':
+#         user.is_active = True
+#         user.save()
+#         messages.success(request, f"User '{user.username}' approved successfully.")
+#     elif action == 'reject':
+#         user.delete()
+#         messages.success(request, f"User '{user.username}' rejected and deleted.")
+#     else:
+#         messages.error(request, "Invalid action selected.")
+
+#     return redirect('pending_accounts')
+
 @user_passes_test(is_admin)
-def approve_account(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
-    user.is_active = True
-    user.save()
+def handle_account_action(request):
+    user_id = request.POST.get('user_id')
+    user = User.objects.get(pk=user_id)
+    profile = user.profile 
+    action = request.POST.get('action')
+    reason = request.POST.get('reason', '').strip()
+    use_default = request.POST.get('use_default')
 
-    domain = 'localhost:8000'
-    subject = "Your account has been approved!"
-    message = render_to_string('account_approved.html', {
-        'user': user,
-        'domain': domain,
-    })
+    if action == 'approve':
+        user.is_active = True
+        profile.status = "approved"
+        profile.rejection_reason = None
+        profile.save()
+        user.save()
 
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [user.email],
-        html_message=message
-    )
+        # Send approval email
+        domain = "localhost:8000"
+        subject = "Your account has been approved!"
+        message = render_to_string(
+            "account_approved.html",
+            {"user": user, "domain": domain},
+        )
 
-    return redirect('pending_accounts')
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            html_message=message,
+        )
+
+        messages.success(request, f"User '{user.username}' approved successfully. Email sent.")
+        return redirect("pending_accounts")
+
+    elif action == 'reject':
+        user.is_active = False  # block login
+        profile.status = "rejected"
+
+
+        # Default rejection message
+        if use_default:
+            reason = (
+                "We regret to inform you that your account registration has been rejected "
+                "because it did not meet our eligibility requirements. "
+                "If you believe this was a mistake, please contact support for assistance."
+            )
+
+        if not reason:
+            reason = "Your account request has been rejected."
+
+        profile.rejection_reason = reason
+        profile.save()
+        user.save()
+
+        # Send rejection email before deleting user
+        domain = 'localhost:8000'
+        subject = "Your account has been rejected"
+        message = render_to_string('account_rejected.html', {
+            'user': user,
+            'reason': reason,
+            'domain': domain,
+        })
+
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            html_message=message
+        )
+
+        # user.delete()
+        messages.success(request, f"User '{user.username}' rejected and deleted. Email sent.")
+        return redirect('pending_accounts')
+
+    else:
+        messages.error(request, "Invalid action selected.")
+        return redirect('pending_accounts')
+
+
+# @user_passes_test(is_admin)
+# def approve_account(request, user_id):
+#     user = get_object_or_404(User, pk=user_id)
+#     user.is_active = True
+#     user.save()
+
+#     domain = 'localhost:8000'
+#     subject = "Your account has been approved!"
+#     message = render_to_string('account_approved.html', {
+#         'user': user,
+#         'domain': domain,
+#     })
+
+#     send_mail(
+#         subject,
+#         message,
+#         settings.DEFAULT_FROM_EMAIL,
+#         [user.email],
+#         html_message=message
+#     )
+
+#     return redirect('pending_accounts')
 
 @login_required
 @user_passes_test(is_admin)

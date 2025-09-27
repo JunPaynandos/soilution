@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" href="{% static 'images/sll2.png' %}" />
   <!-- <link rel="stylesheet" href="{% static 'css/register.css' %}" /> -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       margin: 0;
@@ -312,6 +313,13 @@
       width: 100px;
     }
 
+    @media (max-width: 768px) {
+      #loader svg {
+        width: 3rem;
+        height: 3rem;
+      }
+    }
+
     @media (max-width: 1440px) {
       .navbar {
         position: absolute;
@@ -380,9 +388,8 @@
       .or {
         /* transform: translateX(calc(10.6rem - 100%)); */
         position: absolute;
-        top: 39.3rem;
+        top: 39.55rem;
         left: 50%;
-        height: 20px;
         transform: translateX(-50%)
       }
 
@@ -419,7 +426,7 @@
     </div>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" id="register-form">
       {% csrf_token %}
 
       <div class="input-group">
@@ -492,6 +499,26 @@
         <p>Already a member ? <a href="{% url 'login' %}">Sign In</a></p>
       </div>
     </form>
+
+    <!-- Preloader -->
+    <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-20 h-20 animate-spin">
+        <radialGradient id="a9" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)">
+          <stop offset="0" stop-color="#888"></stop>
+          <stop offset=".3" stop-color="#888" stop-opacity=".9"></stop>
+          <stop offset=".6" stop-color="#888" stop-opacity=".6"></stop>
+          <stop offset=".8" stop-color="#888" stop-opacity=".3"></stop>
+          <stop offset="1" stop-color="#888" stop-opacity="0"></stop>
+        </radialGradient>
+        <circle transform-origin="center" fill="none" stroke="url(#a9)" stroke-width="30" stroke-linecap="round"
+          stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70">
+          <animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2" values="360;0"
+            keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform>
+        </circle>
+        <circle transform-origin="center" fill="none" opacity=".2" stroke="#888" stroke-width="30"
+          stroke-linecap="round" cx="100" cy="100" r="70"></circle>
+      </svg>
+    </div>
   </div>
 
   <script>
@@ -528,6 +555,17 @@
       window.history.replaceState(null, null, window.location.href);
     }
   </script>
+
+  <script>
+    document.getElementById('register-form').addEventListener('submit', function (event) {
+      // Show the loader when the form is submitted
+      document.getElementById('loader').classList.remove('hidden');
+
+      // Disable the submit button to prevent multiple submissions
+      document.querySelector('input[type="submit"]').disabled = true;
+    });
+  </script>
+
 </body>
 
 </html>

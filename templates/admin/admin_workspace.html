@@ -344,6 +344,66 @@
       #sidebarBackdrop:not(.hidden) {
         display: block;
       }
+
+      nav {
+        z-index: 1000;
+      }
+    }
+
+    @media (max-width: 452px) {
+      #searchIcon {
+        right: -5rem;
+      }
+
+      #searchBar {
+        right: -4.8rem;
+      }
+
+      #searchBar.active {
+        width: 360px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      #searchIcon {
+        right: -2rem;
+      }
+
+      #searchBar {
+        right: -1.8rem;
+      }
+
+      #searchBar.active {
+        width: 318px;
+      }
+    }
+
+    @media (max-width: 370px) {
+      #searchIcon {
+        right: -1rem;
+      }
+
+      #searchBar {
+        right: -1rem;
+      }
+
+      #searchBar.active {
+        width: 305px;
+      }
+    }
+
+    @media (max-width: 320px) {
+      #searchIcon {
+        right: 1.6rem;
+      }
+
+      #searchBar {
+        right: 1.6rem;
+      }
+
+      #searchBar.active {
+        width: 260px;
+      }
     }
   </style>
 </head>
@@ -351,7 +411,7 @@
 <body class="bg-white-100">
   <!-- Navbar -->
   <nav
-    class="sticky top-0 bg-white-800 text-black flex justify-between items-center border-b border-solid border-[#aaa] p-2 pl-0 pr-0">
+    class="sticky top-0 bg-white text-black flex justify-between items-center border-b border-solid border-[#aaa] p-2 pl-0 pr-0">
     <!-- left wrapper -->
     <div class="flex items-center ml-2 gap-2">
       <!-- Mobile toggle button -->

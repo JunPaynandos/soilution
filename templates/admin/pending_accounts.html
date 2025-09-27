@@ -131,6 +131,37 @@
       color: #888;
     }
 
+    .message-container {
+      position: absolute;
+      right: 25px;
+      width: 16rem;
+      margin-top: -3rem;
+      text-align: center;
+    }
+
+    .message-container .error-message {
+      color: firebrick;
+      font-size: 16px;
+      background-color: #f8d7da;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #f5c6cb;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-container .info-message {
+      background-color: #e6ffed;
+      border: 1px solid #bee5eb;
+      border-radius: 5px;
+      color: #20a057;
+      padding: 10px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #message-container {
+      transition: opacity 1s ease-out;
+    }
+
     @media (max-width: 768px) {
       #inbox-sidebar {
         max-width: 84.5% !important;
@@ -162,6 +193,11 @@
 
       #sidebarBackdrop:not(.hidden) {
         display: block;
+      }
+
+      #loader svg {
+        width: 3rem;
+        height: 3rem;
       }
     }
   </style>
@@ -450,7 +486,23 @@
     <!-- Main Content -->
     <div
       class="flex-1 lg:px-[14.5rem] py-6 mt-[6rem] md:mt-[8rem] ml-6 group-hover:ml-52 transition-all duration-300 ease-in-out">
-      <h1 class="text-2xl lg:text-3xl font-semibold text-gray-800 mb-6">Pending User Approvals</h1>
+      {% if messages %}
+      <div class="message-container mb-4" id="message-container">
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="error-message bg-red-100 text-red-700 px-4 py-2 rounded mb-2">
+          <h4>{{ message }}</h4>
+        </div>
+        {% else %}
+        <div class="info-message bg-blue-100 text-blue-700 px-4 py-2 rounded mb-2">
+          <h4>{{ message }}</h4>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <h1 class="text-2xl lg:text-3xl font-semibold text-gray-800 mb-6">Pending Accounts</h1>
 
       <div class="w-full overflow-x-auto border border-gray-300 shadow-sm">
         {% if page_obj %}
@@ -460,7 +512,9 @@
               <th class="px-4 py-3">Username</th>
               <th class="px-4 py-3">Email</th>
               <th class="px-4 py-3">Full Name</th>
-              <th class="px-4 py-3">Approve</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Action</th>
+              <th class="px-4 py-3">Rejection Reason</th>
             </tr>
           </thead>
           <tbody id="user-table-body" class=" bg-white divide-y divide-gray-100">
@@ -469,11 +523,36 @@
               <td class="px-4 py-3 whitespace-nowrap">{{ user.username }}</td>
               <td class="px-4 py-3 whitespace-nowrap">{{ user.email }}</td>
               <td class="px-4 py-3 whitespace-nowrap">{{ user.first_name }} {{ user.last_name }}</td>
+              <td class="px-4 py-3 whitespace-nowrap">
+                {% if user.profile.status == "approved" %}
+                <span class="px-2 py-1 text-green-700 bg-green-100 rounded-full text-xs font-medium">Approved</span>
+                {% elif user.profile.status == "rejected" %}
+                <span class="px-2 py-1 text-red-700 bg-red-100 rounded-full text-xs font-medium">Rejected</span>
+                {% else %}
+                <span class="px-2 py-1 text-yellow-700 bg-yellow-100 rounded-full text-xs font-medium">Pending</span>
+                {% endif %}
+              </td>
               <td class="px-4 py-3">
-                <a href="{% url 'approve_account' user.id %}"
-                  class="inline-block bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-2 rounded transition">
-                  Approve
-                </a>
+                <form method="POST" action="{% url 'handle_account_action' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="user_id" value="{{ user.id }}" />
+                  <select name="action" onchange="handleActionChange(this, '{{ user.id }}')"
+                    class="border border-gray-300 text-gray-700 text-xs px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select Action</option>
+                    <option value="approve">Approve</option>
+                    <option value="reject">Reject</option>
+                  </select>
+                </form>
+              </td>
+              <td class="px-4 py-3 whitespace-nowrap">
+                {% if user.profile.status == "rejected" %}
+                <button type="button" class="text-red-600 underline text-xs"
+                  onclick="openReasonModal('{{ user.username }}', '{{ user.profile.rejection_reason|escapejs }}')">
+                  View Reason
+                </button>
+                {% else %}
+                -
+                {% endif %}
               </td>
             </tr>
             {% endfor %}
@@ -489,7 +568,7 @@
           <tbody>
             <tr>
               <td class="px-4 py-4 text-center text-gray-500">
-                No pending accounts to approve.
+                No pending accounts.
               </td>
             </tr>
           </tbody>
@@ -544,8 +623,58 @@
         </div>
       </div>
 
-    </div>
+      <!-- Reject Modal -->
+      <div id="rejectModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6 m-6 md:m-0">
+          <h2 class="text-lg font-semibold mb-4">Reject Account</h2>
+          <form id="rejectForm" method="POST" action="{% url 'handle_account_action' %}">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" id="rejectUserId">
+            <input type="hidden" name="action" value="reject">
 
+            <label class="block text-sm font-medium text-gray-700">Reason</label>
+            <textarea name="reason" id="rejectReason" rows="4"
+              class="w-full border border-gray-300 rounded p-2 text-sm mb-3"
+              placeholder="Enter rejection reason here..."></textarea>
+
+            <div class="flex items-center mb-4">
+              <input type="checkbox" id="useDefaultReason" name="use_default" value="1"
+                class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+              <label for="useDefaultReason" class="ml-2 text-sm text-gray-700">
+                Use default rejection message
+              </label>
+            </div>
+
+            <div class="flex justify-end gap-2">
+              <button type="button" onclick="closeRejectModal()"
+                class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm">
+                Cancel
+              </button>
+              <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
+                Confirm Reject
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Rejection Reason Modal -->
+      <div id="reasonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6 m-6 md:m-0">
+          <h2 class="text-lg font-semibold mb-4">Rejection Reason</h2>
+          <p id="reasonContent" class="text-sm text-gray-700 whitespace-pre-line"></p>
+
+          <div class="flex justify-end mt-4">
+            <button onclick="closeReasonModal()"
+              class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
 
     <!-- Preloader -->
     <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">
@@ -1207,37 +1336,6 @@
   </script>
 
   <!-- <script>
-      function toggleSubmenu(targetId, parentElement) {
-        const allSubmenus = ["submenu", "submenu2"];
-
-        allSubmenus.forEach((id) => {
-          const submenu = document.getElementById(id);
-          const parent = submenu.previousElementSibling;
-          const arrow = parent.querySelector(".arrow-icon");
-
-          if (id === targetId) {
-            const isOpen = submenu.classList.contains("max-h-[500px]");
-
-            if (isOpen) {
-              submenu.classList.remove("max-h-[500px]");
-              submenu.classList.add("max-h-0");
-              arrow.classList.remove("rotate-180");
-            } else {
-              submenu.classList.remove("max-h-0");
-              submenu.classList.add("max-h-[500px]");
-              arrow.classList.add("rotate-180");
-            }
-          } else {
-            submenu.classList.remove("max-h-[500px]");
-            submenu.classList.add("max-h-0");
-            const otherArrow = parent.querySelector(".arrow-icon");
-            otherArrow?.classList.remove("rotate-180");
-          }
-        });
-      }
-    </script> -->
-
-  <!-- <script>
       document.addEventListener("DOMContentLoaded", function () {
         function fetchPendingUsers() {
           fetch("{% url 'get_pending_accounts' %}")
@@ -1298,6 +1396,115 @@
     });
 
   </script>
+
+  <!-- show/hide message for 3 sec -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var messageContainer = document.getElementById("message-container");
+
+      if (messageContainer) {
+        setTimeout(function () {
+          messageContainer.style.opacity = 0;
+          setTimeout(function () {
+            messageContainer.style.display = "none";
+          }, 1000);
+        }, 5000);
+      }
+    });
+  </script>
+
+  <!-- rejection -->
+  <script>
+    // ✅ Show loader
+    function showLoader() {
+      const loader = document.getElementById("loader");
+      loader.classList.remove("hidden");
+      loader.classList.add("flex");
+    }
+
+    function handleActionChange(selectEl, userId) {
+      const action = selectEl.value;
+      const form = selectEl.closest("form");
+
+      if (action === "approve") {
+        showLoader();
+
+        // small delay so loader renders before form submission
+        setTimeout(() => {
+          form.submit();
+        }, 100);
+      } else if (action === "reject") {
+        // open modal instead of submitting
+        openRejectModal(userId);
+        selectEl.value = ""; // reset dropdown
+      }
+    }
+
+    function openRejectModal(userId) {
+      document.getElementById("rejectUserId").value = userId;
+      document.getElementById("rejectReason").value = "";
+      document.getElementById("useDefaultReason").checked = false;
+      document.getElementById("rejectModal").classList.remove("hidden");
+      document.getElementById("rejectModal").classList.add("flex");
+    }
+
+    function closeRejectModal() {
+      document.getElementById("rejectModal").classList.add("hidden");
+      document.getElementById("rejectModal").classList.remove("flex");
+    }
+
+    // ✅ For Confirm Reject button
+    document.addEventListener("DOMContentLoaded", () => {
+      const rejectForm = document.getElementById("rejectForm");
+      if (rejectForm) {
+        rejectForm.addEventListener("submit", (e) => {
+          showLoader();
+        });
+      }
+    });
+
+    //reject reason message
+    function openReasonModal(username, reason) {
+      document.getElementById("reasonContent").innerText = reason;
+      document.getElementById("reasonModal").classList.remove("hidden");
+      document.getElementById("reasonModal").classList.add("flex");
+    }
+
+    function closeReasonModal() {
+      document.getElementById("reasonModal").classList.add("hidden");
+      document.getElementById("reasonModal").classList.remove("flex");
+    }
+  </script>
+
+
+  <!-- <script>
+    function openRejectModal(userId) {
+      document.getElementById("rejectUserId").value = userId;
+      document.getElementById("rejectReason").value = "";
+      document.getElementById("useDefaultReason").checked = false;
+      document.getElementById("rejectModal").classList.remove("hidden");
+      document.getElementById("rejectModal").classList.add("flex");
+    }
+
+    function closeRejectModal() {
+      document.getElementById("rejectModal").classList.add("hidden");
+      document.getElementById("rejectModal").classList.remove("flex");
+    }
+  </script> -->
+
+  <!-- <script>
+    function openReasonModal(username, reason) {
+      document.getElementById("reasonContent").innerText = reason;
+      document.getElementById("reasonModal").classList.remove("hidden");
+      document.getElementById("reasonModal").classList.add("flex");
+    }
+
+    function closeReasonModal() {
+      document.getElementById("reasonModal").classList.add("hidden");
+      document.getElementById("reasonModal").classList.remove("flex");
+    }
+  </script> -->
+
 
 </body>
 

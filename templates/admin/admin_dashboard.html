@@ -170,6 +170,78 @@
 
     <!-- right wrapper -->
     <div class="flex items-center gap-x-4 mr-4">
+      <!-- IoT device -->
+      <!-- <div class="relative flex items-center text-gray-500 hover:text-[#2bdf78]"
+        title="{% if esp32_data %}Device Connected{% else %}Device Disconnected{% endif %}">
+        <i class="bi bi-cpu text-xl"></i>
+        {% if esp32_data %}
+        <span class="absolute top-[-6px] right-[-6px] w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+        {% else %}
+        <span class="absolute top-[-6px] right-[-6px] w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
+        {% endif %}
+      </div> -->
+
+
+      <!-- w/o js -->
+      <div class="relative group">
+        <button class="relative flex items-center text-gray-500 hover:text-[#2bdf78]">
+          <i class="bi bi-cpu text-xl"></i>
+          {% if esp32_data %}
+          <span
+            class="absolute bottom-[-1px] right-[-8px] w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
+          {% else %}
+          <span
+            class="absolute bottom-[-1px] right-[-8px] w-4 h-4 bg-red-500 border-2 border-white rounded-full"></span>
+          {% endif %}
+        </button>
+
+        <div
+          class="absolute right-0 mt-2 w-64 bg-white border border-gray-300 rounded shadow-lg z-50 hidden group-hover:block">
+          <div class="p-4 text-sm text-gray-700">
+            {% if esp32_data %}
+            <p class="font-semibold text-green-600">Device Connected</p>
+            <p class="mt-1 text-gray-600">
+              Last pH reading: <strong>{{ esp32_data.pH }}</strong><br>
+              Timestamp: <strong>{{ esp32_data.timestamp }}</strong>
+            </p>
+            {% else %}
+            <p class="font-semibold text-red-600">Device Disconnected</p>
+            <p class="mt-1 text-gray-600">Waiting for device to connect...</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- w/ js -->
+      <!-- <div class="relative">
+        <button id="device-status-button"
+          class="relative flex items-center text-gray-500 hover:text-[#2bdf78] focus:outline-none">
+          <i class="bi bi-cpu text-xl"></i>
+          {% if esp32_data %}
+          <span class="absolute top-[-6px] right-[-6px] w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+          {% else %}
+          <span class="absolute top-[-6px] right-[-6px] w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
+          {% endif %}
+        </button>
+
+        <div id="device-status-dropdown"
+          class="absolute right-0 mt-2 w-64 bg-white border border-gray-300 rounded shadow-lg z-50 hidden">
+          <div class="p-4 text-sm text-gray-700">
+            {% if esp32_data %}
+            <p class="font-semibold text-green-600">Device Connected</p>
+            <p class="mt-1 text-gray-600">
+              Last pH reading: <strong>{{ esp32_data.pH }}</strong><br>
+              Timestamp: <strong>{{ esp32_data.timestamp }}</strong>
+            </p>
+            {% else %}
+            <p class="font-semibold text-red-600">Device Disconnected</p>
+            <p class="mt-1 text-gray-600">Waiting for device to connect...</p>
+            {% endif %}
+          </div>
+        </div>
+      </div> -->
+
+
       <!-- Inbox Icon -->
       <div class="relative">
         <a href="#" id="inbox-toggle" class="inbox-link relative flex text-gray-500 hover:text-[#2bdf78]">
@@ -216,27 +288,34 @@
             <!-- Conversations will load here via AJAX -->
           </ul>
 
-          <!-- <div class="px-4 py-2 border-t bg-white text-right">
-              <button id="compose-toggle-btn" class="inline-flex gap-1 text-sm text-blue-600 hover:underline">Send us a message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px]">
+          <div class="px-4 py-2 border-t bg-white text-right">
+            <button id="compose-toggle-btn" class="inline-flex gap-1 text-sm text-blue-600 hover:underline">Compose a
+              message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px]">
                 <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
               </svg>
-              </button>
-            </div>
+            </button>
+          </div>
 
-            <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-20px] h-full">
-              <label for="recipient-select" class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select Recipient</label>
-              <select id="recipient-select" class="w-full p-2 border border-gray-300 rounded-lg">
-                <option value="">Select someone to help</option>
-              </select>
+          <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-20px] h-full">
+            <label for="recipient-select"
+              class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select
+              Recipient</label>
+            <select id="recipient-select" class="w-full p-2 border border-gray-300 rounded-lg">
+              <option value="">Select Recipient</option>
+            </select>
 
-              <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
-              <textarea id="message-content" class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg" rows="4" placeholder="Write your message..."></textarea>
+            <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
+            <textarea id="message-content" class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg" rows="4"
+              placeholder="Write your message..."></textarea>
 
-              <button id="send-message-btn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-full cursor-pointer" disabled>Send</button>
-            </div> -->
+            <button id="send-message-btn"
+              class="bg-emerald-500 hover:bg-emerald-600 text-white py-2 px-4 rounded-lg cursor-pointer"
+              disabled>Send</button>
+          </div>
 
           <!-- Message Thread -->
-          <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 bg-gray-50">
+          <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 mt-[-1rem] bg-gray-50">
             <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
               ← Back
             </button>
@@ -253,13 +332,13 @@
           <form id="chat-form" class="hidden p-3 border-t flex items-center bg-white gap-2">
             {% csrf_token %}
             <input type="text" id="chat-input" placeholder="Type a message..."
-              class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
               autocomplete="off" style="
                   word-wrap: break-word;
                   overflow-wrap: break-word;
                   white-space: normal;
                 " />
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full">
+            <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-full">
               Send
             </button>
           </form>
@@ -373,9 +452,17 @@
               </div>
               <span
                 class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
-                Crop_details
+                Crop_list
               </span>
             </a>
+          </li>
+          <li class="mt-2 mb-2 relative flex items-center space-x-4 text-black group cursor-pointer">
+            <a href="#"
+              class="ml-[-6px] px-2 py-2 flex items-center w-full min-w-[2.2rem] hover:bg-gray-200 rounded space-x-2 active-link"><img
+                src="{% static 'images/list.png' %}" alt="" width="18" height="18" /><span
+                class="absolute left-4 opacity-0 group-hover:opacity-100 transition-all">
+                Logs
+              </span></a>
           </li>
           <li class="mt-2 mb-2 relative flex items-center space-x-4 text-black group cursor-pointer">
             <a href="{% url 'reports' %}"
@@ -1160,7 +1247,7 @@
           .then(response => response.json())
           .then(data => {
             const admins = data.admins;
-            recipientSelect.innerHTML = '<option value="">Select one of our team to help you</option>';  // Reset dropdown
+            recipientSelect.innerHTML = '<option value="">Select Recipient</option>';  // Reset dropdown
 
             admins.forEach(admin => {
               recipientSelect.innerHTML += `<option value="${admin.id}">${admin.username}</option>`;
@@ -1263,6 +1350,27 @@
     });
 
   </script>
+
+  <!-- <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const statusButton = document.getElementById("device-status-button");
+      const dropdown = document.getElementById("device-status-dropdown");
+
+      // Toggle dropdown on click
+      statusButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("hidden");
+      });
+
+      // Close dropdown on outside click
+      document.addEventListener("click", function (e) {
+        if (!dropdown.contains(e.target) && !statusButton.contains(e.target)) {
+          dropdown.classList.add("hidden");
+        }
+      });
+    });
+  </script> -->
+
 
 
 </body>

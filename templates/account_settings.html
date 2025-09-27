@@ -111,7 +111,8 @@
     <!-- left wrapper -->
     <div class="flex items-center ml-2 gap-2">
       <div class="flex items-center ml-0">
-        <a href="{% url 'workspace' %}"><img src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" /></a>
+        <a href="{% if user.profile.role == 'admin' %}{% url 'admin_page' %}{% else %}{% url 'workspace' %}{% endif %}"><img
+            src="{% static 'images/sl.png' %}" alt="Logo" class="w-12 h-9 mr-4" /></a>
       </div>
     </div>
 

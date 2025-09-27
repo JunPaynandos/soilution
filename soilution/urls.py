@@ -20,12 +20,12 @@ urlpatterns = [
     path('workspace/dashboard/insights/', views.insights, name='insights'),
     path('workspace/dashboard/crop_details/', views.crop_details, name='crop_details'),
     path('crop/<str:crop_name>/', views.crop_more_details, name='crop_more_details'),
-    path('workspace/dashboard/logs/', views.logs, name='logs'),
+    # path('workspace/dashboard/logs/', views.logs, name='logs'),
     path('workspace/dashboard/reports/', views.reports, name='reports'),
     path('workspace/dashboard_settings/', views.dashboard_settings, name='dashboard_settings'),
     path('workspace/dashboard/admin_insights/', views.admin_insights, name='admin_insights'),
     path('workspace/dashboard/admin_crop_details/', views.admin_crop_details, name='admin_crop_details'),
-    path('workspace/dashboard/admin_logs/', views.admin_logs, name='admin_logs'),
+    # path('workspace/dashboard/admin_logs/', views.admin_logs, name='admin_logs'),
     path('workspace/dashboard/admin_reports/', views.admin_reports, name='admin_reports'),
     path('workspace/admin_dashboard_settings/', views.admin_dashboard_settings, name='admin_dashboard_settings'),
     path('login/', views.login, name='login'),
@@ -62,8 +62,9 @@ urlpatterns = [
     path('get_admin_users/', views.get_admin_users, name='get_admin_users'),
     path('dashboard/pending-accounts/', views.pending_accounts, name='pending_accounts'),
     path('dashboard/pending-accounts/data/', views.get_pending_accounts, name='get_pending_accounts'),
+    path('handle-account-action/', views.handle_account_action, name='handle_account_action'),
     # path('dashboard/pending-accounts/data/', views.pending_accounts_data, name='pending_accounts_data'),
-    path('approve_account/<int:user_id>/', views.approve_account, name='approve_account'),
+    # path('approve_account/<int:user_id>/', views.approve_account, name='approve_account'),
     path('pending_approval/', views.pending_approval, name='pending_approval'), 
     # path('dashboard/pending-account-count/', views.pending_account_count, name='pending_account_count'),
     path('pending-accounts/', views.pending_users, name='pending_users'),
@@ -75,6 +76,7 @@ urlpatterns = [
     # path('users/<int:user_id>/deactivate/', views.deactivate_user, name='deactivate_user'),
     # path('users/<int:user_id>/activate/', views.activate_user, name='activate_user'),
 
+    path('admin_page/logs/', views.admin_logs, name='admin_logs'),
 ]
 
 if settings.DEBUG:

@@ -101,6 +101,7 @@ html, body {
     }
 
     .navbar-nav .nav-item .nav-link {
+      position: relative;
       color: #2bdf78 !important;
       padding: 0.8rem 1.2rem;
       font-size: 1.8rem;
@@ -108,15 +109,31 @@ html, body {
       transition: color 0.3s ease, background-color 0.3s ease;
     }
 
-    .navbar-nav .nav-item .nav-link:hover,
-    .navbar-nav .nav-item .nav-link.active {
-      color: #2bdf78 !important;
-      transition: background-color 0.3s ease-in-out;
-    }
-
     .navbar-nav .nav-item .nav-link.active {
       color: #2bdf78 !important;
       position: relative;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .navbar-nav .nav-item .nav-link::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: rgba(72, 160, 93, 0.5);
+      transform: skew(-20deg);
+      border-radius: 12px;
+      z-index: -1;
+      margin: 0 3px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover::before {
+      opacity: 1;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+      color: #fff !important;
     }
 
     .navbar-nav .nav-item .nav-link.active::after {
@@ -535,6 +552,10 @@ html, body {
         font-weight: 400;
       }
 
+      .navbar-nav .nav-item .nav-link:hover::before {
+        opacity: 0;
+      }
+
       .navbar-nav .nav-item .nav-link.active {
         color: #2bdf78 !important;
         position: relative;
@@ -693,7 +714,16 @@ html, body {
       }
 
       .footer-legal {
-        margin-left: 20px;
+        position: absolute;
+        right: 8rem;
+      }
+
+      .navbar {
+        padding: 1rem 2rem;
+      }
+
+      .about-us {
+        left: -20rem;
       }
     }
   </style>
@@ -865,9 +895,9 @@ html, body {
         <div class="footer-legal">
           <h3>Legal</h3>
           <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Disclaimer</a></li>
+            <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+            <li><a href="{% url 'terms_of_service' %}">Terms of Service</a></li>
+            <li><a href="{% url 'disclaimer' %}">Disclaimer</a></li>
           </ul>
         </div>
       </div>

@@ -13,7 +13,6 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=check_circle" />
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-  <!-- <link rel="stylesheet" href="{% static 'css/index.css' %}" /> -->
   <style>
     /* #navbarBackdrop {
       width: 42rem;
@@ -261,6 +260,7 @@
     }
 
     .navbar-nav .nav-item .nav-link {
+      position: relative;
       color: #2bdf78 !important;
       padding: 0.8rem 1.2rem;
       font-size: 1.8rem;
@@ -268,15 +268,37 @@
       transition: color 0.3s ease, background-color 0.3s ease;
     }
 
-    .navbar-nav .nav-item .nav-link:hover,
-    .navbar-nav .nav-item .nav-link.active {
-      color: #2bdf78 !important;
-      transition: background-color 0.3s ease-in-out;
-    }
-
     .navbar-nav .nav-item .nav-link.active {
       color: #2bdf78 !important;
       position: relative;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .navbar-nav .nav-item .nav-link::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: rgba(72, 160, 93, 0.5);
+      transform: skew(-20deg);
+      border-radius: 12px;
+      z-index: -1;
+      margin: 0 3px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover::before {
+      opacity: 1;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+      /* -webkit-text-stroke: 1px #2bdf78; */
+      /* text-shadow:
+        1px 1px 0px #2bdf78,
+        -1px -1px 0px #2bdf78,
+        1px -1px 0px #2bdf78,
+        -1px 1px 0px #2bdf78; */
+      color: #fff !important;
     }
 
     .navbar-nav .nav-item .nav-link.active::after {
@@ -722,6 +744,7 @@
         top: -4.5rem;
         font-size: 35px;
         font-weight: 800;
+        overflow: hidden;
       }
 
       .section-title img {
@@ -812,6 +835,10 @@
       .navbar-toggler:active {
         outline: none !important;
         box-shadow: none !important;
+      }
+
+      .navbar-nav .nav-item .nav-link:hover::before {
+        opacity: 0;
       }
 
       #logo-img {
@@ -1009,7 +1036,82 @@
       }
 
       .footer-legal {
-        margin-left: 20px;
+        position: absolute;
+        right: 8rem;
+      }
+
+      body {
+        background-size: 70% auto;
+        background-position: calc(100% + 20%) calc(50% - 50%);
+      }
+
+      .navbar {
+        padding: 1rem 2rem;
+      }
+
+      .hero-content {
+        top: 2rem;
+        left: -1.2rem;
+      }
+
+
+      .hero-content h5 {
+        font-size: 1rem;
+      }
+
+      .hero-content h1.main-title {
+        font-size: 2.8rem;
+      }
+
+      .hero-content h1.main-title-2 {
+        font-size: 2.8rem;
+      }
+
+      .hero-content p.hero-desc {
+        font-size: .8rem;
+      }
+
+      .buttons-container {
+        left: -1.2rem;
+      }
+
+      .cta-button a {
+        font-size: 1rem;
+        padding: 15px 30px;
+      }
+
+      .service-card {
+        padding: 0rem;
+      }
+
+      .card-title {
+        font-size: 24px;
+      }
+
+      .card-text {
+        font-size: 16px;
+      }
+
+      .box-container {
+        position: relative;
+        top: -3rem;
+      }
+
+      .box {
+        width: 25rem;
+      }
+
+      .section-title1 h1,
+      .section-title h1 {
+        font-size: 52px;
+      }
+
+      .soil-title {
+        font-size: 20px;
+      }
+
+      .soil-text {
+        font-size: 18px;
       }
     }
   </style>
