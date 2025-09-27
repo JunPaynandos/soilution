@@ -240,3 +240,7 @@ SUPABASE_SERVICE_ROLE_KEY = os.environ.get('SUPABASE_SERVICE_ROLE_KEY')
 
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+CSP_CONNECT_SRC = (
+    "'self'",
+    "wss://shalala-e2sm.onrender.com",  # allow websocket
+)
