@@ -11,6 +11,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -202,6 +203,52 @@
 
     nav {
       background-color: white;
+      z-index: 1000;
+    }
+
+    #chat-form button {
+      width: 80px !important;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      /* IE/Edge */
+    }
+
+    /* Hide scrollbar for Chrome, Safari, Edge */
+    #inbox-messages-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    #inbox-messages-list {
+      scrollbar-width: none;
+    }
+
+    /* Hide scrollbar for all browsers, but still allow scroll */
+    #inbox-messages-list {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      overflow-y: auto;
+      /* Keep scrolling enabled */
+    }
+
+    .hide-scrollbar {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE & Edge */
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari */
     }
 
     @media (max-width: 768px) {
@@ -338,10 +385,6 @@
       .wsm p {
         font-size: 16px !important;
       }
-
-      nav {
-        z-index: 1000;
-      }
     }
 
     @media (max-width: 452px) {
@@ -456,7 +499,7 @@
           <!-- Body that grows to fill available space -->
           <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Message List -->
-            <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
+            <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2 hide-scrollbar">
               <!-- Conversations will load here via AJAX -->
             </ul>
 
@@ -745,6 +788,11 @@
       }
     });
   </script> -->
+
+  <script>
+    const currentUserId = "{{ request.user.id }}";
+    console.log(currentUserId);
+  </script>
 
   <script>
     $(document).ready(function () {
@@ -1171,12 +1219,6 @@
                     </li>
                   `);
               });
-              // If the sidebar is open, clear badge + "New" highlights
-              if (!$("#inbox-sidebar").hasClass("hidden")) {
-                $("#inbox-toggle span.absolute").remove();
-                inboxList.find("li").removeClass("bg-green-50");
-                inboxList.find("span.text-green-600").remove();
-              }
             } else {
               inboxList.html(
                 '<p class="flex flex-col items-center justify-center h-full min-h-[200px] text-center text-lg text-gray-500 p-3">No messages<br><span class="text-sm mt-1">Messages from the team will be shown here</span></p>'
@@ -1531,8 +1573,32 @@
     });
   </script>
 
-  <!-- for sidebar toggle and badge clearing -->
+  <!-- preloader in sidebar link -->
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loader = document.getElementById("loader");
+      const sidebarLinks = document.querySelectorAll("#sidebar a");
+
+      sidebarLinks.forEach(link => {
+        link.addEventListener("click", () => {
+          loader.classList.remove("hidden"); // Show the preloader
+        });
+      });
+    });
+  </script>
+
+  <script>
+    window.addEventListener("pageshow", function (event) {
+      // Always hide the loader when coming back to this page
+      const loader = document.getElementById("loader");
+      if (loader) {
+        loader.classList.add("hidden");
+      }
+    });
+  </script>
+
+  <!-- for sidebar toggle and badge clearing -->
+  <!-- <script>
     $(document).ready(function () {
       $("#inbox-toggle").on("click", function (e) {
         e.preventDefault();
@@ -1550,7 +1616,7 @@
         }
       });
     });
-  </script>
+  </script> -->
 </body>
 
 </html>

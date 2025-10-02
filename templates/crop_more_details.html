@@ -9,6 +9,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for Firefox */
+        .hide-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            /* IE/Edge */
+        }
+
+        /* Hide scrollbar for Chrome, Safari, Edge */
+        #inbox-messages-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for Firefox */
+        #inbox-messages-list {
+            scrollbar-width: none;
+        }
+
+        /* Hide scrollbar for all browsers, but still allow scroll */
+        #inbox-messages-list {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            overflow-y: auto;
+            /* Keep scrolling enabled */
+        }
+
+        .hide-scrollbar {
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE & Edge */
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari */
+        }
+    </style>
 </head>
 
 <body>
@@ -369,6 +414,11 @@
         </div>
 
     </div>
+
+    <script>
+        const currentUserId = "{{ request.user.id }}";
+        console.log(currentUserId);
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -908,7 +958,7 @@
     </script>
 
     <!-- for sidebar toggle and badge clearing -->
-    <script>
+    <!-- <script>
         $(document).ready(function () {
             $("#inbox-toggle").on("click", function (e) {
                 e.preventDefault();
@@ -926,7 +976,7 @@
                 }
             });
         });
-    </script>
+    </script> -->
 
     <!-- preloader in sidebar link -->
     <script>

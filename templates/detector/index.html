@@ -97,6 +97,10 @@
       left: -15rem;
     }
 
+    .br-md-only {
+      display: none;
+    }
+
     .hero-content h5,
     .hero-content h1,
     .hero-desc {
@@ -278,7 +282,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background-color: rgba(72, 160, 93, 0.5);
+      /* background-color: rgba(72, 160, 93, 0.5); */
       transform: skew(-20deg);
       border-radius: 12px;
       z-index: -1;
@@ -298,7 +302,7 @@
         -1px -1px 0px #2bdf78,
         1px -1px 0px #2bdf78,
         -1px 1px 0px #2bdf78; */
-      color: #fff !important;
+      color: #96eb9d !important;
     }
 
     .navbar-nav .nav-item .nav-link.active::after {
@@ -568,10 +572,6 @@
       margin-left: 240px;
     }
 
-    .footer-support a {
-      color: #2bdf78;
-    }
-
     .footer-social ul,
     .footer-legal ul {
       list-style-type: none;
@@ -584,13 +584,15 @@
     }
 
     .footer-social a,
-    .footer-legal a {
+    .footer-legal a,
+    .footer-support a {
       text-decoration: none;
       color: #2bdf78;
     }
 
     .footer-social a:hover,
-    .footer-legal a:hover {
+    .footer-legal a:hover,
+    .footer-support a:hover {
       text-decoration: underline;
       color: #2bdf78;
     }
@@ -1022,6 +1024,118 @@
       }
     }
 
+    @media (min-width: 768px) and (max-width: 1023px) {
+      #hero-desc {
+        width: 30rem;
+      }
+
+      .card-responsive-margin {
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+
+      .card-title {
+        font-size: 24px;
+      }
+
+      .card-text {
+        font-size: 16px;
+      }
+
+      .br-md-only {
+        display: inline;
+      }
+
+      .section-title h1 {
+        top: -20px;
+      }
+
+      .box-container {
+        padding-left: 50px;
+        padding-right: 50px;
+      }
+
+      .box-2 {
+        top: -130px;
+      }
+
+      .box-3 {
+        top: -170px;
+      }
+
+      .box-4 {
+        top: -200px;
+      }
+
+      .soil-title {
+        font-size: 24px;
+      }
+
+      .soil-text {
+        font-size: 16px;
+      }
+
+      footer {
+        top: -150px;
+      }
+
+      .footer-container {
+        height: 10rem;
+        overflow: hidden;
+      }
+
+      .footer-links-container {
+        top: -6.5rem;
+        left: 2rem;
+      }
+
+      .footer-support {
+        margin-left: 14.5rem;
+      }
+
+      .footer-support p {
+        display: block;
+      }
+
+      .footer-legal {
+        position: absolute;
+        right: 8.5rem;
+      }
+    }
+
+    @media (min-width: 1024px) and (max-width: 1439px) {
+      body {
+        background-size: 70% 90% !important;
+        background-position: calc(100% + 20%) calc(50% - 50%) !important;
+      }
+
+      .container2 {
+        min-height: 10rem !important;
+      }
+
+      .carousel-item {
+        margin: 0;
+        /* height: 600px; */
+      }
+
+      .service-image {
+        width: 180px;
+      }
+
+      .service-card {
+        height: 450px;
+        /* or adjust as needed */
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .card-body .card-title {
+        font-size: 18px;
+      }
+    }
+
     @media (min-width: 1024px) and (max-width:1440px) {
       .footer-about {
         padding-left: 60px;
@@ -1042,7 +1156,7 @@
 
       body {
         background-size: 70% auto;
-        background-position: calc(100% + 20%) calc(50% - 50%);
+        background-position: calc(100% + 20%) calc(50% - 20px);
       }
 
       .navbar {
@@ -1192,20 +1306,21 @@
               <div class="carousel-item active">
                 <div class="row">
                   <div class="col-md-4 col-12 mb-3">
-                    <div class="card service-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card service-card card-responsive-margin" data-aos="fade-up" data-aos-delay="400">
                       <div class="line"></div>
                       <img class="img-fluid service-image" alt="100%x280" src="{% static 'images/step1g.png' %}" />
                       <div class="card-body">
                         <h4 class="card-title">Connect IoT Device</h4>
                         <p class="card-text">
                           Ensure your soil sensor is connected to your device
+                          <span class="br-md-only"><br></span>
                           via bluetooth or usb
                         </p>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-4 col-12 mb-3">
-                    <div class="card service-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card service-card card-responsive-margin" data-aos="fade-up" data-aos-delay="400">
                       <div class="line"></div>
                       <img class="img-fluid service-image" alt="100%x280" src="{% static 'images/step2g.png' %}" />
                       <div class="card-body card-two">
@@ -1218,7 +1333,7 @@
                     </div>
                   </div>
                   <div class="col-md-4 col-12 mb-3">
-                    <div class="card service-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card service-card card-responsive-margin" data-aos="fade-up" data-aos-delay="400">
                       <div class="line"></div>
                       <img class="img-fluid service-image" alt="100%x280" src="{% static 'images/step3g.png' %}" />
                       <div class="card-body">
@@ -1319,7 +1434,6 @@
       </div>
     </div>
   </div>
-
 
   <footer>
     <div class="footer-container">

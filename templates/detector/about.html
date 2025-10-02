@@ -119,7 +119,7 @@ html, body {
       content: "";
       position: absolute;
       inset: 0;
-      background-color: rgba(72, 160, 93, 0.5);
+      /* background-color: rgba(72, 160, 93, 0.5); */
       transform: skew(-20deg);
       border-radius: 12px;
       z-index: -1;
@@ -133,7 +133,8 @@ html, body {
     }
 
     .navbar-nav .nav-item .nav-link:hover {
-      color: #fff !important;
+      /* -webkit-text-stroke: 1px #2bdf78; */
+      color: #96eb9d !important;
     }
 
     .navbar-nav .nav-item .nav-link.active::after {
@@ -445,13 +446,15 @@ html, body {
     }
 
     .footer-social a,
-    .footer-legal a {
+    .footer-legal a,
+    .footer-support a {
       text-decoration: none;
       color: #2bdf78;
     }
 
     .footer-social a:hover,
-    .footer-legal a:hover {
+    .footer-legal a:hover,
+    .footer-support a:hover {
       text-decoration: underline;
       color: #2bdf78;
     }
@@ -700,6 +703,119 @@ html, body {
       }
     }
 
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .section {
+        flex-direction: column !important;
+      }
+
+      .sec-leftside h1,
+      .sec-leftside p,
+      .sec-rightside h1,
+      .sec-rightside p,
+      .leftside-shm h1,
+      .leftside-shm p {
+        width: 90vw;
+        margin: 0 !important;
+      }
+
+      .sec-leftside,
+      .sec-rightside,
+      .leftside-shm {
+        padding-left: 25px;
+      }
+
+      .team-member h3 {
+        font-size: 19px;
+      }
+
+      .image-container {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+      }
+
+      .rounded-circle {
+        width: 150px !important;
+        height: 150px !important;
+      }
+
+      .footer-container {
+        height: 10rem;
+        overflow: hidden;
+      }
+
+      .footer-links-container {
+        top: -6.5rem;
+        left: 2rem;
+      }
+
+      .footer-support {
+        margin-left: 14.5rem;
+      }
+
+      .footer-support p {
+        display: block;
+      }
+
+      .footer-legal {
+        position: absolute;
+        right: 8.5rem;
+      }
+    }
+
+    @media (min-width: 1024px) and (max-width: 1439px) {
+
+      .div-section .about-us {
+        left: -15rem;
+      }
+
+      .div-section .lead {
+        font-size: 60px;
+      }
+
+      .div-section .about-desc {
+        left: .3rem;
+        width: 25rem;
+      }
+
+      .about-content .wis-title,
+      .about-content h1 {
+        font-size: 40px;
+      }
+
+      .about-content p {
+        font-size: 20px;
+      }
+
+      .wis {
+        left: 1rem;
+        height: 15rem;
+      }
+
+      .sv1 {
+        height: 20rem;
+      }
+
+      iframe {
+        height: 25rem;
+      }
+
+      .team-member h3 {
+        font-size: 19px;
+      }
+
+      .image-container {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+      }
+
+      .rounded-circle {
+        width: 180px !important;
+        height: 180px !important;
+      }
+    }
+
     @media (min-width: 1024px) and (max-width:1440px) {
       .footer-about {
         padding-left: 60px;
@@ -887,7 +1003,7 @@ html, body {
           <h3>Customer Support</h3>
           <p>
             Email:
-            <a href="#">soilution42@gmail.com</a>
+            <a href="{% url 'contact_support' %}">soilution42@gmail.com</a>
           </p>
           <p>Phone: <a href="#">+63 9784 324 5766</a></p>
         </div>

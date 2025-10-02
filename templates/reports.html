@@ -59,6 +59,47 @@
       animation: fade-in-down 0.3s ease-out;
     }
 
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      /* IE/Edge */
+    }
+
+    /* Hide scrollbar for Chrome, Safari, Edge */
+    #inbox-messages-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    #inbox-messages-list {
+      scrollbar-width: none;
+    }
+
+    /* Hide scrollbar for all browsers, but still allow scroll */
+    #inbox-messages-list {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      overflow-y: auto;
+      /* Keep scrolling enabled */
+    }
+
+    .hide-scrollbar {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE & Edge */
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari */
+    }
+
     @media (max-width:768px) {
       #inbox-sidebar {
         max-width: 84.5% !important;
@@ -586,6 +627,11 @@
     document.addEventListener('DOMContentLoaded', function () {
       populateCropTable(cropHistoryData);
     });
+  </script>
+
+  <script>
+    const currentUserId = "{{ request.user.id }}";
+    console.log(currentUserId);
   </script>
 
   <script>
@@ -1126,7 +1172,7 @@
   </script>
 
   <!-- for sidebar toggle and badge clearing -->
-  <script>
+  <!-- <script>
     $(document).ready(function () {
       $("#inbox-toggle").on("click", function (e) {
         e.preventDefault();
@@ -1144,7 +1190,7 @@
         }
       });
     });
-  </script>
+  </script> -->
 
   <!-- preloader in sidebar link -->
   <script>

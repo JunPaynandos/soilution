@@ -64,6 +64,47 @@
       animation: fade-in-down 0.3s ease-out;
     }
 
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      /* IE/Edge */
+    }
+
+    /* Hide scrollbar for Chrome, Safari, Edge */
+    #inbox-messages-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    #inbox-messages-list {
+      scrollbar-width: none;
+    }
+
+    /* Hide scrollbar for all browsers, but still allow scroll */
+    #inbox-messages-list {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      overflow-y: auto;
+      /* Keep scrolling enabled */
+    }
+
+    .hide-scrollbar {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE & Edge */
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari */
+    }
+
     @media (max-width: 768px) {
       #inbox-sidebar {
         max-width: 84.5% !important;
@@ -143,7 +184,8 @@
 
         <!-- Messenger like Sidebar -->
         <div id="inbox-sidebar"
-          class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col">
+          class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col"
+          style="height: 100dvh;">
           <!-- sidebar preloader -->
           <div id="loader2" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 200 200">
@@ -171,7 +213,7 @@
           </div>
 
           <!-- Body that grows to fill available space -->
-          <div class="flex-1 flex flex-col overflow-hidden">
+          <div class="flex-1 flex flex-col overflow-y-auto">
             <!-- Message List -->
             <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
               <!-- Conversations will load here via AJAX -->
@@ -454,6 +496,11 @@
     </div>
 
   </div>
+
+  <script>
+    const currentUserId = "{{ request.user.id }}";
+    console.log(currentUserId);
+  </script>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -993,7 +1040,7 @@
   </script>
 
   <!-- for sidebar toggle and badge clearing -->
-  <script>
+  <!-- <script>
     $(document).ready(function () {
       $("#inbox-toggle").on("click", function (e) {
         e.preventDefault();
@@ -1011,7 +1058,7 @@
         }
       });
     });
-  </script>
+  </script> -->
 
   <!-- preloader in sidebar link -->
   <script>
@@ -1098,6 +1145,26 @@
       }
     }
   </script>
+
+  <script>
+    // Optional JS to ensure input is scrolled into view
+    document.getElementById("chat-input").addEventListener("focus", function () {
+      setTimeout(() => {
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300); // Delay allows keyboard to open
+    });
+
+    const chatInput = document.getElementById("chat-input");
+    const chatContainer = document.getElementById("chat-thread");
+
+    chatInput.addEventListener("focus", () => {
+      setTimeout(() => {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 300);
+    });
+
+  </script>
+
 
 </body>
 

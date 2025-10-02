@@ -83,6 +83,18 @@
       /* Keep scrolling enabled */
     }
 
+    .hide-scrollbar {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE & Edge */
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari */
+    }
+
     @media (max-width: 768px) {
       #inbox-sidebar {
         max-width: 84.5% !important;
@@ -159,7 +171,8 @@
 
         <!-- Messenger like Sidebar -->
         <div id="inbox-sidebar"
-          class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col">
+          class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col"
+          style="height: 100dvh;">
           <!-- sidebar preloader -->
           <div id="loader2" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 200 200">
@@ -187,9 +200,9 @@
           </div>
 
           <!-- Body that grows to fill available space -->
-          <div class="flex-1 flex flex-col overflow-hidden">
+          <div class="flex-1 flex flex-col overflow-y-auto">
             <!-- Message List -->
-            <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
+            <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2 hide-scrollbar">
               <!-- Conversations will load here via AJAX -->
             </ul>
 
@@ -315,7 +328,6 @@
         </div>
       </div>
     </div>
-
   </nav>
 
   <div class="flex flex-1">
@@ -831,12 +843,6 @@
                     </li>
                   `);
               });
-              // If the sidebar is open, clear badge + "New" highlights
-              if (!$("#inbox-sidebar").hasClass("hidden")) {
-                $("#inbox-toggle span.absolute").remove();
-                inboxList.find("li").removeClass("bg-green-50");
-                inboxList.find("span.text-green-600").remove();
-              }
             } else {
               inboxList.html(
                 '<p class="flex flex-col items-center justify-center h-full min-h-[200px] text-center text-lg text-gray-500 p-3">No messages<br><span class="text-sm mt-1">Messages from the team will be shown here</span></p>'
@@ -1193,22 +1199,20 @@
 
   <!-- for sidebar toggle and badge clearing -->
   <script>
-    $(document).ready(function () {
-      $("#inbox-toggle").on("click", function (e) {
-        e.preventDefault();
+    $("#inbox-toggle").on("click", function (e) {
+      e.preventDefault();
 
-        const sidebar = $("#inbox-sidebar");
-        const isOpen = !sidebar.hasClass("hidden");
+      const sidebar = $("#inbox-sidebar");
+      const isOpen = !sidebar.hasClass("hidden");
 
-        if (isOpen) {
-          sidebar.addClass("hidden").removeClass("translate-x-0").addClass("translate-x-full");
-        } else {
-          sidebar.removeClass("hidden").removeClass("translate-x-full").addClass("translate-x-0");
-          $("#inbox-toggle span.absolute").remove();
-          $("#inbox-messages-list li").removeClass("bg-green-50");
-          $("#inbox-messages-list span.text-green-600").remove();
-        }
-      });
+      if (isOpen) {
+        sidebar.addClass("hidden").removeClass("translate-x-0").addClass("translate-x-full");
+      } else {
+        sidebar.removeClass("hidden").removeClass("translate-x-full").addClass("translate-x-0");
+        $("#inbox-toggle span.absolute").remove();
+        $("#inbox-messages-list li").removeClass("bg-green-50");
+        $("#inbox-messages-list span.text-green-600").remove();
+      }
     });
   </script>
 
@@ -1255,6 +1259,24 @@
     });
   </script> -->
 
+  <script>
+    // Optional JS to ensure input is scrolled into view
+    document.getElementById("chat-input").addEventListener("focus", function () {
+      setTimeout(() => {
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300); // Delay allows keyboard to open
+    });
+
+    const chatInput = document.getElementById("chat-input");
+    const chatContainer = document.getElementById("chat-thread");
+
+    chatInput.addEventListener("focus", () => {
+      setTimeout(() => {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 300);
+    });
+
+  </script>
 
 </body>
 

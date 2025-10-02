@@ -196,13 +196,15 @@
         }
 
         .footer-social a,
-        .footer-legal a {
+        .footer-legal a,
+        .footer-support a {
             text-decoration: none;
             color: #2bdf78;
         }
 
         .footer-social a:hover,
-        .footer-legal a:hover {
+        .footer-legal a:hover,
+        .footer-support a:hover {
             text-decoration: underline;
             color: #2bdf78;
         }
@@ -385,7 +387,36 @@
             }
         }
 
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .footer-container {
+                height: 10rem;
+                overflow: hidden;
+            }
+
+            .footer-links-container {
+                top: -6.5rem;
+                left: 2rem;
+            }
+
+            .footer-support {
+                margin-left: 14.5rem;
+            }
+
+            .footer-support p {
+                display: block;
+            }
+
+            .footer-legal {
+                position: absolute;
+                right: 8.5rem;
+            }
+        }
+
         @media (min-width: 1024px) and (max-width:1440px) {
+            footer {
+                overflow: hidden;
+            }
+
             .footer-about {
                 padding-left: 60px;
             }

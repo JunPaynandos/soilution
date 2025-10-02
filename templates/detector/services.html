@@ -84,7 +84,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background-color: rgba(72, 160, 93, 0.5);
+      /* background-color: rgba(72, 160, 93, 0.5); */
       transform: skew(-20deg);
       border-radius: 12px;
       z-index: -1;
@@ -98,7 +98,7 @@
     }
 
     .navbar-nav .nav-item .nav-link:hover {
-      color: #fff !important;
+      color: #96eb9d !important;
     }
 
     .navbar-nav .nav-item .nav-link.active::after {
@@ -300,13 +300,15 @@
     }
 
     .footer-social a,
-    .footer-legal a {
+    .footer-legal a,
+    .footer-support a {
       text-decoration: none;
       color: #2bdf78;
     }
 
     .footer-social a:hover,
-    .footer-legal a:hover {
+    .footer-legal a:hover,
+    .footer-support a:hover {
       text-decoration: underline;
       color: #2bdf78;
     }
@@ -505,7 +507,78 @@
       }
     }
 
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .footer-container {
+        height: 10rem;
+        overflow: hidden;
+      }
+
+      .footer-links-container {
+        top: -6.5rem;
+        left: 2rem;
+      }
+
+      .footer-support {
+        margin-left: 14.5rem;
+      }
+
+      .footer-support p {
+        display: block;
+      }
+
+      .footer-legal {
+        position: absolute;
+        right: 8.5rem;
+      }
+    }
+
+    @media (min-width: 1024px) and (max-width: 1439px) {
+      body {
+        background-position: right 80% !important;
+      }
+
+      .div-section .about-us {
+        left: -15rem;
+      }
+
+      .div-section .lead {
+        font-size: 60px;
+      }
+
+      .div-section .service-desc {
+        left: .3rem;
+      }
+    }
+
     @media (min-width: 1024px) and (max-width:1440px) {
+
+      #features .row,
+      #benefit .row {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      #features .col-md-6,
+      #benefit .col-md-6 {
+        display: flex;
+      }
+
+      #features .feature-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+        width: 100%;
+      }
+
+      #features .feature-item img,
+      #benefit .feature-item img {
+        align-self: center;
+      }
+
       .footer-about {
         padding-left: 60px;
       }
@@ -709,7 +782,7 @@
           <h3>Customer Support</h3>
           <p>
             Email:
-            <a href="#">soilution42@gmail.com</a>
+            <a href="{% url 'contact_support' %}">soilution42@gmail.com</a>
           </p>
           <p>Phone: <a href="#">+63 9784 324 5766</a></p>
         </div>
