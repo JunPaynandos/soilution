@@ -161,7 +161,7 @@
 
     .form-footer {
       position: relative;
-      top: 30px;
+      top: -40px;
       text-align: center;
       font-size: 16px;
       padding: 10px 0;
@@ -222,7 +222,7 @@
 
     .login-with-google-btn {
       position: relative;
-      top: 14px;
+      top: -39px;
       transition: background-color 0.3s, box-shadow 0.3s;
       padding: 14px 16px 14px 28px;
       border: 1px solid #aaa;
@@ -266,33 +266,32 @@
       }
     }
 
-    .hr {
+    .separator {
       position: relative;
-      top: 5px;
-    }
-
-    .or {
-      position: absolute;
-      top: 45rem;
-      left: 50%;
-      font-size: 12px;
-      font-weight: 700;
-      color: #3d3d3d;
-      background-color: white;
-      padding: 0 8px 0 8px;
-      transform: translateX(-50%)
-        /* position: relative;
-      top: -17px;
+      top: -16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      bottom: -5px;
+      margin: 2rem 0;
+      /* adjust as needed */
+    }
+
+    .hr {
+      width: 100%;
+      border: none;
+      border-top: 1px solid #ccc;
+      position: relative;
+      z-index: 1;
+    }
+
+    .or {
+      background-color: white;
+      padding: 0 8px;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 700;
       color: #3d3d3d;
-      background: white;
-      width: 40px;
-      transform: translateX(calc(18.3rem - 100%)); */
+      position: absolute;
+      z-index: 2;
     }
 
     .navbar {
@@ -375,23 +374,22 @@
         font-size: 13px;
       }
 
-      .form-footer {
+      /* .form-footer {
         position: relative;
         top: 10px;
         margin-bottom: 30px;
-      }
+      } */
 
       .form-footer p {
         font-size: 12px;
       }
 
-      .or {
-        /* transform: translateX(calc(10.6rem - 100%)); */
+      /* .or {
         position: absolute;
         top: 39.55rem;
         left: 50%;
         transform: translateX(-50%)
-      }
+      } */
 
       #logo-img {
         width: 45px;
@@ -482,9 +480,9 @@
 
       <input type="submit" value="Sign Up" id="btn" />
 
-      <hr class="hr" />
-      <div class="or">
-        <p>OR</p>
+      <div class="separator">
+        <hr class="hr" />
+        <span class="or">OR</span>
       </div>
 
       <div class="d-flex">

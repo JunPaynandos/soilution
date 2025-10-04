@@ -72,6 +72,37 @@
       animation: fade-in-down 0.3s ease-out;
     }
 
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    #inbox-messages-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    #inbox-messages-list {
+      scrollbar-width: none;
+    }
+
+    #inbox-messages-list {
+      -ms-overflow-style: none;
+      overflow-y: auto;
+    }
+
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
     @media (max-width: 768px) {
       .account-container {
         position: relative;
@@ -130,9 +161,11 @@
           {% endif %}
         </a>
 
+
         <!-- Messenger like Sidebar -->
         <div id="inbox-sidebar"
-          class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col">
+          class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col"
+          style="height: 100dvh;">
           <!-- sidebar preloader -->
           <div id="loader2" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 200 200">
@@ -159,85 +192,118 @@
             </button>
           </div>
 
-          <!-- Message List -->
-          <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
-            <!-- Conversations will load here via AJAX -->
-          </ul>
+          <!-- Body that grows to fill available space -->
+          <div class="flex-1 flex flex-col overflow-y-auto">
+            <!-- Message List -->
+            <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
+              <!-- Conversations will load here via AJAX -->
+            </ul>
 
-          <div class="px-4 py-2 border-t bg-white text-right">
-            <button id="compose-toggle-btn" class="inline-flex gap-1 text-sm text-blue-600 hover:underline">Send us a
-              message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px]">
-                <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
-              </svg>
-            </button>
-          </div>
-
-          <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-20px] h-full">
-            <label for="recipient-select"
-              class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select
-              Recipient</label>
-            <select id="recipient-select" class="w-full p-2 border border-gray-300 rounded-lg">
-              <option value="">Select someone to help</option>
-            </select>
-
-            <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
-            <textarea id="message-content" class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg" rows="4"
-              placeholder="Write your message..."></textarea>
-
-            <button id="send-message-btn"
-              class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-full cursor-pointer"
-              disabled>Send</button>
-          </div>
-
-          <!-- Message Thread -->
-          <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 bg-gray-50">
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
-              ← Back
-            </button>
-            <!-- Messages will be dynamically loaded here -->
-            <p class="text-sm text-gray-500 text-center">
-              Select a conversation
-            </p>
-            <div id="typing-indicator" class="text-sm text-gray-500 italic px-4 py-1 hidden">
-              Typing...
+            <div class="px-4 py-4 border-t bg-white text-right">
+              <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">
+                Send new message<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="w-[1em] h-[1em] mt-[3px] mr-1">
+                  <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
+                </svg>
+              </button>
             </div>
+
+            <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-3rem] h-full">
+              <label for="recipient-select"
+                class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select
+                Recipient</label>
+              <select id="recipient-select"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                <option value="">Select someone to help</option>
+              </select>
+
+              <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
+              <textarea id="message-content"
+                class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                rows="4" placeholder="Write your message..."></textarea>
+
+              <div class="flex justify-end mt-4">
+                <button id="send-message-btn"
+                  class="bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-8 rounded-lg cursor-pointer" disabled>
+                  Send
+                </button>
+              </div>
+            </div>
+
+            <!-- Message Thread -->
+            <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 mt-[-3rem] bg-gray-50">
+              <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
+                ← Back
+              </button>
+              <!-- Messages will be dynamically loaded here -->
+              <p class="text-sm text-gray-500 text-center">
+                Select a conversation
+              </p>
+              <div id="typing-indicator" class="text-sm text-gray-500 italic px-4 py-1 hidden">
+                Typing...
+              </div>
+            </div>
+
+            <!-- Message Input -->
+            <form id="chat-form" class="hidden p-3 border-t flex items-center sticky bottom-0 z-100 bg-white gap-2">
+              {% csrf_token %}
+              <textarea id="chat-input" placeholder="Type a message..."
+                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none overflow-y-scroll h-14 max-h-24 leading-snug text-md hide-scrollbar"
+                rows="1" style="white-space: pre-wrap; overflow-wrap: break-word;"></textarea>
+              <button type="submit"
+                class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-4 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                Send
+              </button>
+            </form>
           </div>
-
-          <!-- Message Input -->
-          <form id="chat-form" class="hidden p-3 border-t flex items-center bg-white gap-2">
-            {% csrf_token %}
-            <input type="text" id="chat-input" placeholder="Type a message..."
-              class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              autocomplete="off" style="
-                  word-wrap: break-word;
-                  overflow-wrap: break-word;
-                  white-space: normal;
-                " />
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full">
-              Send
-            </button>
-          </form>
         </div>
-
-        <!-- <div
-            id="inbox-backdrop"
-            class="fixed inset-0 bg-black bg-opacity-30 z-40 hidden"
-          ></div> -->
       </div>
 
       <!-- Notification Bell -->
       <div class="relative">
         <button id="bell-button" class="relative flex text-gray-500 hover:text-[#2bdf78] mr-[-12px]">
           <i class="bi bi-bell-fill text-xl"></i>
-          <span id="pending-badge"
+          <!-- <span id="pending-badge"
             class="absolute top-[-5px] right-[5px] bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
             0
+          </span> -->
+          {% if user.profile and user.profile.role == 'admin' %}
+          <span id="pending-badge"
+            class="absolute top-[-5px] right-[-5px] bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">
+            0
           </span>
+          {% endif %}
+          </a>
+
         </button>
 
         <!-- Dropdown -->
+
         <div id="notification-dropdown"
+          class="absolute right-[-20px] mt-2 w-72 bg-white border border-gray-200 rounded shadow-lg hidden z-[1]">
+          <div class="p-4 border-b text-sm font-bold text-gray-700">
+            Notifications
+          </div>
+          {% if user.profile and user.profile.role == 'admin' %}
+          <ul id="notification-list" class="max-h-60 overflow-y-auto text-sm divide-y divide-gray-100">
+            <li class="p-4 text-gray-500 text-center">Loading...</li>
+          </ul>
+          <a class="p-4 border-t text-xs flex justify-center font-semibold text-gray-700"
+            href="{% url 'pending_accounts' %}">
+            See All
+          </a>
+          {% else %}
+          <div class="p-4 text-sm text-gray-500 text-center">
+            Loading...
+          </div>
+          <a class="p-4 border-t text-xs flex justify-center font-semibold text-gray-700" href="#">
+            See All
+          </a>
+          {% endif %}
+        </div>
+
+        <!-- <div id="notification-dropdown"
           class="absolute right-[-20px] mt-2 w-72 bg-white border border-gray-400 rounded shadow-lg hidden">
           <div class="p-4 border-b text-sm font-semibold text-gray-700">
             Notifications
@@ -245,14 +311,13 @@
           <ul id="notification-list" class="max-h-60 overflow-y-auto text-sm divide-y divide-gray-100">
             <li class="p-4 text-gray-500 text-center">Loading...</li>
           </ul>
+        </div> -->
 
-        </div>
       </div>
 
       <!-- Profile Chip with Dropdown -->
       <div class="relative">
-        <div class="flex items-center space-x-2 text-white p-2 rounded-full cursor-pointer profile-div"
-          id="profile-button">
+        <div class="flex items-center space-x-2 text-white p-2 rounded-full cursor-pointer" id="profile-button">
           <!-- Avatar -->
           <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-300">
             {% with request.user.profile as my_profile %}
@@ -270,7 +335,7 @@
 
         <!-- Dropdown Menu -->
         <div id="profile-dropdown"
-          class="absolute  right-[-8px] md:right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-2">
+          class="absolute right-[-8px] md:right-0 hidden bg-white text-black rounded shadow-md w-48 z-10 p-1 mr-2">
           <ul class="py-2">
             <li class="px-4 py-2 text-m text-black-600">
               <strong>{{ user.first_name }}</strong> <br />
@@ -523,8 +588,8 @@
 
       // setupDropdown(workspaceButton, workspaceDropdown);
       setupDropdown(profileButton, profileDropdown);
-      // setupDropdown(bellButton, bellDropdown, fetchPendingAccounts);
-      setupDropdown(bellButton, bellDropdown);
+      setupDropdown(bellButton, bellDropdown, fetchPendingAccounts);
+      // setupDropdown(bellButton, bellDropdown);
       if (inboxToggle && inboxDropdown) {
         setupDropdown(inboxToggle, inboxDropdown);
       }
@@ -541,6 +606,54 @@
           hideAllDropdowns();
         }
       });
+
+
+      fetchPendingAccounts(); // initial fetch
+      // setInterval(fetchPendingAccounts, 5000);
+
+      async function fetchPendingAccounts() {
+        const badge = document.getElementById("pending-badge");
+        const list = document.getElementById("notification-list");
+
+        try {
+          const response = await fetch("/dashboard/pending-accounts/data/");
+          const data = await response.json();
+
+          // Update dropdown list (only if dropdown exists)
+          if (list) {
+            list.innerHTML = "";
+
+            if (data.count > 0) {
+              data.users.forEach((user) => {
+                const li = document.createElement("li");
+                li.className = "p-4 text-gray-700 hover:bg-gray-100";
+                li.innerHTML = `<a href="{% url 'pending_accounts' %}" class="block w-full h-full">
+                      <strong>Pending Account:</strong> ${user.email}
+                    </a>`;
+                list.appendChild(li);
+              });
+            } else {
+              list.innerHTML = `<li class="p-4 text-gray-500 text-center">No pending accounts</li>`;
+            }
+          }
+
+          // Update badge
+          if (badge) {
+            if (data.count > 0) {
+              badge.classList.remove("hidden");
+              badge.innerText = data.count;
+            } else {
+              badge.classList.add("hidden");
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching users:", error);
+          if (list) {
+            list.innerHTML = `<li class="p-4 text-red-500 text-center">Failed to load</li>`;
+          }
+        }
+      }
+
 
       if (loader) {
         sidebarLinks.forEach((link) => {
@@ -659,7 +772,7 @@
         $("#chat-form").removeClass("hidden");
         $("#compose-toggle-btn").addClass("hidden");
         $("#chat-username").html(`
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← Back</button>
+            <button onclick="backToInboxList()" class="text-md text-blue-600 hover:underline mr-4">←</button>
             ${username}
           `);
 
@@ -902,44 +1015,61 @@
 
         // Optional: update header
         document.getElementById("chat-username").innerHTML = `
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← </button>
+            <button onclick="backToInboxList()" class="text-md text-blue-600 hover:underline mr-4">←</button>
             Compose New Message
           `;
       });
 
-      // Fetch admin users to populate the recipient select dropdown
-      function loadAdminUsers() {
-        fetch('/get_admin_users/')  // URL for the new view
+      const currentUserRole = "{{ user.profile.role|default:'user' }}";
+      function loadRecipients() {
+        let url = '';
+
+        if (currentUserRole === 'admin') {
+          // Admin users see only regular users in dropdown
+          url = '/get_user_role/';
+        } else {
+          // Regular users see only admins in dropdown
+          url = '/get_admin_users/';
+        }
+
+        fetch(url)
           .then(response => response.json())
           .then(data => {
-            const admins = data.admins;
-            recipientSelect.innerHTML = '<option value="">Select one of our team to help you</option>';  // Reset dropdown
+            let recipients = [];
 
-            admins.forEach(admin => {
-              recipientSelect.innerHTML += `<option value="${admin.id}">${admin.username}</option>`;
+            if (currentUserRole === 'admin') {
+              recipients = data.users;  // Expecting users without admin role
+            } else {
+              recipients = data.admins; // Expecting admin users
+            }
+
+            // Reset dropdown
+            recipientSelect.innerHTML = '<option value="">Select recipient</option>';
+
+            // Populate dropdown with users
+            recipients.forEach(user => {
+              recipientSelect.innerHTML += `<option value="${user.id}">${user.username}</option>`;
             });
           })
-          .catch(error => console.error("Error loading admin users:", error));
+          .catch(error => console.error("Error loading recipients:", error));
       }
 
-      // Enable the send button if both recipient and message content are provided
+      // Enable send button only if both recipient and message are provided
       function checkFormValidity() {
         const recipientId = recipientSelect.value;
         const message = messageContent.value.trim();
         sendMessageBtn.disabled = !(recipientId && message);
       }
 
-      // Listen for changes in the recipient or message content
       recipientSelect.addEventListener("change", checkFormValidity);
       messageContent.addEventListener("input", checkFormValidity);
 
-      // Send the message when the button is clicked
       sendMessageBtn.addEventListener("click", function () {
         const recipientId = recipientSelect.value;
         const message = messageContent.value.trim();
 
         if (recipientId && message) {
-          const csrfToken = getCSRFToken();  // Ensure CSRF token is attached
+          const csrfToken = getCSRFToken();  // Your existing CSRF token function
 
           fetch(`/messages/send/${recipientId}/`, {
             method: 'POST',
@@ -955,7 +1085,7 @@
                 const recipientId = data.recipient_id || recipientSelect.value;
                 const recipientUsername = recipientSelect.options[recipientSelect.selectedIndex].text;
 
-                // Hide compose, show thread
+                // Hide compose, show thread (adjust as per your UI)
                 composeMessageDiv.classList.add("hidden");
                 $('#inbox-messages-list').addClass('hidden');
                 $('#chat-thread').removeClass('hidden').empty();
@@ -964,11 +1094,11 @@
                 // Set current chat state
                 currentChatUserId = recipientId;
                 $('#chat-username').html(`
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← Back</button>
-            ${recipientUsername}
-          `);
+              <button onclick="backToInboxList()" class="text-md text-blue-600 hover:underline mr-4">←</button>
+              ${recipientUsername}
+            `);
 
-                // Load the conversation
+                // Load conversation (your existing function)
                 loadConversation(recipientId);
               } else {
                 alert('Failed to send message');
@@ -980,8 +1110,9 @@
         }
       });
 
-      // Load admin users when the page is loaded
-      loadAdminUsers();
+      // Load the recipients when the page loads
+      loadRecipients();
+
     });
   </script>
 
@@ -1038,6 +1169,25 @@
     if (window.history.replaceState) {
       window.history.replaceState(null, null, window.location.href);
     }
+  </script>
+
+  <script>
+    // Optional JS to ensure input is scrolled into view
+    document.getElementById("chat-input").addEventListener("focus", function () {
+      setTimeout(() => {
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300); // Delay allows keyboard to open
+    });
+
+    const chatInput = document.getElementById("chat-input");
+    const chatContainer = document.getElementById("chat-thread");
+
+    chatInput.addEventListener("focus", () => {
+      setTimeout(() => {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 300);
+    });
+
   </script>
 </body>
 

@@ -1,4 +1,3 @@
-<!-- templates/crop_detail.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,51 +6,110 @@
     <meta charset="UTF-8">
     <title>{{ crop_name|title }} - Crop Details</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <style>
+        .goog-te-banner-frame,
+        .goog-te-gadget,
+        .goog-te-combo,
+        .goog-logo-link,
+        #google_translate_element {
+            display: none !important;
+        }
+
+        body {
+            top: 0px !important;
+        }
+
+        /* Hide the top Google Translate banner */
+        iframe.goog-te-banner-frame {
+            display: none !important;
+        }
+
+        /* Push page back up after banner is hidden */
+        body {
+            top: 0px !important;
+            position: static !important;
+        }
+
+        /* Hide the Google logo & popup anchor in the bottom right */
+        .goog-logo-link,
+        .goog-te-gadget span {
+            display: none !important;
+        }
+
+        /* Hide translation toolbar elements */
+        .VIpgJd-ZVi9od-ORHb,
+        .VIpgJd-ZVi9od-l4eHX-hSRGPd,
+        .VIpgJd-ZVi9od-LgbsSe,
+        .VIpgJd-ZVi9od-xl07Ob-lTBxed,
+        #goog-gt-tt,
+        .goog-te-balloon-frame,
+        div#goog-gt-tt {
+            display: none !important;
+        }
+
+        /* Fix page layout shifts caused by translate */
+        body .skiptranslate {
+            padding-top: 0px !important;
+        }
+
+        /* Optional: completely hide Google Translate tooltip */
+        .goog-tooltip,
+        .goog-tooltip:hover {
+            display: none !important;
+        }
+
+        * [class^='VIpgJd'],
+        * [class*='VIpgJd'] {
+            display: none !important;
+        }
+
+
+
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
 
-        /* Hide scrollbar for Firefox */
         .hide-scrollbar {
             scrollbar-width: none;
             -ms-overflow-style: none;
-            /* IE/Edge */
         }
 
-        /* Hide scrollbar for Chrome, Safari, Edge */
         #inbox-messages-list::-webkit-scrollbar {
             display: none;
         }
 
-        /* Hide scrollbar for Firefox */
         #inbox-messages-list {
             scrollbar-width: none;
         }
 
-        /* Hide scrollbar for all browsers, but still allow scroll */
         #inbox-messages-list {
             -ms-overflow-style: none;
-            /* IE and Edge */
             overflow-y: auto;
-            /* Keep scrolling enabled */
         }
 
         .hide-scrollbar {
             scrollbar-width: none;
-            /* Firefox */
             -ms-overflow-style: none;
-            /* IE & Edge */
         }
 
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
-            /* Chrome, Safari */
+        }
+
+        #inbox-sidebar {
+            max-width: 84.5% !important;
+        }
+
+        @media (max-width: 768px) {
+            #loader svg {
+                width: 3rem;
+                height: 3rem;
+            }
         }
     </style>
 </head>
@@ -98,7 +156,8 @@
 
                 <!-- Messenger like Sidebar -->
                 <div id="inbox-sidebar"
-                    class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col">
+                    class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col"
+                    style="height: 100dvh;">
                     <!-- sidebar preloader -->
                     <div id="loader2"
                         class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">
@@ -128,15 +187,15 @@
                     </div>
 
                     <!-- Body that grows to fill available space -->
-                    <div class="flex-1 flex flex-col overflow-hidden">
+                    <div class="flex-1 flex flex-col overflow-y-auto">
                         <!-- Message List -->
                         <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
                             <!-- Conversations will load here via AJAX -->
                         </ul>
 
-                        <div class="px-4 py-6 border-t bg-white text-right">
+                        <div class="px-4 py-4 border-t bg-white text-right">
                             <button id="compose-toggle-btn"
-                                class="inline-flex gap-1 text-md text-blue-600 hover:underline">Send us a
+                                class="inline-flex gap-1 text-md text-blue-600 hover:underline">Send new
                                 message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px] mr-1">
@@ -349,44 +408,45 @@
 
         <!-- Main Content -->
         <div class="container mx-auto px-4 py-10">
-            <!-- Responsive Flex Container -->
             <div class="flex flex-col md:flex-row items-start md:space-x-10">
-
-                <!-- Back Button -->
                 <div class="mt-6 text-center absolute top-[4rem] left-6 md:left-[6rem]">
-                    <a href="{% url 'crop_details' %}" class="text-blue-600 hover:underline text-sm md:text-md">
-                        ← Back to Crop List
+                    <a href="{% url 'crop_details' %}"
+                        class="text-blue-600 hover:underline text-sm md:text-md back-btn">
+                        ← <span id="back-text">Back to Crop List</span>
                     </a>
                 </div>
 
-                <!-- Image Section -->
-                <div class="w-full mt-0 md:mt-[10rem] md:w-1/2 mb-6 md:mb-0">
-                    <img src="{{ details.image_url }}" alt="{{ crop_name }} image"
+                <div class="language-switcher flex gap-4 absolute right-2 md:right-8 mt-10 mr-4">
+                    <select id="language-selector" onchange="changeLanguage(this.value)"
+                        class="px-2 py-2 text-sm border-gray-300 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent text-gray-700">
+                        <option value="en">English</option>
+                        <option value="tl">Filipino</option>
+                    </select>
+                </div>
+
+                <div class="w-full mt-0 md:mt-[14rem] md:w-1/2 mb-6 md:mb-0">
+                    <img id="crop-image" src="{{ details.image_url }}" alt="{{ crop_name }} image"
                         class="w-[15rem] sm:w-full h-[30rem] object-contain mx-auto">
                 </div>
 
-                <!-- Text Section -->
-                <div class="w-full mt-[-9rem] md:mt-20 md:w-1/2">
-                    <!-- Crop Name -->
-                    <h2 class="text-3xl md:text-5xl font-bold mb-6 ml-5">{{ crop_name|title }}</h2>
-
-                    <!-- Crop Details -->
+                <div class="w-full mt-[-9rem] md:mt-[10rem] md:w-1/2">
+                    <h2 id="crop-name" class="text-3xl md:text-5xl font-bold mb-6 ml-5">Loading...</h2>
                     <div class="bg-white p-6 text-justify">
                         <p class="mb-4">
-                            <strong class="text-xl md:text-2xl">Description:</strong><br>
-                            <span class="text-gray-700 block indent-6 leading-relaxed">{{ crop.description }}</span>
+                            <strong id="label-description" class="text-xl md:text-2xl">Description:</strong><br>
+                            <span id="description" class="text-gray-700 block indent-6 leading-relaxed">...</span>
                         </p>
                         <p class="mb-4">
-                            <strong class="text-xl md:text-2xl">Climate:</strong><br>
-                            <span class="text-gray-700 block indent-6 leading-relaxed">{{ crop.climate }}</span>
+                            <strong id="label-climate" class="text-xl md:text-2xl">Climate:</strong><br>
+                            <span id="climate" class="text-gray-700 block indent-6 leading-relaxed">...</span>
                         </p>
                         <p class="mb-4">
-                            <strong class="text-xl md:text-2xl">Soil:</strong><br>
-                            <span class="text-gray-700 block indent-6 leading-relaxed">{{ crop.soil }}</span>
+                            <strong id="label-soil" class="text-xl md:text-2xl">Soil:</strong><br>
+                            <span id="soil" class="text-gray-700 block indent-6 leading-relaxed">...</span>
                         </p>
                         <p class="mb-4">
-                            <strong class="text-xl md:text-2xl">Harvest Time:</strong><br>
-                            <span class="text-gray-700 block indent-6 leading-relaxed">{{ crop.harvest_time }}</span>
+                            <strong id="label-harvest_time" class="text-xl md:text-2xl">Harvest Time:</strong><br>
+                            <span id="harvest_time" class="text-gray-700 block indent-6 leading-relaxed">...</span>
                         </p>
                     </div>
                 </div>
@@ -622,7 +682,7 @@
                 $("#chat-form").removeClass("hidden");
                 $("#compose-toggle-btn").addClass("hidden");
                 $("#chat-username").html(`
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← Back</button>
+            <button onclick="backToInboxList()" class="text-md text-blue-600 hover:underline mr-4">←</button>
             ${username}
           `);
 
@@ -874,44 +934,61 @@
 
                 // Optional: update header
                 document.getElementById("chat-username").innerHTML = `
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← </button>
+            <button onclick="backToInboxList()" class="text-md text-blue-600 hover:underline mr-4">← </button>
             Compose New Message
           `;
             });
 
-            // Fetch admin users to populate the recipient select dropdown
-            function loadAdminUsers() {
-                fetch('/get_admin_users/')  // URL for the new view
+            const currentUserRole = "{{ user.profile.role|default:'user' }}";
+            function loadRecipients() {
+                let url = '';
+
+                if (currentUserRole === 'admin') {
+                    // Admin users see only regular users in dropdown
+                    url = '/get_user_role/';
+                } else {
+                    // Regular users see only admins in dropdown
+                    url = '/get_admin_users/';
+                }
+
+                fetch(url)
                     .then(response => response.json())
                     .then(data => {
-                        const admins = data.admins;
-                        recipientSelect.innerHTML = '<option value="">Select one of our team to help</option>';  // Reset dropdown
+                        let recipients = [];
 
-                        admins.forEach(admin => {
-                            recipientSelect.innerHTML += `<option value="${admin.id}">${admin.username}</option>`;
+                        if (currentUserRole === 'admin') {
+                            recipients = data.users;  // Expecting users without admin role
+                        } else {
+                            recipients = data.admins; // Expecting admin users
+                        }
+
+                        // Reset dropdown
+                        recipientSelect.innerHTML = '<option value="">Select recipient</option>';
+
+                        // Populate dropdown with users
+                        recipients.forEach(user => {
+                            recipientSelect.innerHTML += `<option value="${user.id}">${user.username}</option>`;
                         });
                     })
-                    .catch(error => console.error("Error loading admin users:", error));
+                    .catch(error => console.error("Error loading recipients:", error));
             }
 
-            // Enable the send button if both recipient and message content are provided
+            // Enable send button only if both recipient and message are provided
             function checkFormValidity() {
                 const recipientId = recipientSelect.value;
                 const message = messageContent.value.trim();
                 sendMessageBtn.disabled = !(recipientId && message);
             }
 
-            // Listen for changes in the recipient or message content
             recipientSelect.addEventListener("change", checkFormValidity);
             messageContent.addEventListener("input", checkFormValidity);
 
-            // Send the message when the button is clicked
             sendMessageBtn.addEventListener("click", function () {
                 const recipientId = recipientSelect.value;
                 const message = messageContent.value.trim();
 
                 if (recipientId && message) {
-                    const csrfToken = getCSRFToken();  // Ensure CSRF token is attached
+                    const csrfToken = getCSRFToken();  // Your existing CSRF token function
 
                     fetch(`/messages/send/${recipientId}/`, {
                         method: 'POST',
@@ -927,7 +1004,7 @@
                                 const recipientId = data.recipient_id || recipientSelect.value;
                                 const recipientUsername = recipientSelect.options[recipientSelect.selectedIndex].text;
 
-                                // Hide compose, show thread
+                                // Hide compose, show thread (adjust as per your UI)
                                 composeMessageDiv.classList.add("hidden");
                                 $('#inbox-messages-list').addClass('hidden');
                                 $('#chat-thread').removeClass('hidden').empty();
@@ -936,11 +1013,11 @@
                                 // Set current chat state
                                 currentChatUserId = recipientId;
                                 $('#chat-username').html(`
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← Back</button>
-            ${recipientUsername}
-          `);
+              <button onclick="backToInboxList()" class="text-md text-blue-600 hover:underline mr-4">←</button>
+              ${recipientUsername}
+            `);
 
-                                // Load the conversation
+                                // Load conversation (your existing function)
                                 loadConversation(recipientId);
                             } else {
                                 alert('Failed to send message');
@@ -952,8 +1029,8 @@
                 }
             });
 
-            // Load admin users when the page is loaded
-            loadAdminUsers();
+            // Load the recipients when the page loads
+            loadRecipients();
         });
     </script>
 
@@ -1003,6 +1080,20 @@
     </script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loader = document.getElementById('loader');
+            const backLink = document.querySelector('.back-btn');
+
+            if (backLink && loader) {
+                backLink.addEventListener('click', function () {
+                    loader.classList.remove('hidden');
+                });
+            }
+        });
+    </script>
+
+
+    <script>
         const sidebarToggle = document.getElementById("sidebarToggle");
         const sidebar = document.getElementById("sidebar");
         const sidebarBackdrop = document.getElementById("sidebarBackdrop");
@@ -1032,6 +1123,87 @@
             closeIcon.classList.add("hidden");
         });
 
+    </script>
+
+    <script>
+        // Optional JS to ensure input is scrolled into view
+        document.getElementById("chat-input").addEventListener("focus", function () {
+            setTimeout(() => {
+                this.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 300); // Delay allows keyboard to open
+        });
+
+        const chatInput = document.getElementById("chat-input");
+        const chatContainer = document.getElementById("chat-thread");
+
+        chatInput.addEventListener("focus", () => {
+            setTimeout(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 300);
+        });
+
+    </script>
+
+    <!-- translator -->
+    <script>
+        let cropData = {};
+        let currentLang = "en";
+        const cropName = "{{ crop_name|lower }}";
+        const imageUrl = "{{ image_url }}";
+
+
+        async function loadCropData() {
+            try {
+                const response = await fetch("{% static 'data/crop_details.json' %}");
+                cropData = await response.json();
+                updateContent();
+            } catch (err) {
+                console.error("Failed to load crop data:", err);
+            }
+        }
+
+        function updateContent() {
+            const crop = cropData[cropName]?.[currentLang];
+            const labels = cropData.labels?.[currentLang];
+
+            if (!crop || !labels) {
+                console.warn(`Missing content for crop: ${cropName} in ${currentLang}`);
+                return;
+            }
+
+            // Set content
+            document.getElementById("crop-name").textContent = crop.name;
+            document.getElementById("description").textContent = crop.description;
+            document.getElementById("climate").textContent = crop.climate;
+            document.getElementById("soil").textContent = crop.soil;
+            document.getElementById("harvest_time").textContent = crop.harvest_time;
+
+            // Set labels
+            document.getElementById("label-description").textContent = labels.description;
+            document.getElementById("label-climate").textContent = labels.climate;
+            document.getElementById("label-soil").textContent = labels.soil;
+            document.getElementById("label-harvest_time").textContent = labels.harvest_time;
+
+            // Set image
+            document.getElementById("crop-image").src = imageUrl;
+            document.getElementById("crop-image").alt = crop.name + " image";
+
+            // Optional: Update "Back to Crop List" label
+            document.getElementById("back-text").textContent = (currentLang === "tl") ? "Bumalik sa Listahan ng Pananim" : "Back to Crop List";
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem("lang", lang);
+            updateContent();
+        }
+
+        // Initial load
+        document.addEventListener("DOMContentLoaded", () => {
+            const sel = document.getElementById("language-selector");
+            if (sel) sel.value = currentLang;
+            loadCropData();
+        });
     </script>
 </body>
 

@@ -58,41 +58,31 @@
       display: none;
     }
 
-    /* Hide scrollbar for Firefox */
     .hide-scrollbar {
       scrollbar-width: none;
       -ms-overflow-style: none;
-      /* IE/Edge */
     }
 
-    /* Hide scrollbar for Chrome, Safari, Edge */
     #inbox-messages-list::-webkit-scrollbar {
       display: none;
     }
 
-    /* Hide scrollbar for Firefox */
     #inbox-messages-list {
       scrollbar-width: none;
     }
 
-    /* Hide scrollbar for all browsers, but still allow scroll */
     #inbox-messages-list {
       -ms-overflow-style: none;
-      /* IE and Edge */
       overflow-y: auto;
-      /* Keep scrolling enabled */
     }
 
     .hide-scrollbar {
       scrollbar-width: none;
-      /* Firefox */
       -ms-overflow-style: none;
-      /* IE & Edge */
     }
 
     .hide-scrollbar::-webkit-scrollbar {
       display: none;
-      /* Chrome, Safari */
     }
 
     @media (max-width: 768px) {
@@ -206,8 +196,8 @@
               <!-- Conversations will load here via AJAX -->
             </ul>
 
-            <div class="px-4 py-6 border-t bg-white text-right">
-              <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">Send us a
+            <div class="px-4 py-4 border-t bg-white text-right">
+              <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">Send new
                 message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px] mr-1">
                   <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
@@ -255,10 +245,10 @@
             <form id="chat-form" class="hidden p-3 border-t flex items-center sticky bottom-0 z-100 bg-white gap-2">
               {% csrf_token %}
               <textarea id="chat-input" placeholder="Type a message..."
-                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none overflow-y-scroll h-14 max-h-24 leading-snug text-md hide-scrollbar"
+                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none overflow-y-scroll h-14 max-h-24 leading-snug text-md hide-scrollbar"
                 rows="1" style="white-space: pre-wrap; overflow-wrap: break-word;"></textarea>
               <button type="submit"
-                class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-4 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
                 Send
               </button>
             </form>
@@ -862,7 +852,7 @@
         $("#chat-form").removeClass("hidden");
         $("#compose-toggle-btn").addClass("hidden");
         $("#chat-username").html(`
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← Back</button>
+            <button onclick="backToInboxList()" class="text-md text-blue-600 hover:underline mr-4">←</button>
             ${username}
           `);
 

@@ -339,39 +339,60 @@ def crop_details(request):
 #     else:
 #         return render(request, '404.html', {'message': 'Crop not found!'})  
 
-def crop_more_details(request, crop_name):
-    # Load crop details
-    details_path = os.path.join(settings.BASE_DIR, 'static', 'data', 'crop_details.json')
-    with open(details_path, 'r', encoding="utf-8") as f:
-        crop_details = json.load(f)
+# def crop_more_details(request, crop_name):
+#     # Load crop details
+#     details_path = os.path.join(settings.BASE_DIR, 'static', 'data', 'crop_details.json')
+#     with open(details_path, 'r', encoding="utf-8") as f:
+#         crop_details = json.load(f)
 
+#     # Load crop image paths
+#     image_path = os.path.join(settings.BASE_DIR, 'static', 'data', 'crop_images.json')
+#     with open(image_path, 'r', encoding="utf-8") as f:
+#         crop_images = json.load(f)
+
+#     # Normalize crop name to lowercase for matching
+#     crop_key = crop_name.lower()
+
+#     # Get crop detail and image URL
+#     crop = crop_details.get(crop_key)
+#     image_url = crop_images.get(crop_key)
+
+#     if crop:
+#         return render(
+#             request,
+#             'crop_more_details.html',
+#             {
+#                 'crop': crop,
+#                 'crop_name': crop_name,
+#                 'details': {
+#                     'image_url': image_url
+#                 }
+#             }
+#         )
+#     else:
+#         return render(request, '404.html', {'message': 'Crop not found!'})
+
+def crop_more_details(request, crop_name):
     # Load crop image paths
     image_path = os.path.join(settings.BASE_DIR, 'static', 'data', 'crop_images.json')
     with open(image_path, 'r', encoding="utf-8") as f:
         crop_images = json.load(f)
 
-    # Normalize crop name to lowercase for matching
     crop_key = crop_name.lower()
-
-    # Get crop detail and image URL
-    crop = crop_details.get(crop_key)
     image_url = crop_images.get(crop_key)
 
-    if crop:
+    # Check if image and crop JSON exist
+    if image_url:
         return render(
             request,
             'crop_more_details.html',
             {
-                'crop': crop,
                 'crop_name': crop_name,
-                'details': {
-                    'image_url': image_url
-                }
+                'image_url': image_url,
             }
         )
     else:
         return render(request, '404.html', {'message': 'Crop not found!'})
-
 
 # def logs(request):
 #     user = request.user
@@ -1759,3 +1780,17 @@ def get_admin_users(request):
     
     return JsonResponse({'admins': admin_data})
 
+@login_required
+def get_user_role(request):
+    users = User.objects.exclude(id=request.user.id)
+    user_data = []
+
+    for user in users:
+        if hasattr(user, 'profile'):
+            user_data.append({
+                'id': user.id,
+                'username': user.username,
+                'role': user.profile.role,
+            })
+
+    return JsonResponse({'users': user_data})

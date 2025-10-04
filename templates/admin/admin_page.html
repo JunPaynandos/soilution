@@ -72,6 +72,37 @@
       animation: fade-in-down 0.3s ease-out;
     }
 
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    #inbox-messages-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    #inbox-messages-list {
+      scrollbar-width: none;
+    }
+
+    #inbox-messages-list {
+      -ms-overflow-style: none;
+      overflow-y: auto;
+    }
+
+    .hide-scrollbar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
     @media (max-width: 768px) {
       #inbox-sidebar {
         max-width: 84.5% !important;
@@ -149,7 +180,8 @@
 
         <!-- Messenger like Sidebar -->
         <div id="inbox-sidebar"
-          class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col">
+          class="hidden fixed top-0 right-0 w-96 h-screen bg-white border-l border-gray-300 shadow-lg z-50 transition-transform transform translate-x-full flex flex-col"
+          style="height: 100dvh;">
           <!-- sidebar preloader -->
           <div id="loader2" class="hidden fixed inset-0 flex items-center justify-center bg-opacity-70 bg-white z-50">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 200 200">
@@ -176,58 +208,70 @@
             </button>
           </div>
 
-          <!-- Message List -->
-          <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2">
-            <!-- Conversations will load here via AJAX -->
-          </ul>
+          <!-- Body that grows to fill available space -->
+          <div class="flex-1 flex flex-col overflow-y-auto">
+            <!-- Message List -->
+            <ul id="inbox-messages-list" class="overflow-y-auto flex-1 px-4 py-2 hide-scrollbar">
+              <!-- Conversations will load here via AJAX -->
+            </ul>
 
-          <!-- <div class="px-4 py-2 border-t bg-white text-right">
-              <button id="compose-toggle-btn" class="inline-flex gap-1 text-sm text-blue-600 hover:underline">Send us a message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px]">
-                <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
-              </svg>
+            <div class="px-4 py-4 border-t bg-white text-right">
+              <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">Compose
+                message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px] mr-1">
+                  <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
+                </svg>
               </button>
             </div>
 
-            <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-20px] h-full">
-              <label for="recipient-select" class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select Recipient</label>
-              <select id="recipient-select" class="w-full p-2 border border-gray-300 rounded-lg">
+            <div id="compose-message" class="hidden p-4 border-t bg-gray-50 mt-[-3rem] h-full">
+              <label for="recipient-select"
+                class="block text-md font-medium mb-2 outline-none focus:ring-[#0e9272] focus:border-[#0e9272]">Select
+                Recipient</label>
+              <select id="recipient-select"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
                 <option value="">Select someone to help</option>
               </select>
 
               <label for="message-content" class="block text-md font-medium mt-4 mb-2">Message</label>
-              <textarea id="message-content" class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg" rows="4" placeholder="Write your message..."></textarea>
+              <textarea id="message-content"
+                class="w-full h-[20rem] p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                rows="4" placeholder="Write your message..."></textarea>
 
-              <button id="send-message-btn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-full cursor-pointer" disabled>Send</button>
-            </div> -->
-
-          <!-- Message Thread -->
-          <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 bg-gray-50">
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
-              ← Back
-            </button>
-            <!-- Messages will be dynamically loaded here -->
-            <p class="text-sm text-gray-500 text-center">
-              Select a conversation
-            </p>
-            <div id="typing-indicator" class="text-sm text-gray-500 italic px-4 py-1 hidden">
-              Typing...
+              <div class="flex justify-end mt-4">
+                <button id="send-message-btn"
+                  class="bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-8 rounded-lg cursor-pointer" disabled>
+                  Send
+                </button>
+              </div>
             </div>
-          </div>
 
-          <!-- Message Input -->
-          <form id="chat-form" class="hidden p-3 border-t flex items-center bg-white gap-2">
-            {% csrf_token %}
-            <input type="text" id="chat-input" placeholder="Type a message..."
-              class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              autocomplete="off" style="
-                  word-wrap: break-word;
-                  overflow-wrap: break-word;
-                  white-space: normal;
-                " />
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full">
-              Send
-            </button>
-          </form>
+            <!-- Message Thread -->
+            <div id="chat-thread" class="hidden flex-1 overflow-y-auto px-4 py-2 space-y-2 mt-[-3rem] bg-gray-50">
+              <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline">
+                ←
+              </button>
+              <!-- Messages will be dynamically loaded here -->
+              <p class="text-sm text-gray-500 text-center">
+                Select a conversation
+              </p>
+              <div id="typing-indicator" class="text-sm text-gray-500 italic px-4 py-1 hidden">
+                Typing...
+              </div>
+            </div>
+
+            <!-- Message Input -->
+            <form id="chat-form" class="hidden p-3 border-t flex items-center sticky bottom-0 z-100 bg-white gap-2">
+              {% csrf_token %}
+              <textarea id="chat-input" placeholder="Type a message..."
+                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none overflow-y-scroll h-14 max-h-24 leading-snug text-md hide-scrollbar"
+                rows="1" style="white-space: pre-wrap; overflow-wrap: break-word;"></textarea>
+              <button type="submit"
+                class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-4 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                Send
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -739,7 +783,7 @@
         $("#chat-form").removeClass("hidden");
         $("#compose-toggle-btn").addClass("hidden");
         $("#chat-username").html(`
-            <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← Back</button>
+            <button onclick="backToInboxList()" class="text-md text-blue-600 hover:underline mr-4">←</button>
             ${username}
           `);
 
@@ -973,103 +1017,107 @@
         });
       }
 
-      // composeBtn.addEventListener("click", function () {
-      //   // Hide inbox list and thread
-      //   document.getElementById("inbox-messages-list").classList.add("hidden");
-      //   document.getElementById("chat-thread").classList.add("hidden");
-      //   document.getElementById("chat-form").classList.add("hidden");
-      //   document.getElementById("compose-toggle-btn").classList.add("hidden");
+      composeBtn.addEventListener("click", function () {
+        // Hide inbox list and thread
+        document.getElementById("inbox-messages-list").classList.add("hidden");
+        document.getElementById("chat-thread").classList.add("hidden");
+        document.getElementById("chat-form").classList.add("hidden");
+        document.getElementById("compose-toggle-btn").classList.add("hidden");
 
-      //   // Show compose form
-      //   composeMessageDiv.classList.remove("hidden");
+        // Show compose form
+        composeMessageDiv.classList.remove("hidden");
 
-      //   // Reset form
-      //   recipientSelect.value = "";
-      //   messageContent.value = "";
-      //   sendMessageBtn.disabled = true;
+        // Reset form
+        recipientSelect.value = "";
+        messageContent.value = "";
+        sendMessageBtn.disabled = true;
 
-      //   // Optional: update header
-      //   document.getElementById("chat-username").innerHTML = `
-      //     <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← </button>
-      //     Compose New Message
-      //   `;
-      // });
+        // Optional: update header
+        document.getElementById("chat-username").innerHTML = `
+          <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← </button>
+          Compose New Message
+        `;
+      });
 
-      // // Fetch admin users to populate the recipient select dropdown
-      // function loadAdminUsers() {
-      //   fetch('/get_admin_users/')  // URL for the new view
-      //     .then(response => response.json())
-      //     .then(data => {
-      //       const admins = data.admins;
-      //       recipientSelect.innerHTML = '<option value="">Select one of our team to help you</option>';  // Reset dropdown
+      // Fetch users to populate the recipient select dropdown
+      function loadUsers() {
+        fetch('/get_user_role/')  // URL for the new view
+          .then(response => response.json())
+          .then(data => {
+            const users = data.users;
+            recipientSelect.innerHTML = '<option value="">Select recipient</option>';  // Reset dropdown
 
-      //       admins.forEach(admin => {
-      //         recipientSelect.innerHTML += `<option value="${admin.id}">${admin.username}</option>`;
-      //       });
-      //     })
-      //     .catch(error => console.error("Error loading admin users:", error));
-      // }
+            users.forEach(user => {
+              // You can include the role in the option text or show it in a tooltip
+              recipientSelect.innerHTML += `
+          <option value="${user.id}" title="${user.role}">
+            ${user.username} (${user.role})
+          </option>`;
+            });
+          })
+          .catch(error => console.error("Error loading admin users:", error));
+      }
 
-      // // Enable the send button if both recipient and message content are provided
-      // function checkFormValidity() {
-      //   const recipientId = recipientSelect.value;
-      //   const message = messageContent.value.trim();
-      //   sendMessageBtn.disabled = !(recipientId && message);
-      // }
+      // Enable the send button if both recipient and message content are provided
+      function checkFormValidity() {
+        const recipientId = recipientSelect.value;
+        const message = messageContent.value.trim();
+        sendMessageBtn.disabled = !(recipientId && message);
+      }
 
-      // // Listen for changes in the recipient or message content
-      // recipientSelect.addEventListener("change", checkFormValidity);
-      // messageContent.addEventListener("input", checkFormValidity);
+      // Listen for changes in the recipient or message content
+      recipientSelect.addEventListener("change", checkFormValidity);
+      messageContent.addEventListener("input", checkFormValidity);
 
-      // // Send the message when the button is clicked
-      // sendMessageBtn.addEventListener("click", function () {
-      //   const recipientId = recipientSelect.value;
-      //   const message = messageContent.value.trim();
+      // Send the message when the button is clicked
+      sendMessageBtn.addEventListener("click", function () {
+        const recipientId = recipientSelect.value;
+        const message = messageContent.value.trim();
 
-      //   if (recipientId && message) {
-      //     const csrfToken = getCSRFToken();  // Ensure CSRF token is attached
+        if (recipientId && message) {
+          const csrfToken = getCSRFToken();  // Ensure CSRF token is attached
 
-      //     fetch(`/messages/send/${recipientId}/`, {
-      //       method: 'POST',
-      //       headers: {
-      //         'X-CSRFToken': csrfToken,
-      //         'Content-Type': 'application/x-www-form-urlencoded',
-      //       },
-      //       body: `message=${encodeURIComponent(message)}`
-      //     })
-      //     .then(response => response.json())
-      //     .then(data => {
-      //       if (data.status === 'ok') {
-      //         const recipientId = data.recipient_id || recipientSelect.value;
-      //   const recipientUsername = recipientSelect.options[recipientSelect.selectedIndex].text;
+          fetch(`/messages/send/${recipientId}/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': csrfToken,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `message=${encodeURIComponent(message)}`
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'ok') {
+                const recipientId = data.recipient_id || recipientSelect.value;
+                const recipientUsername = recipientSelect.options[recipientSelect.selectedIndex].text;
 
-      //   // Hide compose, show thread
-      //   composeMessageDiv.classList.add("hidden");
-      //   $('#inbox-messages-list').addClass('hidden');
-      //   $('#chat-thread').removeClass('hidden').empty();
-      //   $('#chat-form').removeClass('hidden');
+                // Hide compose, show thread
+                composeMessageDiv.classList.add("hidden");
+                $('#inbox-messages-list').addClass('hidden');
+                $('#chat-thread').removeClass('hidden').empty();
+                $('#chat-form').removeClass('hidden');
 
-      //   // Set current chat state
-      //   currentChatUserId = recipientId;
-      //   $('#chat-username').html(`
-      //     <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← Back</button>
-      //     ${recipientUsername}
-      //   `);
+                // Set current chat state
+                currentChatUserId = recipientId;
+                $('#chat-username').html(`
+          <button onclick="backToInboxList()" class="text-sm text-blue-600 hover:underline mr-2">← Back</button>
+          ${recipientUsername}
+        `);
 
-      //   // Load the conversation
-      //   loadConversation(recipientId);
-      //       } else {
-      //         alert('Failed to send message');
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.error('Send failed', err);
-      //     });
-      //   }
-      // });
+                // Load the conversation
+                loadConversation(recipientId);
+              } else {
+                alert('Failed to send message');
+              }
+            })
+            .catch(err => {
+              console.error('Send failed', err);
+            });
+        }
+      });
 
-      // // Load admin users when the page is loaded
-      // loadAdminUsers();
+      // Load users when the page is loaded
+      loadUsers();
     });
   </script>
 
@@ -1176,6 +1224,25 @@
       // Reset icon visibility
       hamburgerIcon.classList.remove("hidden");
       closeIcon.classList.add("hidden");
+    });
+
+  </script>
+
+  <script>
+    // Optional JS to ensure input is scrolled into view
+    document.getElementById("chat-input").addEventListener("focus", function () {
+      setTimeout(() => {
+        this.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300); // Delay allows keyboard to open
+    });
+
+    const chatInput = document.getElementById("chat-input");
+    const chatContainer = document.getElementById("chat-thread");
+
+    chatInput.addEventListener("focus", () => {
+      setTimeout(() => {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 300);
     });
 
   </script>

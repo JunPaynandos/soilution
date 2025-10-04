@@ -60,6 +60,7 @@ urlpatterns = [
     path('messages/send/<int:receiver_id>/', views.send_message, name='send_message'),
     path('messages/mark_read/<int:sender_id>/', views.mark_messages_as_read, name='mark_messages_read'),
     path('get_admin_users/', views.get_admin_users, name='get_admin_users'),
+    path('get_user_role/', views.get_user_role, name='get_user_role'),
     path('dashboard/pending-accounts/', views.pending_accounts, name='pending_accounts'),
     path('dashboard/pending-accounts/data/', views.get_pending_accounts, name='get_pending_accounts'),
     path('handle-account-action/', views.handle_account_action, name='handle_account_action'),

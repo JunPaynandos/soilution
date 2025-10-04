@@ -98,8 +98,16 @@ class LoginForm(forms.Form):
                 raise forms.ValidationError({'email': "Invalid email"})
 
             social_account = SocialAccount.objects.filter(user=user, provider='google').first()
+            # if social_account:
+            #     raise forms.ValidationError({'email': "This email is associated with google. Please log in using Google or reset your password."})
+
             if social_account:
-                raise forms.ValidationError({'email': "This email is associated with google. Please log in using Google or reset your password."})
+                raise ValidationError(
+                    {'email': ValidationError(
+                        "This email is associated with Google. Please log in using Google or reset your password.",
+                        code='google_email'
+                    )}
+                )
 
             user = authenticate(username=email, password=password)
             if user is None:
