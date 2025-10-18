@@ -232,6 +232,10 @@
       display: none;
     }
 
+    #inbox-sidebar {
+      max-width: 84.5% !important;
+    }
+
     @media (max-width: 768px) {
       .content-section {
         padding: 0 30px;
@@ -487,7 +491,7 @@
         </button>
 
         <div
-          class="absolute right-0 mt-2 w-64 bg-white border border-gray-300 rounded shadow-lg z-50 hidden group-hover:block">
+          class="absolute right-0 sm:translate-x-0 translate-x-[7.7rem] mt-2 w-64 bg-white border border-gray-300 rounded shadow-lg z-50 hidden group-hover:block">
           <div class="p-4 text-sm text-gray-700">
             {% if esp32_data %}
             <p class="font-semibold text-green-600">Device Connected</p>
@@ -553,7 +557,7 @@
             </ul>
 
             <div class="px-4 py-4 border-t bg-white text-right">
-              <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">Send new
+              <button id="compose-toggle-btn" class="inline-flex gap-1 text-md text-blue-600 hover:underline">Compose
                 message <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[1em] h-[1em] mt-[3px] mr-1">
                   <path d="M4 22L20 12L4 2V10L16 12L4 14V22Z" />
