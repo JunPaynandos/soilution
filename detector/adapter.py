@@ -5,12 +5,20 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.urls import reverse
+import logging
+
+logger = logging.getLogger('auth')
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def is_email_taken(self, email):
         User = get_user_model()
-        return User.objects.filter(email=email).exists()
+        # return User.objects.filter(email=email).exists()
+        exists = User.objects.filter(email=email).exists()
+        if exists:
+            # logger.warning(f"Social login attempt with already registered email: {email}")
+            logger.info(f"User with email '{email}' logged in successfully via google login.")
+        return exists
 
     def pre_social_login(self, request, sociallogin):
         user = sociallogin.user
@@ -18,6 +26,7 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         if not user.id:
             # New social user
             user.is_active = False
+            logger.info(f"New social user attempted login: {user.email} — marked inactive until approval.")
             # Let the pipeline continue to save the user to DB
         else:
             # Existing user
@@ -33,6 +42,7 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def authentication_success_url(self, request):
         # Only reached if user is active
+        logger.info(f"User {request.user.email} successfully authenticated via social login.")
         return reverse('workspace')
 
     def add_message(self, request, level, message_template, message_context=None, extra_tags=''):

@@ -186,3 +186,20 @@ class InboxConsumer(AsyncWebsocketConsumer):
                     "sender_id": sender_id
                 }
             )
+
+class LogConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.channel_layer.group_add("logs_group", self.channel_name)
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard("logs_group", self.channel_name)
+
+    async def receive(self, text_data):
+        # Optional: handle messages from frontend if needed
+        pass
+
+    async def send_new_log(self, event):
+        log_data = event['log']
+        await self.send(text_data=json.dumps(log_data))
+        

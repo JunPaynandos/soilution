@@ -216,14 +216,18 @@
       <!-- w/o js -->
       <div class="relative group">
         <button class="relative flex items-center text-gray-500 hover:text-[#2bdf78]">
-          <i class="bi bi-cpu text-xl"></i>
-          {% if esp32_data %}
+          <!-- <i class="bi bi-cpu text-xl"></i> -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M7.76 16.24C6.67 15.16 6 13.66 6 12s.67-3.16 1.76-4.24l1.42 1.42C8.45 9.9 8 10.9 8 12s.45 2.1 1.17 2.83zm8.48 0C17.33 15.16 18 13.66 18 12s-.67-3.16-1.76-4.24l-1.42 1.42C15.55 9.9 16 10.9 16 12s-.45 2.1-1.17 2.83zM12 10c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m8 2c0 2.21-.9 4.21-2.35 5.65l1.42 1.42C20.88 17.26 22 14.76 22 12s-1.12-5.26-2.93-7.07l-1.42 1.42A7.94 7.94 0 0 1 20 12M6.35 6.35L4.93 4.93C3.12 6.74 2 9.24 2 12s1.12 5.26 2.93 7.07l1.42-1.42C4.9 16.21 4 14.21 4 12s.9-4.21 2.35-5.65" />
+          </svg>
+          <!-- {% if esp32_data %}
           <span
             class="absolute bottom-[-1px] right-[-8px] w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
           {% else %}
           <span
             class="absolute bottom-[-1px] right-[-8px] w-4 h-4 bg-red-500 border-2 border-white rounded-full"></span>
-          {% endif %}
+          {% endif %} -->
         </button>
 
         <div
@@ -885,7 +889,7 @@
                 const li = document.createElement("li");
                 li.className = "p-4 text-gray-700 hover:bg-gray-100";
                 li.innerHTML = `<a href="{% url 'pending_accounts' %}" class="block w-full h-full">
-                      <strong>Pending Account:</strong> ${user.email}
+                      <strong>Unconfirmed Account:</strong> ${user.email}
                     </a>`;
                 list.appendChild(li);
               });

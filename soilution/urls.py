@@ -78,6 +78,8 @@ urlpatterns = [
     # path('users/<int:user_id>/activate/', views.activate_user, name='activate_user'),
 
     path('admin_page/logs/', views.admin_logs, name='admin_logs'),
+    # path('fetch-logs/', views.fetch_logs_ajax, name='fetch_logs_ajax'),
+    # path('log-overview-json/', views.log_overview_json, name='log_overview_json'),
 ]
 
 if settings.DEBUG:

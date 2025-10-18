@@ -39,12 +39,15 @@ from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator
 from django.db import connection
 from .models import Log
+import logging
 import json
 import os
 
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY)
 
 channel_layer = get_channel_layer()
+
+logger = logging.getLogger('custom')
 
 def index(request):
     list(messages.get_messages(request))
@@ -435,8 +438,15 @@ def admin_logs(request):
     if level:
         logs = logs.filter(level=level)
 
+    logs = logs.order_by('-timestamp')  # Always order by newest
+
+    paginator = Paginator(logs, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'logs': logs[:100],  # Limit to latest 100
+        'logs': page_obj,  # Pass paginated logs
+        'page_obj': page_obj,  # For pagination controls
         'selected_category': category,
         'selected_level': level,
     }
@@ -500,6 +510,8 @@ def reports(request):
     return render(request, 'reports.html', context)
 
 def login(request):
+    logger = logging.getLogger('auth')
+
     if request.user.is_authenticated:
         profile = request.user.profile
         if profile.role == 'admin':
@@ -513,14 +525,19 @@ def login(request):
         if form.is_valid():
             user = form.user
             if not user.is_active:
+                logger.warning(f"Inactive user {user.username} attempted login.")
                 messages.error(request, "Your account is not yet approved.")
                 return redirect('pending_approval')
             auth_login(request, user)
+            logger.info(f"User {user.username} logged in successfully.")
+
             profile = user.profile
             if profile.role == 'admin':
                 return redirect('admin_page')
             else:
                 return redirect('workspace')
+        else:
+            logger.warning("Invalid login attempt.")
     else:
         form = LoginForm()
 
@@ -739,12 +756,18 @@ def workspace(request):
     profile = user.profile
 
     profile_picture_url = profile.get_profile_image()
-    workspace = Workspace.objects.filter(user=request.user)
+    workspace = Workspace.objects.filter(user=request.user).order_by('-id')
+    
+    paginator = Paginator(workspace, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    return render(request, "workspace.html", {'user': request.user, 'workspace': workspace, 'profile_picture_url': profile_picture_url})
+    return render(request, "workspace.html", {'user': request.user, 'workspace': page_obj, 'profile_picture_url': profile_picture_url})
 
 @login_required
 def add_workspace(request):
+    logger = logging.getLogger('activity')
+
     list(messages.get_messages(request))
     if request.method == 'POST':
         form = WorkspaceForm(request.POST)
@@ -753,6 +776,7 @@ def add_workspace(request):
             workspace = form.save(commit=False)
             workspace.user = request.user
             workspace.save()
+            logger.info(f"User {request.user.username} created a workspace named '{workspace.name}'.")
 
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 # Return a JSON response for AJAX request
@@ -772,6 +796,7 @@ def add_workspace(request):
         else:
             # Log form errors if any
             print("Form errors:", form.errors)  # For debugging purposes
+            logger.warning(f"User {request.user.username} submitted invalid workspace form: {form.errors}")
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': form.errors})
             else:
@@ -784,6 +809,8 @@ def add_workspace(request):
 
 @login_required
 def update_account(request):
+    logger = logging.getLogger('auth')
+
     list(messages.get_messages(request))
     user = request.user
     profile, created = Profile.objects.get_or_create(user=user)
@@ -799,6 +826,7 @@ def update_account(request):
 
         if form.is_valid():
             form.save()
+            logger.info(f"User {user.username} updated their account information.")
 
             if request.FILES.get("profile_image"):
                 profile_picture = request.FILES["profile_image"]
@@ -811,6 +839,7 @@ def update_account(request):
                 if hasattr(response, "full_path"):
                     profile.profile_image = f"{settings.SUPABASE_URL}/storage/v1/object/public/{response.full_path}"
                     profile.save()
+                    logger.info(f"User {user.username} updated their profile image.")
 
             messages.success(request, "Your account has been updated successfully!")
             # form_success = True
@@ -819,6 +848,7 @@ def update_account(request):
             return redirect(f"{reverse('account_settings')}?{urlencode({'next': next_url})}")
         else:
             messages.error(request, "No space allowed. Please try again.")
+            logger.warning(f"User {user.username} submitted invalid account update form: {form.errors}")
         
     else:
         form = UserProfileForm(instance=user)
@@ -869,6 +899,8 @@ def dashboard_settings(request):
 
 @login_required
 def update_workspace(request):
+    logger = logging.getLogger('activity')
+
     list(messages.get_messages(request))
     if request.method == 'POST':
         workspace_id = request.POST.get('workspace')
@@ -884,6 +916,7 @@ def update_workspace(request):
         workspace.name = name
         workspace.description = description
         workspace.save()
+        logger.info(f"User {request.user.username} updated workspace '{workspace.name}' (ID: {workspace.id}).")
 
         messages.success(request, 'Workspace updated successfully!')
         return redirect('dashboard_settings')
@@ -892,10 +925,13 @@ def update_workspace(request):
 
 @login_required
 def delete_workspace(request):
+    logger = logging.getLogger('activity')
+
     list(messages.get_messages(request))
     if request.method == 'POST':
         workspace_id = request.POST.get('workspace')
         workspace = get_object_or_404(Workspace, id=workspace_id, user=request.user)
+        logger.warning(f"User {request.user.username} deleted workspace '{workspace.name}' (ID: {workspace.id}).")
         workspace.delete()
         messages.success(request, 'Workspace deleted successfully.')
         return redirect('workspace')  # back to workspace list
@@ -975,11 +1011,15 @@ def admin_page(request):
     total_users = User.objects.count()
     active_users = User.objects.filter(is_active=True).count()
     staff_users = User.objects.filter(is_staff=True).count()
-    pending_users = User.objects.filter(is_active=False).count()
+    # pending_users = User.objects.filter(is_active=False).count()
+    pending_users = Profile.objects.filter(status='pending').count()
+    approved_users_count = Profile.objects.filter(status='approved').count()
     # New users in the current month
     now = timezone.now()
     start_of_month = now.replace(day=1)
     new_users_this_month = User.objects.filter(date_joined__gte=start_of_month).count()
+    approved_users = Profile.objects.filter(status='approved').select_related('user')
+    rejected_users = Profile.objects.filter(status='rejected').count()
 
     # Get messages sent to admin
     received_messages = Message.objects.filter(receiver=request.user).order_by('-timestamp')[:10]
@@ -987,11 +1027,17 @@ def admin_page(request):
 
     recent_messages = Message.objects.filter(receiver=request.user).order_by('-timestamp')[:5]
 
+    recent_logs = Log.objects.filter(
+        category__in=['DEVICE', 'ACTIVITY', 'USER']
+    ).order_by('-timestamp')[:5]
+
     user_data = json.dumps({
         "total": total_users,
         "active": active_users,
         "pending": pending_users,
+        "approved": approved_users_count,
         "new": new_users_this_month,
+        "rejected": rejected_users,
     })
 
     return render(request, 'admin/admin_page.html', {
@@ -1003,7 +1049,10 @@ def admin_page(request):
         'unread_count': unread_count,
         'recent_messages': recent_messages,
         'pending_users': pending_users,
+        'rejected_users': rejected_users,
         'user_data': user_data,
+        'approved_users': approved_users,
+        'recent_logs': recent_logs,
     })
 
 @login_required

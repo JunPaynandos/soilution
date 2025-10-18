@@ -371,7 +371,7 @@
               <img src="{% static 'images/hour-glass.png' %}" alt="" width="14" height="14" />
               <span
                 class="absolute left-6 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
-                Pending_Accounts
+                Account_Status
               </span>
             </a>
           </li>
@@ -403,61 +403,65 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 p-6 mt-16 md:ml-14 group-hover:ml-52 transition-all duration-300 ease-in-out">
+    <div class="flex-1 p-6 mt-16 md:ml-14 group-hover:ml-52 transition-all duration-300 ease-in-out w-full">
       <!-- Title -->
-      <h1 class="text-2xl font-semibold mb-4">System Logs</h1>
+      <h1 class="text-2xl font-semibold mb-4">Logs</h1>
 
-      <!-- ✅ Description Section -->
-      <div class="mb-6">
-        <p class="mb-2 text-gray-700">
-          This section contains logs and records of all activities and actions taken within the system. You can review
-          past activities and changes here.
-        </p>
-        <ul class="list-disc list-inside text-gray-600 space-y-1">
-          <li>Device Logs</li>
-          <li>Activity Logs</li>
-          <li>System Notifications</li>
-          <li>User Interactions</li>
-          <li>Security Events</li>
-          <li>Notification Logs</li>
-        </ul>
-      </div>
+      <!-- Filter and Refresh Buttons Container -->
+      <div class="flex flex-col md:flex-row items-end space-y-4 md:space-y-0 md:space-x-4 mb-6 w-full">
+        <!-- Filter Form -->
+        <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+          <!-- Category Dropdown -->
+          <div class="flex flex-col">
+            <label class="block mb-1 text-sm font-medium text-gray-700">Category:</label>
+            <select name="category" class="w-full p-2 border rounded">
+              <option value="" {% if not selected_category %}selected{% endif %}>All</option>
+              <option value="DEVICE" {% if selected_category == "DEVICE" %}selected{% endif %}>Device</option>
+              <option value="ACTIVITY" {% if selected_category == "ACTIVITY" %}selected{% endif %}>Activity</option>
+              <option value="SYSTEM" {% if selected_category == "SYSTEM" %}selected{% endif %}>System</option>
+              <option value="USER" {% if selected_category == "USER" %}selected{% endif %}>User</option>
+              <option value="SECURITY" {% if selected_category == "SECURITY" %}selected{% endif %}>Security</option>
+            </select>
+          </div>
 
-      <!-- ✅ Filter Form -->
-      <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Category:</label>
-          <select name="category" class="w-full p-2 border rounded">
-            <option value="">All</option>
-            <option value="DEVICE">Device</option>
-            <option value="ACTIVITY">Activity</option>
-            <option value="SYSTEM">System</option>
-            <option value="USER">User</option>
-            <option value="SECURITY">Security</option>
-            <option value="NOTIFY">Notification</option>
-          </select>
-        </div>
+          <!-- Level Dropdown -->
+          <div class="flex flex-col">
+            <label class="block mb-1 text-sm font-medium text-gray-700">Level:</label>
+            <select name="level" class="w-full p-2 border rounded">
+              <option value="" {% if not selected_level %}selected{% endif %}>All</option>
+              <option value="INFO" {% if selected_level == "INFO" %}selected{% endif %}>Info</option>
+              <option value="WARNING" {% if selected_level == "WARNING" %}selected{% endif %}>Warning</option>
+              <option value="ERROR" {% if selected_level == "ERROR" %}selected{% endif %}>Error</option>
+              <option value="DEBUG" {% if selected_level == "DEBUG" %}selected{% endif %}>Debug</option>
+            </select>
+          </div>
 
-        <div>
-          <label class="block mb-1 text-sm font-medium text-gray-700">Level:</label>
-          <select name="level" class="w-full p-2 border rounded">
-            <option value="">All</option>
-            <option value="INFO">Info</option>
-            <option value="WARNING">Warning</option>
-            <option value="ERROR">Error</option>
-            <option value="DEBUG">Debug</option>
-          </select>
-        </div>
+          <!-- Filter Button -->
+          <div class="flex flex-col md:flex-row justify-start items-center space-y-2 md:space-y-6 md:space-x-4 w-full">
+            <button type="submit"
+              class="px-4 py-2 mt-0 md:mt-6 bg-blue-600 text-white rounded hover:bg-blue-700 transition w-full md:w-32">
+              <i class="bi bi-funnel"></i> Filter
+            </button>
 
-        <div class="flex items-end">
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-            Filter
+            <!-- Reset Button -->
+            <a id="reset-button" href="{% url 'admin_logs' %}"
+              class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500 transition w-full md:w-32 text-center">
+              <i class="bi bi-x-circle"></i>&nbsp; Reset
+            </a>
+          </div>
+        </form>
+
+        <!-- Refresh Button -->
+        <div class="flex items-end justify-center w-full md:w-auto mt-4 md:mt-0">
+          <button id="manual-refresh"
+            class="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition w-full md:w-32">
+            <i class="fa-solid fa-rotate-right"></i>&nbsp; Refresh
           </button>
         </div>
-      </form>
+      </div>
 
-      <!-- ✅ Logs Table -->
-      <div class="overflow-x-auto">
+      <!-- Logs Table -->
+      <div id="logs-table-container" class="w-full overflow-x-auto border border-gray-400 rounded-md">
         <table class="min-w-full table-auto border-collapse border border-gray-300">
           <thead class="bg-gray-100">
             <tr>
@@ -473,8 +477,18 @@
             <tr class="hover:bg-gray-50">
               <td class="px-4 py-2 border">{{ log.timestamp }}</td>
               <td class="px-4 py-2 border">{{ log.get_category_display }}</td>
-              <td class="px-4 py-2 border">{{ log.level }}</td>
-              <td class="px-4 py-2 border">{{ log.message }}</td>
+              <td class="px-4 py-2 border">
+                <span class="px-2 py-1 rounded-full text-xs font-semibold
+                  {% if log.level == 'ERROR' %} bg-[rgba(220,38,38,0.2)] text-red-700
+                  {% elif log.level == 'WARNING' %} bg-[rgba(234,179,8,0.2)] text-yellow-700
+                  {% elif log.level == 'INFO' %} bg-[rgba(37,99,235,0.2)] text-blue-700
+                  {% elif log.level == 'DEBUG' %} bg-[rgba(107,114,128,0.2)] text-gray-700
+                  {% else %} bg-[rgba(209,213,219,0.2)] text-gray-700
+                  {% endif %}">
+                  {{ log.level }}
+                </span>
+              </td>
+              <td class="px-4 py-2 border max-w-xs break-words">{{ log.message }}</td>
               <td class="px-4 py-2 border">{{ log.source }}</td>
             </tr>
             {% empty %}
@@ -486,7 +500,51 @@
         </table>
       </div>
 
-      <!-- ✅ Preloader -->
+      <!-- Pagination -->
+      <div class="mt-4 flex justify-center">
+        {% if page_obj.has_other_pages %}
+        <nav class="inline-flex space-x-1" aria-label="Pagination">
+          {% if page_obj.number > 1 %}
+          <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_level %}level={{ selected_level }}&{% endif %}page=1"
+            class="px-3 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100 text-sm">
+            «
+          </a>
+          {% endif %}
+
+          {% if page_obj.has_previous %}
+          <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_level %}level={{ selected_level }}&{% endif %}page={{ page_obj.previous_page_number }}"
+            class="px-3 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100 text-sm">
+            Previous
+          </a>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+          {% if num == page_obj.number %}
+          <span class="px-3 py-1 bg-blue-600 text-white border border-blue-600 rounded text-sm">{{ num }}</span>
+          {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %} <a
+            href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_level %}level={{ selected_level }}&{% endif %}page={{ num }}"
+            class="px-3 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100 text-sm">{{ num }}</a>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_level %}level={{ selected_level }}&{% endif %}page={{ page_obj.next_page_number }}"
+              class="px-3 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100 text-sm">
+              Next
+            </a>
+            {% endif %}
+
+            {% if page_obj.number < page_obj.paginator.num_pages %} <a
+              href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_level %}level={{ selected_level }}&{% endif %}page={{ page_obj.paginator.num_pages }}"
+              class="px-3 py-1 bg-white border border-gray-300 rounded hover:bg-gray-100 text-sm">
+              »
+              </a>
+              {% endif %}
+        </nav>
+        {% endif %}
+      </div>
+
+      <!-- Preloader (Loader) -->
       <div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-white bg-opacity-70 z-50">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-20 h-20 animate-spin">
           <radialGradient id="a9" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)">
@@ -506,7 +564,6 @@
         </svg>
       </div>
     </div>
-
 
     <script>
       const currentUserId = "{{ request.user.id }}";
@@ -611,7 +668,7 @@
                   const li = document.createElement("li");
                   li.className = "p-4 text-gray-700 hover:bg-gray-100";
                   li.innerHTML = `<a href="{% url 'pending_accounts' %}" class="block w-full h-full">
-                      <strong>Pending Account:</strong> ${user.email}
+                      <strong>Unconfirmed Account:</strong> ${user.email}
                     </a>`;
                   list.appendChild(li);
                 });
@@ -1085,7 +1142,7 @@
     <!-- sidebar menu & submenu -->
     <script>
       function toggleSubmenu(targetId, parentElement) {
-        const allSubmenus = ["submenu2"]; // Only submenu2 remains
+        const allSubmenus = ["submenu2"];
 
         allSubmenus.forEach((id) => {
           const submenu = document.getElementById(id);
@@ -1114,49 +1171,6 @@
       }
     </script>
 
-    <!-- Chart.js Script -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-      const userData = JSON.parse('{{ user_data|safe }}');
-
-      const ctx = document.getElementById('userChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar', // You can also try 'doughnut', 'pie', 'line'
-        data: {
-          labels: ['Registered', 'Active', 'Pending', 'New This Month'],
-          datasets: [{
-            label: 'Users',
-            data: [
-              userData.total,
-              userData.active,
-              userData.pending,
-              userData.new
-            ],
-            backgroundColor: [
-              '#10ac85',
-              '#3498db',
-              '#e67e22',
-              '#9b59b6'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-    </script>
-
     <script>
       const sidebarToggle = document.getElementById("sidebarToggle");
       const sidebar = document.getElementById("sidebar");
@@ -1165,34 +1179,130 @@
       const closeIcon = document.getElementById("closeIcon");
 
       sidebarToggle.addEventListener("click", () => {
-        sidebar.classList.toggle("-translate-x-full"); // toggle sidebar visibility
+        sidebar.classList.toggle("-translate-x-full");
         sidebar.classList.toggle("translate-x-0");
 
-        // Toggle the backdrop visibility
         sidebarBackdrop.classList.toggle("hidden");
 
-        // Swap icons for open/close state
         hamburgerIcon.classList.toggle("hidden");
         closeIcon.classList.toggle("hidden");
       });
 
-      // Close sidebar if backdrop is clicked
       sidebarBackdrop.addEventListener("click", () => {
-        sidebar.classList.add("-translate-x-full"); // Close sidebar
+        sidebar.classList.add("-translate-x-full"); r
         sidebar.classList.remove("translate-x-0");
-        sidebarBackdrop.classList.add("hidden"); // Hide the backdrop
+        sidebarBackdrop.classList.add("hidden");
 
-        // Reset icon visibility
         hamburgerIcon.classList.remove("hidden");
         closeIcon.classList.add("hidden");
       });
 
     </script>
 
-    <!-- bell notif -->
-    <!-- <script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const loader = document.getElementById("loader");
 
-    </script> -->
+        const filterForm = document.querySelector("form[method='get']");
+        if (filterForm) {
+          filterForm.addEventListener("submit", () => {
+            loader.classList.remove("hidden");
+          });
+        }
+
+        const resetButton = document.getElementById("reset-button");
+        if (resetButton) {
+          resetButton.addEventListener("click", () => {
+            loader.classList.remove("hidden");
+          });
+        }
+
+        // Show loader on manual refresh click
+        // const refreshButton = document.getElementById("manual-refresh");
+        // if (refreshButton) {
+        //   refreshButton.addEventListener("click", () => {
+        //     loader.classList.remove("hidden");
+        //   });
+        // }
+      });
+    </script>
+
+    <script>
+      const socket = new WebSocket('ws://' + window.location.host + '/ws/logs/');
+
+      socket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        // Filter out WebSocket connection logs
+        if (
+          data.source && data.source.startsWith('django.channels.server') &&
+          (
+            data.message.toLowerCase().startsWith('websocket') ||
+            data.message.toLowerCase().startsWith('http get') ||
+            data.message.toLowerCase().startsWith('http post')
+          )
+        ) {
+          return;
+        }
+
+        const tbody = document.querySelector('#logs-table-container tbody');
+        if (!tbody) return;
+
+        const tr = document.createElement('tr');
+        tr.classList.add('hover:bg-gray-50');
+
+        const timestamp = new Date(data.timestamp).toLocaleString();
+
+        let levelClass = 'bg-gray-200 text-gray-700';
+        if (data.level === 'ERROR') levelClass = 'bg-red-200 text-red-700';
+        else if (data.level === 'WARNING') levelClass = 'bg-yellow-200 text-yellow-700';
+        else if (data.level === 'INFO') levelClass = 'bg-blue-200 text-blue-700';
+        else if (data.level === 'DEBUG') levelClass = 'bg-gray-300 text-gray-800';
+
+        tr.innerHTML = `
+        <td class="px-4 py-2 border">${timestamp}</td>
+        <td class="px-4 py-2 border">${data.category}</td>
+        <td class="px-4 py-2 border">
+            <span class="px-2 py-1 rounded-full text-xs font-semibold ${levelClass}">
+                ${data.level}
+            </span>
+        </td>
+        <td class="px-4 py-2 border">${data.message}</td>
+        <td class="px-4 py-2 border">${data.source}</td>
+    `;
+
+        tbody.insertBefore(tr, tbody.firstChild);
+
+        if (tbody.children.length > 50) {
+          tbody.removeChild(tbody.lastChild);
+        }
+      };
+
+      socket.onclose = function (e) {
+        console.error('Socket closed unexpectedly');
+      };
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const loader = document.getElementById("loader");
+
+        // Hide loader after page load
+        window.onload = () => {
+          loader.classList.add("hidden");
+        };
+
+        // Show loader when clicking on pagination links
+        const paginationLinks = document.querySelectorAll('a[href*="page="]');
+        paginationLinks.forEach(link => {
+          link.addEventListener("click", () => {
+            loader.classList.remove("hidden");
+          });
+        });
+      });
+    </script>
+
+
 </body>
 
 </html>

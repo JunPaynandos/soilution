@@ -628,7 +628,7 @@
                 const li = document.createElement("li");
                 li.className = "p-4 text-gray-700 hover:bg-gray-100";
                 li.innerHTML = `<a href="{% url 'pending_accounts' %}" class="block w-full h-full">
-                      <strong>Pending Account:</strong> ${user.email}
+                      <strong>Unconfirmed Account:</strong> ${user.email}
                     </a>`;
                 list.appendChild(li);
               });

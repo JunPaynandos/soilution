@@ -66,7 +66,7 @@ class Log(models.Model):
         ('DEVICE', 'Device Logs'),
         ('ACTIVITY', 'Activity Logs'),
         ('SYSTEM', 'System Logs'),
-        ('USER', 'User Interactions'),
+        ('USER', 'User logs'),
         ('SECURITY', 'Security Events'),
         ('NOTIFY', 'Notification Logs'),
     ]
@@ -89,3 +89,4 @@ class Log(models.Model):
 
     def __str__(self):
         return f"[{self.get_category_display()}] {self.level} - {self.timestamp}"
+        

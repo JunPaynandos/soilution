@@ -502,7 +502,7 @@
               <img src="{% static 'images/hour-glass.png' %}" alt="" width="14" height="14" />
               <span
                 class="absolute left-6 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
-                Pending_Accounts
+                Account_Status
               </span>
             </a>
           </li>
@@ -517,6 +517,19 @@
             </a>
           </li>
         </ul>
+
+        <li class="mt-2 mb-2 relative flex items-center space-x-4 text-black group cursor-pointer">
+          <a href="{% url 'admin_logs' %}"
+            class="ml-[-6px] px-2 py-2 flex items-center w-full min-w-[2.2rem] hover:bg-gray-200 rounded space-x-2 active-link">
+            <div class="flex-shrink-0">
+              <img src="{% static 'images/list.png' %}" alt="" width="18" height="18" />
+            </div>
+            <span
+              class="absolute left-4 pointer-events-none md:pointer-events-auto opacity-0 md:group-hover:opacity-100 transition-all">
+              Logs
+            </span>
+          </a>
+        </li>
       </nav>
     </div>
 
@@ -560,10 +573,9 @@
             </div>
           </div>
 
-
           <!-- Table Responsive Wrapper -->
-          <div class="w-full overflow-x-auto border border-gray-400">
-            <table class="min-w-[740px] w-full text-sm text-left overflow-hidden">
+          <div class="w-full overflow-x-auto border border-gray-400 rounded-md">
+            <table class="min-w-[750px] w-full text-sm text-left overflow-hidden">
               <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
                 <tr>
                   <th class="px-4 py-3 border-b">Username</th>
@@ -723,7 +735,6 @@
       </div>
     </div>
 
-
     <!-- user detail modal -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -878,7 +889,7 @@
                   const li = document.createElement("li");
                   li.className = "p-4 text-gray-700";
                   li.innerHTML = `<a href="{% url 'pending_accounts' %}" class="block w-full h-full">
-                      <strong>Pending Account:</strong> ${user.email}
+                      <strong>Unconfirmed Account:</strong> ${user.email}
                     </a>`;
                   list.appendChild(li);
                 });

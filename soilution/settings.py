@@ -142,11 +142,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
 
-USE_I18N = True
+# USE_I18N = True
 
+# USE_TZ = True
+
+TIME_ZONE = 'Asia/Manila'
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)
@@ -244,3 +248,45 @@ CSP_CONNECT_SRC = (
     "'self'",
     "wss://shalala-e2sm.onrender.com",  # allow websocket
 )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'db': {
+            'level': 'DEBUG',
+            'class': 'detector.logging_handlers.DatabaseLogHandler',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['db', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'security': {
+            'handlers': ['db'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'auth': {
+            'handlers': ['db'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'activity': {
+            'handlers': ['db'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'custom': {
+            'handlers': ['db'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}
+
