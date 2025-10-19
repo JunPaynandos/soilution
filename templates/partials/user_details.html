@@ -81,13 +81,11 @@
 
       <!-- Recent Activity -->
       <div class="mt-10">
-        <h3 class="text-xl font-semibold mb-3 text-gray-800">
-          Recent Activity
-        </h3>
+        <h3 class="text-xl font-semibold mb-3 text-gray-800">Recent Activity</h3>
         <ul class="space-y-3 text-gray-700">
-          {% for log in user.profile.get_recent_logs %}
+          {% for log in recent_logs %}
           <li class="text-sm border-l-4 border-green-400 pl-3">
-            {{ log.timestamp|date:"M d, Y H:i" }} – {{ log.action }}
+            {{ log.timestamp|date:"M d, Y H:i" }} – {{ log.message }}
           </li>
           {% empty %}
           <li class="text-sm text-gray-500">No recent activity.</li>

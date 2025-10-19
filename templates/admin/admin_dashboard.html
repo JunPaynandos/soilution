@@ -641,8 +641,14 @@
         <!-- Left Chart (70%) -->
         <div
           class="card mt-5 md:mt-12 bg-white border border-gray-300 rounded-lg shadow-lg p-4 md:w-[70%] flex flex-col">
-          <h3 class="text-center">Crop Recommendation History</h3>
-          <canvas id="cropHistoryChart" class="w-full h-80"></canvas>
+          <h3 class="text-center mb-4 text-lg md:text-xl font-semibold">Crop Recommendation History</h3>
+
+          <!-- Responsive chart container -->
+          <div class="w-full overflow-x-auto">
+            <div class="min-w-[270px] sm:min-w-0">
+              <canvas id="cropHistoryChart" class="w-full h-64 md:h-80"></canvas>
+            </div>
+          </div>
         </div>
 
         <!-- Right Card (30%) -->
@@ -705,23 +711,34 @@
   </div>
 
   <script>
-    // This expects a Django context variable: crop_history_json
-    let cropHistoryData = [];
-    try {
-      cropHistoryData = JSON.parse('{{ crop_history_json|escapejs }}');
-    } catch (e) {
-      cropHistoryData = [];
-    }
+    // let cropHistoryData = [];
+    // try {
+    //   cropHistoryData = JSON.parse('{{ crop_history_json|escapejs }}');
+    // } catch (e) {
+    //   cropHistoryData = [];
+    // }
 
-    // Helper: format timestamp to YYYY-MM-DD
+    // Dummy data for preview
+    let cropHistoryData = [
+      { timestamp: "2025-10-15 10:12", crop: "Corn" },
+      { timestamp: "2025-10-15 11:25", crop: "Rice" },
+      { timestamp: "2025-10-15 12:40", crop: "Corn" },
+      { timestamp: "2025-10-16 08:15", crop: "Wheat" },
+      { timestamp: "2025-10-16 09:30", crop: "Corn" },
+      { timestamp: "2025-10-16 11:00", crop: "Rice" },
+      { timestamp: "2025-10-17 14:00", crop: "Soybean" },
+      { timestamp: "2025-10-17 15:20", crop: "Corn" },
+      { timestamp: "2025-10-17 17:10", crop: "Wheat" },
+      { timestamp: "2025-10-17 18:45", crop: "Rice" },
+    ];
+
     function getDay(dateStr) {
-      // Handles both "YYYY-MM-DD HH:MM" and ISO strings
       return dateStr.split(' ')[0];
     }
 
-    // Group data by day and crop
     const dayCropCounts = {};
     const uniqueCrops = new Set();
+
     cropHistoryData.forEach(entry => {
       const day = getDay(entry.timestamp);
       const crop = entry.crop;
@@ -731,14 +748,9 @@
       dayCropCounts[day][crop] += 1;
     });
 
-    // Get sorted list of days
     const days = Object.keys(dayCropCounts).sort();
-
-    // Get sorted list of crops
     const crops = Array.from(uniqueCrops).sort();
 
-    // Prepare datasets: for each crop, array of counts per day
-    // Use a fixed color palette for consistency
     const colorPalette = [
       "#4dc9f6", "#f67019", "#f53794", "#537bc4", "#acc236",
       "#166a8f", "#00a950", "#58595b", "#8549ba", "#e6194b",
@@ -754,25 +766,50 @@
       stack: 'cropStack'
     }));
 
+    // 🪄 Detect if mobile (you can tweak breakpoint)
+    const isMobile = window.innerWidth < 640;
+
     const ctx = document.getElementById('cropHistoryChart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',
-      data: {
-        labels: days,
-        datasets: datasets
-      },
+      data: { labels: days, datasets: datasets },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'top' },
+          legend: {
+            display: !isMobile,  // hide legend on mobile
+            position: 'top',
+            labels: {
+              boxWidth: 12,
+              font: { size: 10 }
+            }
+          },
           title: {
             display: true,
-            text: 'Crop Recommendation History (per Day)'
+            text: 'Crop Recommendation History (per Day)',
+            font: { size: 14 }
           }
         },
+        layout: {
+          padding: { left: 10, right: 10, top: 10, bottom: 10 }
+        },
         scales: {
-          x: { stacked: true, title: { display: true, text: 'Day' } },
-          y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Recommendation Count' } }
+          x: {
+            stacked: true,
+            title: { display: true, text: 'Day' },
+            ticks: {
+              maxRotation: 45,
+              minRotation: 30,
+              font: { size: 10 }
+            }
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            title: { display: true, text: 'Recommendation Count' },
+            ticks: { font: { size: 10 } }
+          }
         }
       }
     });

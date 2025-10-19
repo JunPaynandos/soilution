@@ -83,6 +83,7 @@ class Log(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     message = models.TextField()
     source = models.CharField(max_length=255, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ['-timestamp']

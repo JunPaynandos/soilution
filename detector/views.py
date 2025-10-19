@@ -776,7 +776,15 @@ def add_workspace(request):
             workspace = form.save(commit=False)
             workspace.user = request.user
             workspace.save()
-            logger.info(f"User {request.user.username} created a workspace named '{workspace.name}'.")
+            # logger.info(f"User {request.user.username} created a workspace named '{workspace.name}'.")
+
+            Log.objects.create(
+                user=request.user,
+                category='ACTIVITY',
+                message=f"User {request.user.username} created a workspace named '{workspace.name}'.",
+                level='INFO',
+                source='activity',
+            )
 
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 # Return a JSON response for AJAX request
@@ -826,7 +834,15 @@ def update_account(request):
 
         if form.is_valid():
             form.save()
-            logger.info(f"User {user.username} updated their account information.")
+            # logger.info(f"User {user.username} updated their account information.")
+
+            Log.objects.create(
+                user=request.user,
+                category='ACTIVITY',
+                message=f"User {request.user.username} update their account information.",
+                level='INFO',
+                source='activity',
+            )
 
             if request.FILES.get("profile_image"):
                 profile_picture = request.FILES["profile_image"]
@@ -839,7 +855,15 @@ def update_account(request):
                 if hasattr(response, "full_path"):
                     profile.profile_image = f"{settings.SUPABASE_URL}/storage/v1/object/public/{response.full_path}"
                     profile.save()
-                    logger.info(f"User {user.username} updated their profile image.")
+                    # logger.info(f"User {user.username} updated their profile image.")
+
+                    Log.objects.create(
+                        user=request.user,
+                        category='ACTIVITY',
+                        message=f"User {request.user.username} updated their profile image.",
+                        level='INFO',
+                        source='activity',
+                    )
 
             messages.success(request, "Your account has been updated successfully!")
             # form_success = True
@@ -916,7 +940,14 @@ def update_workspace(request):
         workspace.name = name
         workspace.description = description
         workspace.save()
-        logger.info(f"User {request.user.username} updated workspace '{workspace.name}' (ID: {workspace.id}).")
+        # logger.info(f"User {request.user.username} updated workspace '{workspace.name}' (ID: {workspace.id}).")
+        Log.objects.create(
+            user=request.user,
+            category='ACTIVITY',
+            message=f"User {request.user.username} updated workspace '{workspace.name}' (ID: {workspace.id}).",
+            level='INFO',
+            source='activity',
+        )
 
         messages.success(request, 'Workspace updated successfully!')
         return redirect('dashboard_settings')
@@ -931,7 +962,14 @@ def delete_workspace(request):
     if request.method == 'POST':
         workspace_id = request.POST.get('workspace')
         workspace = get_object_or_404(Workspace, id=workspace_id, user=request.user)
-        logger.warning(f"User {request.user.username} deleted workspace '{workspace.name}' (ID: {workspace.id}).")
+        # logger.warning(f"User {request.user.username} deleted workspace '{workspace.name}' (ID: {workspace.id}).")
+        Log.objects.create(
+            user=request.user,
+            category='ACTIVITY',
+            message=f"User {request.user.username} deleted workspace '{workspace.name}' (ID: {workspace.id}).",
+            level='INFO',
+            source='activity',
+        )
         workspace.delete()
         messages.success(request, 'Workspace deleted successfully.')
         return redirect('workspace')  # back to workspace list
@@ -1506,10 +1544,16 @@ def user_detail_modal(request, user_id):
     user = get_object_or_404(User, id=user_id)
     profile = get_object_or_404(Profile, user=user)
 
+    recent_logs = Log.objects.filter(
+        user=user,
+        category="ACTIVITY"
+    ).order_by("-timestamp")[:10]
+
     return render(request, 'partials/user_details.html', {
         'user': user,
         'profile': profile,
         'profile_picture_url': profile.get_profile_image(),
+        'recent_logs': recent_logs,
     })
 
 

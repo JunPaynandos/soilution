@@ -46,7 +46,8 @@ class DatabaseLogHandler(logging.Handler):
                     level=record.levelname,
                     category=category,
                     message=record.getMessage(),
-                    source=record.name
+                    source=record.name,
+                    user=record.user if hasattr(record, "user") else None
                 )
 
                 channel_layer = get_channel_layer()
@@ -76,7 +77,8 @@ class DatabaseLogHandler(logging.Handler):
             level=record.levelname,
             category=category,
             message=record.getMessage(),
-            source=record.name
+            source=record.name,
+            user=record.user if hasattr(record, "user") else None
         )
 
         channel_layer = get_channel_layer()
