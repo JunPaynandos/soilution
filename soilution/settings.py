@@ -18,7 +18,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['shalala-e2sm.onrender.com', 'localhost', '127.0.0.1:8000', '127.0.0.1']
+ALLOWED_HOSTS = ['shalala-e2sm.onrender.com', 'soilution.onrender.com',  'localhost', '127.0.0.1:8000', '127.0.0.1']
 
 ACCOUNT_ADAPTER = 'detector.adapter.CustomAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'detector.adapter.CustomSocialAccountAdapter'  # Replace with your actual app name
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://shalala-e2sm.onrender.com', 'https://soilution.onrender.com', 'soilution.onrender.com', 'http://localhost:8000']
+CSRF_TRUSTED_ORIGINS = ['https://shalala-e2sm.onrender.com', 'https://soilution.onrender.com', 'http://localhost:8000']
 
 
 ROOT_URLCONF = 'soilution.urls'
