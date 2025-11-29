@@ -564,7 +564,7 @@
             <h4 class="text-xl font-semibold">Crop Recommendations</h4>
           </div>
 
-          <div class="card-body p-4 flex-1">
+          <!-- <div class="card-body p-4 flex-1">
             {% if recommendations %}
             <ul class="space-y-2">
               {% for rec in recommendations %}
@@ -581,8 +581,31 @@
               <p class="text-center text-gray-500">No recommendations available.</p>
             </div>
             {% endif %}
-          </div>
+          </div> -->
+        
+            <div class="card-body p-4 flex-1">
+              <!-- Always render the UL so JS can fill it -->
+              <ul id="recommendationsList" class="space-y-2" {% if not recommendations %}style="display:none" {% endif %}>
+                {% if recommendations %}
+                {% for rec in recommendations %}
+                <li>
+                  <strong>{{ rec.crop_name }}</strong>
+                  {% if rec.probability %}
+                  - Probability: {{ rec.probability|floatformat:2 }}
+                  {% endif %}
+                </li>
+                {% endfor %}
+                {% endif %}
+              </ul>
+
+              <!-- No data (will be hidden by JS if dummy items added) -->
+              <p id="noDataMessage" class="text-center text-gray-500" {% if recommendations %}style="display:none" {% endif %}>
+                No recommendations available.
+              </p>
+
+            </div>
         </div>
+      
       </div>
     </div>
 
@@ -704,7 +727,9 @@
     });
   </script> -->
 
-  <script>
+
+  <!-- crop chart -->
+  <!-- <script>
     // let cropHistoryData = [];
     // try {
     //   cropHistoryData = JSON.parse('{{ crop_history_json|escapejs }}');
@@ -807,7 +832,7 @@
         }
       }
     });
-  </script>
+  </script> -->
 
   <script>
     const currentUserId = "{{ request.user.id }}";
@@ -1425,6 +1450,295 @@
     });
 
   </script>
+
+<!-- reco 1 -->
+<!-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const dummyRecommendations = [
+    { crop_name: "Corn", probability: 0.92 },
+    { crop_name: "Rice", probability: 0.88 },
+    { crop_name: "Wheat", probability: 0.81 },
+    { crop_name: "Tomato", probability: 0.95 },
+    { crop_name: "Potato", probability: 0.76 },
+    { crop_name: "Soybean", probability: 0.83 },
+    { crop_name: "Banana", probability: 0.91 },
+    { crop_name: "Carrot", probability: 0.72 },
+    { crop_name: "Peanut", probability: 0.79 },
+    { crop_name: "Barley", probability: 0.84 }
+  ];
+
+  const list = document.getElementById("recommendationsList");
+  const noData = document.getElementById("noDataMessage");
+
+  // Only load dummy data if Django gave none
+  if (list && list.children.length === 0) {
+    list.style.display = "block";
+    if (noData) noData.style.display = "none";
+
+    dummyRecommendations.forEach(rec => {
+      const li = document.createElement("li");
+      li.className = "p-3 bg-gray-100 rounded-md shadow-sm flex justify-between items-center"; // Tailwind styling
+      li.innerHTML = `
+        <span class="font-semibold text-green-700">${rec.crop_name}</span>
+        <span class="text-gray-600">Probability: <strong>${rec.probability.toFixed(2)}</strong></span>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+});
+</script> -->
+
+<!-- r 2 -->
+<!-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // --- MATCHED dummy crop history for chart ---
+  let cropHistoryData = [
+    { timestamp: "2025-10-15 10:12", crop: "Corn" },
+    { timestamp: "2025-10-15 11:25", crop: "Rice" },
+    { timestamp: "2025-10-15 12:40", crop: "Corn" },
+    { timestamp: "2025-10-16 08:15", crop: "Wheat" },
+    { timestamp: "2025-10-16 09:30", crop: "Corn" },
+    { timestamp: "2025-10-16 11:00", crop: "Rice" },
+    { timestamp: "2025-10-17 14:00", crop: "Soybean" },
+    { timestamp: "2025-10-17 15:20", crop: "Corn" },
+    { timestamp: "2025-10-17 17:10", crop: "Wheat" },
+    { timestamp: "2025-10-17 18:45", crop: "Rice" }
+  ];
+
+  const dummyRecommendations = [
+    { crop_name: "Corn",    probability: 0.92, date: "2025-10-15 10:12" },
+    { crop_name: "Rice",    probability: 0.88, date: "2025-10-15 11:25" },
+    { crop_name: "Corn",    probability: 0.81, date: "2025-10-15 12:40" },
+    { crop_name: "Wheat",   probability: 0.74, date: "2025-10-16 08:15" },
+    { crop_name: "Corn",    probability: 0.95, date: "2025-10-16 09:30" },
+    { crop_name: "Rice",    probability: 0.79, date: "2025-10-16 11:00" },
+    { crop_name: "Soybean", probability: 0.84, date: "2025-10-17 14:00" },
+    { crop_name: "Corn",    probability: 0.89, date: "2025-10-17 15:20" },
+    { crop_name: "Wheat",   probability: 0.77, date: "2025-10-17 17:10" },
+    { crop_name: "Rice",    probability: 0.82, date: "2025-10-17 18:45" },
+  ];
+
+  // === Insert dummy recommendations (Tailwind styled) ===
+  const list = document.getElementById("recommendationsList");
+  const noData = document.getElementById("noDataMessage");
+
+  if (list && list.children.length === 0) {
+    list.style.display = "block";
+    if (noData) noData.style.display = "none";
+
+    dummyRecommendations.forEach(rec => {
+      const li = document.createElement("li");
+      li.className = "p-3 bg-gray-100 rounded-md shadow-sm flex flex-col gap-1";
+      li.innerHTML = `
+        <div class="flex justify-between items-center">
+          <span class="font-semibold text-green-700">${rec.crop_name}</span>
+          <span class="text-gray-600">Prob: <strong>${rec.probability.toFixed(2)}</strong></span>
+        </div>
+        <div class="text-xs text-gray-500">
+          Date: ${rec.date}
+        </div>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  // === Existing CHART CODE using cropHistoryData (unchanged) ===
+  function getDay(dateStr) {
+    return dateStr.split(' ')[0];
+  }
+
+  const dayCropCounts = {};
+  const uniqueCrops = new Set();
+
+  cropHistoryData.forEach(entry => {
+    const day = getDay(entry.timestamp);
+    const crop = entry.crop;
+    uniqueCrops.add(crop);
+    if (!dayCropCounts[day]) dayCropCounts[day] = {};
+    if (!dayCropCounts[day][crop]) dayCropCounts[day][crop] = 0;
+    dayCropCounts[day][crop] += 1;
+  });
+
+  const days = Object.keys(dayCropCounts).sort();
+  const crops = Array.from(uniqueCrops).sort();
+
+  const colorPalette = [
+    "#4dc9f6", "#f67019", "#f53794", "#537bc4", "#acc236",
+    "#166a8f", "#00a950", "#58595b", "#8549ba", "#e6194b"
+  ];
+
+  const datasets = crops.map((crop, idx) => ({
+    label: crop,
+    data: days.map(day => dayCropCounts[day][crop] || 0),
+    backgroundColor: colorPalette[idx % colorPalette.length],
+    stack: 'cropStack'
+  }));
+
+  const isMobile = window.innerWidth < 640;
+
+  const ctx = document.getElementById('cropHistoryChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: { labels: days, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: !isMobile,
+          position: 'top',
+          labels: { boxWidth: 12, font: { size: 10 } }
+        },
+        title: {
+          display: true,
+          text: 'Crop Recommendation History (per Day)',
+          font: { size: 14 }
+        }
+      },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, beginAtZero: true }
+      }
+    }
+  });
+
+});
+</script> -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // --- MATCHED dummy crop history for chart ---
+  let cropHistoryData = [
+    { timestamp: "2025-10-15 10:12", crop: "Corn" },
+    { timestamp: "2025-10-15 11:25", crop: "Rice" },
+    { timestamp: "2025-10-15 12:40", crop: "Corn" },
+    { timestamp: "2025-10-16 08:15", crop: "Wheat" },
+    { timestamp: "2025-10-16 09:30", crop: "Corn" },
+    { timestamp: "2025-10-16 11:00", crop: "Rice" },
+    { timestamp: "2025-10-17 14:00", crop: "Soybean" },
+    { timestamp: "2025-10-17 15:20", crop: "Corn" },
+    { timestamp: "2025-10-17 17:10", crop: "Wheat" },
+    { timestamp: "2025-10-17 18:45", crop: "Rice" }
+  ];
+
+  const dummyRecommendations = [
+    { crop_name: "Corn",    probability: 0.92, date: "2025-10-15 10:12" },
+    { crop_name: "Rice",    probability: 0.88, date: "2025-10-15 11:25" },
+    { crop_name: "Corn",    probability: 0.81, date: "2025-10-15 12:40" },
+    { crop_name: "Wheat",   probability: 0.74, date: "2025-10-16 08:15" },
+    { crop_name: "Corn",    probability: 0.95, date: "2025-10-16 09:30" },
+    { crop_name: "Rice",    probability: 0.79, date: "2025-10-16 11:00" },
+    { crop_name: "Soybean", probability: 0.84, date: "2025-10-17 14:00" },
+    { crop_name: "Corn",    probability: 0.89, date: "2025-10-17 15:20" },
+    { crop_name: "Wheat",   probability: 0.77, date: "2025-10-17 17:10" },
+    { crop_name: "Rice",    probability: 0.82, date: "2025-10-17 18:45" },
+  ];
+
+  // --- Compute top 3 crops ---
+  const cropCounts = {};
+  cropHistoryData.forEach(entry => {
+    cropCounts[entry.crop] = (cropCounts[entry.crop] || 0) + 1;
+  });
+
+  const topCrops = Object.entries(cropCounts)
+                        .sort((a,b) => b[1] - a[1])
+                        .slice(0, 3)
+                        .map(e => e[0]);
+
+  // --- Filter data to only top 3 crops ---
+  cropHistoryData = cropHistoryData.filter(entry => topCrops.includes(entry.crop));
+  const filteredRecommendations = dummyRecommendations.filter(rec => topCrops.includes(rec.crop_name));
+
+  // === Insert dummy recommendations (Tailwind styled) ===
+  const list = document.getElementById("recommendationsList");
+  const noData = document.getElementById("noDataMessage");
+
+  if (list && list.children.length === 0) {
+    list.style.display = "block";
+    if (noData) noData.style.display = "none";
+
+    filteredRecommendations.forEach(rec => {
+      const li = document.createElement("li");
+      li.className = "p-3 bg-gray-100 rounded-md shadow-sm flex flex-col gap-1";
+      li.innerHTML = `
+        <div class="flex justify-between items-center">
+          <span class="font-semibold text-green-700">${rec.crop_name}</span>
+          <span class="text-gray-600">Probability: <strong>${rec.probability.toFixed(2)}</strong></span>
+        </div>
+        <div class="text-xs text-gray-500">
+          Date: ${rec.date}
+        </div>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  // === CHART CODE using filtered cropHistoryData ===
+  function getDay(dateStr) {
+    return dateStr.split(' ')[0];
+  }
+
+  const dayCropCounts = {};
+  const uniqueCrops = new Set();
+
+  cropHistoryData.forEach(entry => {
+    const day = getDay(entry.timestamp);
+    const crop = entry.crop;
+    uniqueCrops.add(crop);
+    if (!dayCropCounts[day]) dayCropCounts[day] = {};
+    if (!dayCropCounts[day][crop]) dayCropCounts[day][crop] = 0;
+    dayCropCounts[day][crop] += 1;
+  });
+
+  const days = Object.keys(dayCropCounts).sort();
+  const crops = Array.from(uniqueCrops).sort();
+
+  const colorPalette = [
+    "#4dc9f6", "#f67019", "#f53794", "#537bc4", "#acc236"
+  ];
+
+  const datasets = crops.map((crop, idx) => ({
+    label: crop,
+    data: days.map(day => dayCropCounts[day][crop] || 0),
+    backgroundColor: colorPalette[idx % colorPalette.length],
+    stack: 'cropStack'
+  }));
+
+  const isMobile = window.innerWidth < 640;
+
+  const ctx = document.getElementById('cropHistoryChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: { labels: days, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: !isMobile,
+          position: 'top',
+          labels: { boxWidth: 12, font: { size: 10 } }
+        },
+        title: {
+          display: true,
+          text: 'Top 3 Crop Recommendation History (per Day)',
+          font: { size: 14 }
+        }
+      },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, beginAtZero: true }
+      }
+    }
+  });
+
+});
+</script>
+
 
 </body>
 

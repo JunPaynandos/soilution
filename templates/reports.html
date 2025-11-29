@@ -564,7 +564,7 @@
       const table = document.getElementById('crop-history-table');
       table.innerHTML = '';
       if (filteredData.length === 0) {
-        table.innerHTML = '<tr><td colspan="2" class="text-center py-4">No data found.</td></tr>';
+        // table.innerHTML = '<tr><td colspan="2" class="text-center py-4">No data found.</td></tr>';
         return;
       }
       filteredData.forEach(entry => {
@@ -1363,6 +1363,7 @@
 
   </script>
   
+  <!-- print function -->
   <script>
     function printCropReport() {
         const printContent = document.querySelector("#crop-history-table").closest("table").outerHTML;
@@ -1405,6 +1406,39 @@
         printWindow.close();
     }
   </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const cropHistoryData = [
+    { timestamp: "2025-10-15 10:12", crop: "Corn" },
+    { timestamp: "2025-10-15 11:25", crop: "Rice" },
+    { timestamp: "2025-10-15 12:40", crop: "Corn" },
+    { timestamp: "2025-10-16 08:15", crop: "Wheat" },
+    { timestamp: "2025-10-16 09:30", crop: "Corn" },
+    { timestamp: "2025-10-16 11:00", crop: "Rice" },
+    { timestamp: "2025-10-17 14:00", crop: "Soybean" },
+    { timestamp: "2025-10-17 15:20", crop: "Corn" },
+    { timestamp: "2025-10-17 17:10", crop: "Wheat" },
+    { timestamp: "2025-10-17 18:45", crop: "Rice" },
+  ];
+
+  const tableBody = document.getElementById("crop-history-table");
+  if (tableBody) {
+    cropHistoryData.forEach((rec, idx) => {
+      const tr = document.createElement("tr");
+      tr.className = idx % 2 === 0 ? "bg-gray-50" : "bg-white"; // alternate row colors
+      tr.innerHTML = `
+        <td class="py-2 px-4 border-b text-gray-700 font-medium">${rec.timestamp}</td>
+        <td class="py-2 px-4 border-b text-gray-700 font-medium">${rec.crop}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  }
+
+});
+</script>
+
 </body>
 
 </html>
