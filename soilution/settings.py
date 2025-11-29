@@ -98,7 +98,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
         "OPTIONS": {
             "sslmode": "require"
-        }
+        },
+        "CONN_MAX_AGE": 600
     }
 }
 
