@@ -1611,7 +1611,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  // --- MATCHED dummy crop history for chart ---
+  // --- Dummy crop history for chart ---
   let cropHistoryData = [
     { timestamp: "2025-10-15 10:12", crop: "Corn" },
     { timestamp: "2025-10-15 11:25", crop: "Rice" },
@@ -1638,7 +1638,7 @@ document.addEventListener("DOMContentLoaded", function () {
     { crop_name: "Rice",    probability: 0.82, date: "2025-10-17 18:45" },
   ];
 
-  // --- Compute top 3 crops ---
+  // === Compute top 3 crops for the CHART (frequency based, unchanged) ===
   const cropCounts = {};
   cropHistoryData.forEach(entry => {
     cropCounts[entry.crop] = (cropCounts[entry.crop] || 0) + 1;
@@ -1649,19 +1649,30 @@ document.addEventListener("DOMContentLoaded", function () {
                         .slice(0, 3)
                         .map(e => e[0]);
 
-  // --- Filter data to only top 3 crops ---
   cropHistoryData = cropHistoryData.filter(entry => topCrops.includes(entry.crop));
-  const filteredRecommendations = dummyRecommendations.filter(rec => topCrops.includes(rec.crop_name));
 
-  // === Insert dummy recommendations (Tailwind styled) ===
+  // === TOP 3 UNIQUE CROPS BY HIGHEST PROBABILITY (UPDATED) ===
   const list = document.getElementById("recommendationsList");
   const noData = document.getElementById("noDataMessage");
+
+  // Group: pick highest prob per crop
+  const bestPerCrop = {};
+  dummyRecommendations.forEach(rec => {
+    if (!bestPerCrop[rec.crop_name] || rec.probability > bestPerCrop[rec.crop_name].probability) {
+      bestPerCrop[rec.crop_name] = rec;
+    }
+  });
+
+  // Sort top 3 by descending highest probability
+  const top3 = Object.values(bestPerCrop)
+    .sort((a, b) => b.probability - a.probability)
+    .slice(0, 3);
 
   if (list && list.children.length === 0) {
     list.style.display = "block";
     if (noData) noData.style.display = "none";
 
-    filteredRecommendations.forEach(rec => {
+    top3.forEach(rec => {
       const li = document.createElement("li");
       li.className = "p-3 bg-gray-100 rounded-md shadow-sm flex flex-col gap-1";
       li.innerHTML = `
@@ -1670,14 +1681,14 @@ document.addEventListener("DOMContentLoaded", function () {
           <span class="text-gray-600">Probability: <strong>${rec.probability.toFixed(2)}</strong></span>
         </div>
         <div class="text-xs text-gray-500">
-          Date: ${rec.date}
+          Highest Recorded Date: ${rec.date}
         </div>
       `;
       list.appendChild(li);
     });
   }
 
-  // === CHART CODE using filtered cropHistoryData ===
+  // === CHART CODE (unchanged logic) ===
   function getDay(dateStr) {
     return dateStr.split(' ')[0];
   }
@@ -1698,7 +1709,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const crops = Array.from(uniqueCrops).sort();
 
   const colorPalette = [
-    "#4dc9f6", "#f67019", "#f53794", "#537bc4", "#acc236"
+    "#4dc9f6", "#f67019", "#f53794",
+    "#537bc4", "#acc236"
   ];
 
   const datasets = crops.map((crop, idx) => ({
@@ -1738,6 +1750,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
+
 
 
 </body>
