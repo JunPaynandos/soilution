@@ -92,22 +92,32 @@ ASGI_APPLICATION = 'soilution.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        "OPTIONS": {
-            "sslmode": "require"
-        },
-        "CONN_MAX_AGE": 600
-    }
-}
-
-database_url = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 DATABASES = {
-    'default': dj_database_url.parse(database_url)
+    "default": dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=600,     # Django keeps connections open longer
+        ssl_require=True      # Ensure SSL is used
+    )
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#         "OPTIONS": {
+#             "sslmode": "require"
+#         },
+#         "CONN_MAX_AGE": 600
+#     }
+# }
+
+# database_url = os.environ.get('DATABASE_URL')
+
+# DATABASES = {
+#     'default': dj_database_url.parse(database_url)
+# }
 
 # Session engine (default is database-backed)
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
