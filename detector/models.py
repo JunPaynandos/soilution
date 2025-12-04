@@ -90,4 +90,24 @@ class Log(models.Model):
 
     def __str__(self):
         return f"[{self.get_category_display()}] {self.level} - {self.timestamp}"
+
+class CropRecommendation(models.Model):
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='crop_recommendations')
+    nitrogen = models.FloatField()
+    phosphorus = models.FloatField()
+    potassium = models.FloatField()
+    temperature = models.FloatField()
+    moisture = models.FloatField()
+    ph = models.FloatField()
+    conductivity = models.FloatField()
+    recommended_crop = models.CharField(max_length=100)
+    confidence = models.FloatField()
+    all_recommendations = models.JSONField(default=list)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f"{self.recommended_crop} ({self.confidence}%) - {self.workspace.name}"
         

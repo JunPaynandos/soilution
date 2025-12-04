@@ -13,7 +13,11 @@ import time
 import io
 import os
 
-supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY)
+try:
+    supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY)
+except Exception as e:
+    print(f"Supabase initialization failed in signals: {e}")
+    supabase = None
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
