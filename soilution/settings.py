@@ -94,13 +94,21 @@ ASGI_APPLICATION = 'soilution.asgi.application'
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-DATABASES = {
-    "default": dj_database_url.parse(
-        DATABASE_URL,
-        conn_max_age=600,     # Django keeps connections open longer
-        ssl_require=True      # Ensure SSL is used
-    )
-}
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # DATABASES = {
 #     'default': {
@@ -190,15 +198,23 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-         "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL')],
+REDIS_URL = os.environ.get('REDIS_URL')
+
+if REDIS_URL:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [REDIS_URL],
+            },
         },
-    },
-    
-}
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
 
 # AUTH_USER_MODEL = 'detector.CustomUser' 
 

@@ -450,7 +450,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Soil Moisture</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.moisture|default:"0" }}%
+                {{ esp32_data.moisture|default:"0"|floatformat:2 }}%
               </p>
             </div>
             <img src="{% static 'images/sea.png' %}" alt="moisture_icon"
@@ -463,7 +463,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Temperature</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.temperature|default:"0" }}°C
+                {{ esp32_data.temperature|default:"0"|floatformat:2 }}°C
               </p>
             </div>
             <img src="{% static 'images/thermometer3.png' %}" alt="thermometer_icon"
@@ -476,7 +476,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Humidity</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.humidity|default:"0" }}%
+                {{ esp32_data.humidity|default:"0"|floatformat:2 }}%
               </p>
             </div>
             <img src="{% static 'images/humidity.png' %}" alt="humidity_icon"
@@ -489,7 +489,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">pH Level</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.pH|default:"0" }}
+                {{ esp32_data.pH|default:"0"|floatformat:2 }}
               </p>
             </div>
             <img src="{% static 'images/windows.png' %}" alt="windows_icon"
@@ -507,7 +507,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Nitrogen</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.nitrogen|default:"0" }} mg/kg
+                {{ esp32_data.nitrogen|default:"0"|floatformat:2 }} mg/kg
               </p>
             </div>
             <img src="{% static 'images/nitrogen.png' %}" alt="nitrogen_icon"
@@ -521,7 +521,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Phosphorus</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.phosphorus|default:"0" }} mg/kg
+                {{ esp32_data.phosphorus|default:"0"|floatformat:2 }} mg/kg
               </p>
             </div>
             <img src="{% static 'images/phosphorus.png' %}" alt="phosphorus_icon"
@@ -535,7 +535,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Potassium</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.potassium|default:"0" }} mg/kg
+                {{ esp32_data.potassium|default:"0"|floatformat:2 }} mg/kg
               </p>
             </div>
             <img src="{% static 'images/potassium.png' %}" alt="potassium_icon"
@@ -562,6 +562,14 @@
           class="card dashboard-card mt-1 md:mt-12 bg-white border border-gray-300 rounded-lg shadow-lg md:w-[30%] flex flex-col">
           <div class="card-header text-black text-center p-4 rounded-t-lg border-b-2">
             <h4 class="text-xl font-semibold">Crop Recommendations</h4>
+            <div class="flex flex-col gap-2 mt-2">
+              <button id="start-test-btn" onclick="startSoilTesting()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded shadow transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center mx-auto gap-2 w-full">
+                <i class="fas fa-flask"></i> Start Soil Testing
+              </button>
+              <button onclick="openDeviceModal()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow transition duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center mx-auto gap-2 w-full">
+                <i class="fas fa-link"></i> Connect Device
+              </button>
+            </div>
           </div>
 
           <!-- <div class="card-body p-4 flex-1">
@@ -585,21 +593,19 @@
         
             <div class="card-body p-4 flex-1">
               <!-- Always render the UL so JS can fill it -->
-              <ul id="recommendationsList" class="space-y-2" {% if not recommendations %}style="display:none" {% endif %}>
-                {% if recommendations %}
-                {% for rec in recommendations %}
-                <li>
-                  <strong>{{ rec.crop_name }}</strong>
-                  {% if rec.probability %}
-                  - Probability: {{ rec.probability|floatformat:2 }}
-                  {% endif %}
+              <ul id="recommendationsList" class="space-y-2" {% if not esp32_data.recommendations %}style="display:none" {% endif %}>
+                {% if esp32_data.recommendations %}
+                {% for rec in esp32_data.recommendations %}
+                <li class="flex justify-between items-center border-b pb-2 last:border-b-0">
+                  <span class="font-medium">{{ rec.name }}</span>
+                  <span class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">{{ rec.confidence }}%</span>
                 </li>
                 {% endfor %}
                 {% endif %}
               </ul>
 
               <!-- No data (will be hidden by JS if dummy items added) -->
-              <p id="noDataMessage" class="text-center text-gray-500" {% if recommendations %}style="display:none" {% endif %}>
+              <p id="noDataMessage" class="text-center text-gray-500" {% if esp32_data.recommendations %}style="display:none" {% endif %}>
                 No recommendations available.
               </p>
 
@@ -1494,56 +1500,17 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  // --- MATCHED dummy crop history for chart ---
-  let cropHistoryData = [
-    { timestamp: "2025-10-15 10:12", crop: "Corn" },
-    { timestamp: "2025-10-15 11:25", crop: "Rice" },
-    { timestamp: "2025-10-15 12:40", crop: "Corn" },
-    { timestamp: "2025-10-16 08:15", crop: "Wheat" },
-    { timestamp: "2025-10-16 09:30", crop: "Corn" },
-    { timestamp: "2025-10-16 11:00", crop: "Rice" },
-    { timestamp: "2025-10-17 14:00", crop: "Soybean" },
-    { timestamp: "2025-10-17 15:20", crop: "Corn" },
-    { timestamp: "2025-10-17 17:10", crop: "Wheat" },
-    { timestamp: "2025-10-17 18:45", crop: "Rice" }
-  ];
-
-  const dummyRecommendations = [
-    { crop_name: "Corn",    probability: 0.92, date: "2025-10-15 10:12" },
-    { crop_name: "Rice",    probability: 0.88, date: "2025-10-15 11:25" },
-    { crop_name: "Corn",    probability: 0.81, date: "2025-10-15 12:40" },
-    { crop_name: "Wheat",   probability: 0.74, date: "2025-10-16 08:15" },
-    { crop_name: "Corn",    probability: 0.95, date: "2025-10-16 09:30" },
-    { crop_name: "Rice",    probability: 0.79, date: "2025-10-16 11:00" },
-    { crop_name: "Soybean", probability: 0.84, date: "2025-10-17 14:00" },
-    { crop_name: "Corn",    probability: 0.89, date: "2025-10-17 15:20" },
-    { crop_name: "Wheat",   probability: 0.77, date: "2025-10-17 17:10" },
-    { crop_name: "Rice",    probability: 0.82, date: "2025-10-17 18:45" },
-  ];
-
-  // === Insert dummy recommendations (Tailwind styled) ===
-  const list = document.getElementById("recommendationsList");
-  const noData = document.getElementById("noDataMessage");
-
-  if (list && list.children.length === 0) {
-    list.style.display = "block";
-    if (noData) noData.style.display = "none";
-
-    dummyRecommendations.forEach(rec => {
-      const li = document.createElement("li");
-      li.className = "p-3 bg-gray-100 rounded-md shadow-sm flex flex-col gap-1";
-      li.innerHTML = `
-        <div class="flex justify-between items-center">
-          <span class="font-semibold text-green-700">${rec.crop_name}</span>
-          <span class="text-gray-600">Prob: <strong>${rec.probability.toFixed(2)}</strong></span>
-        </div>
-        <div class="text-xs text-gray-500">
-          Date: ${rec.date}
-        </div>
-      `;
-      list.appendChild(li);
-    });
+  // --- Real crop history for chart ---
+  let cropHistoryData = [];
+  try {
+    cropHistoryData = JSON.parse('{{ crop_history_json|escapejs }}');
+  } catch (e) {
+    console.error("Error parsing crop history:", e);
+    cropHistoryData = [];
   }
+
+  // (Dummy recommendations logic removed - using real data from Django template)
+
 
   // === Existing CHART CODE using cropHistoryData (unchanged) ===
   function getDay(dateStr) {
@@ -1611,34 +1578,16 @@ document.addEventListener("DOMContentLoaded", function () {
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  // --- Dummy crop history for chart ---
-  let cropHistoryData = [
-    { timestamp: "2025-10-15 10:12", crop: "Corn" },
-    { timestamp: "2025-10-15 11:25", crop: "Rice" },
-    { timestamp: "2025-10-15 12:40", crop: "Corn" },
-    { timestamp: "2025-10-16 08:15", crop: "Wheat" },
-    { timestamp: "2025-10-16 09:30", crop: "Corn" },
-    { timestamp: "2025-10-16 11:00", crop: "Rice" },
-    { timestamp: "2025-10-17 14:00", crop: "Soybean" },
-    { timestamp: "2025-10-17 15:20", crop: "Corn" },
-    { timestamp: "2025-10-17 17:10", crop: "Wheat" },
-    { timestamp: "2025-10-17 18:45", crop: "Rice" }
-  ];
+  // --- Real crop history for chart ---
+  let cropHistoryData = [];
+  try {
+    cropHistoryData = JSON.parse('{{ crop_history_json|escapejs }}');
+  } catch (e) {
+    console.error("Error parsing crop history:", e);
+    cropHistoryData = [];
+  }
 
-  const dummyRecommendations = [
-    { crop_name: "Corn",    probability: 0.92, date: "2025-10-15 10:12" },
-    { crop_name: "Rice",    probability: 0.88, date: "2025-10-15 11:25" },
-    { crop_name: "Corn",    probability: 0.81, date: "2025-10-15 12:40" },
-    { crop_name: "Wheat",   probability: 0.74, date: "2025-10-16 08:15" },
-    { crop_name: "Corn",    probability: 0.95, date: "2025-10-16 09:30" },
-    { crop_name: "Rice",    probability: 0.79, date: "2025-10-16 11:00" },
-    { crop_name: "Soybean", probability: 0.84, date: "2025-10-17 14:00" },
-    { crop_name: "Corn",    probability: 0.89, date: "2025-10-17 15:20" },
-    { crop_name: "Wheat",   probability: 0.77, date: "2025-10-17 17:10" },
-    { crop_name: "Rice",    probability: 0.82, date: "2025-10-17 18:45" },
-  ];
-
-  // === Compute top 3 crops for the CHART (frequency based, unchanged) ===
+  // === Compute top 3 crops for the CHART (frequency based) ===
   const cropCounts = {};
   cropHistoryData.forEach(entry => {
     cropCounts[entry.crop] = (cropCounts[entry.crop] || 0) + 1;
@@ -1651,42 +1600,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   cropHistoryData = cropHistoryData.filter(entry => topCrops.includes(entry.crop));
 
-  // === TOP 3 UNIQUE CROPS BY HIGHEST PROBABILITY (UPDATED) ===
-  const list = document.getElementById("recommendationsList");
-  const noData = document.getElementById("noDataMessage");
+  // (Dummy recommendations logic removed)
 
-  // Group: pick highest prob per crop
-  const bestPerCrop = {};
-  dummyRecommendations.forEach(rec => {
-    if (!bestPerCrop[rec.crop_name] || rec.probability > bestPerCrop[rec.crop_name].probability) {
-      bestPerCrop[rec.crop_name] = rec;
-    }
-  });
-
-  // Sort top 3 by descending highest probability
-  const top3 = Object.values(bestPerCrop)
-    .sort((a, b) => b.probability - a.probability)
-    .slice(0, 3);
-
-  if (list && list.children.length === 0) {
-    list.style.display = "block";
-    if (noData) noData.style.display = "none";
-
-    top3.forEach(rec => {
-      const li = document.createElement("li");
-      li.className = "p-3 bg-gray-100 rounded-md shadow-sm flex flex-col gap-1";
-      li.innerHTML = `
-        <div class="flex justify-between items-center">
-          <span class="font-semibold text-green-700">${rec.crop_name}</span>
-          <span class="text-gray-600">Probability: <strong>${rec.probability.toFixed(2)}</strong></span>
-        </div>
-        <div class="text-xs text-gray-500">
-          Highest Recorded Date: ${rec.date}
-        </div>
-      `;
-      list.appendChild(li);
-    });
-  }
 
   // === CHART CODE (unchanged logic) ===
   function getDay(dateStr) {
@@ -1749,7 +1664,126 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 });
+
+function startSoilTesting() {
+  const btn = document.getElementById('start-test-btn');
+  const originalText = btn.innerHTML;
+  
+  // Disable button and show loading state
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+  
+  fetch('/api/start_soil_testing/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: JSON.stringify({})
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert('Soil testing started! Please wait for results.');
+      // Optional: Reload page or update UI after a delay
+      setTimeout(() => location.reload(), 3000);
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Failed to start soil testing.');
+  })
+  .finally(() => {
+    // Restore button state
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  });
+}
+
+function openDeviceModal() {
+  document.getElementById('deviceModal').classList.remove('hidden');
+}
+
+function closeDeviceModal() {
+  document.getElementById('deviceModal').classList.add('hidden');
+}
+
+function connectDevice() {
+  const ip = document.getElementById('deviceIp').value;
+  const name = document.getElementById('deviceName').value;
+  const password = document.getElementById('devicePassword').value;
+  const workspaceId = "{{ selected_workspace_id }}"; // Get from Django context
+
+  if (!ip || !name || !password) {
+    alert("Please fill in all fields");
+    return;
+  }
+
+  const btn = document.getElementById('connectBtn');
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+
+  // Note: This request goes directly from Browser -> ESP32 (Local Network)
+  // If your site is HTTPS and ESP32 is HTTP, this might be blocked by the browser (Mixed Content).
+  // In that case, you might need to use a different approach or ensure the user allows insecure content.
+  fetch(`http://${ip}/set-workspace`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      device_name: name,
+      password: password,
+      workspace_id: parseInt(workspaceId)
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert('Device connected successfully! Workspace ID saved to device.');
+      closeDeviceModal();
+    } else {
+      alert('Connection failed: ' + (data.message || 'Unknown error'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Failed to connect to device. Ensure you are on the same network and the IP is correct.');
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  });
+}
 </script>
+
+<!-- Device Connection Modal -->
+<div id="deviceModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="mt-3 text-center">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Connect ESP32 Device</h3>
+      <div class="mt-2 px-7 py-3">
+        <p class="text-sm text-gray-500 mb-4">
+          Enter the device credentials to link it to this workspace.
+        </p>
+        <input type="text" id="deviceIp" placeholder="ESP32 IP Address (e.g. 192.168.1.15)" class="mb-3 px-3 py-2 border rounded w-full focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        <input type="text" id="deviceName" placeholder="Device Name" class="mb-3 px-3 py-2 border rounded w-full focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        <input type="password" id="devicePassword" placeholder="Device Password" class="mb-3 px-3 py-2 border rounded w-full focus:outline-none focus:ring-2 focus:ring-emerald-500">
+      </div>
+      <div class="items-center px-4 py-3">
+        <button id="connectBtn" onclick="connectDevice()" class="px-4 py-2 bg-emerald-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-300">
+          Connect
+        </button>
+        <button onclick="closeDeviceModal()" class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

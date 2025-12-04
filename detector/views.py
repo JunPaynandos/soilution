@@ -42,8 +42,13 @@ from .models import Log
 import logging
 import json
 import os
+from .services import crop_service, soil_service
 
-supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY)
+try:
+    supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY)
+except Exception as e:
+    print(f"Supabase initialization failed: {e}")
+    supabase = None
 
 channel_layer = get_channel_layer()
 
@@ -476,27 +481,18 @@ def reports(request):
     # Get the page number from the GET request (default is 1)
     page_number = request.GET.get('page', 1)
 
-    # SQL query to get the crop history data (paginated)
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT * FROM detector_crophistory 
-            WHERE workspace_id = %s
-            ORDER BY recommendation_date DESC
-            LIMIT %s OFFSET %s
-        """, [selected_workspace.id, 10, (int(page_number) - 1) * 10])
-        crop_history = cursor.fetchall()
+    # Use Django ORM instead of raw SQL
+    from .models import CropRecommendation
+    
+    if selected_workspace:
+        crop_history_list = CropRecommendation.objects.filter(workspace=selected_workspace).order_by('-timestamp')
+    else:
+        crop_history_list = []
 
-    # Get the total number of records for pagination
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT COUNT(*) FROM detector_crophistory 
-            WHERE workspace_id = %s
-        """, [selected_workspace.id])
-        total_records = cursor.fetchone()[0]
-
-    # Set up paginator with the total number of records
-    paginator = Paginator(crop_history, 10)  # 10 items per page
+    paginator = Paginator(crop_history_list, 10) # Show 10 contacts per page.
     page_obj = paginator.get_page(page_number)
+    
+    total_records = paginator.count
 
     context = {
         'profile_picture_url': profile_picture_url,
@@ -504,7 +500,8 @@ def reports(request):
         'selected_workspace': selected_workspace,
         'user': user,
         'page_obj': page_obj,
-        'total_records': total_records
+        'total_records': total_records,
+        'crop_history': page_obj, # Add this alias for template compatibility if needed
     }
 
     return render(request, 'reports.html', context)
@@ -642,11 +639,48 @@ def dashboard(request):
         selected_workspace = user_workspaces.first()
         request.session['selected_workspace_id'] = selected_workspace.id
 
+    # Fetch latest sensor data for the selected workspace
+    esp32_data = {}
+    crop_history_json = "[]"
+
+    if selected_workspace:
+        from .models import CropRecommendation
+        import json
+
+        # Get latest recommendation for sensor display
+        latest_rec = CropRecommendation.objects.filter(workspace=selected_workspace).order_by('-timestamp').first()
+        if latest_rec:
+            esp32_data = {
+                'nitrogen': latest_rec.nitrogen,
+                'phosphorus': latest_rec.phosphorus,
+                'potassium': latest_rec.potassium,
+                'temperature': latest_rec.temperature,
+                'moisture': latest_rec.moisture,
+                'pH': latest_rec.ph,
+                'humidity': 0, # Not currently tracked in CropRecommendation
+                'recommendations': latest_rec.all_recommendations,
+            }
+
+        # Get history for chart (last 200 records to cover the month)
+        history_recs = CropRecommendation.objects.filter(workspace=selected_workspace).order_by('-timestamp')[:200]
+        history_data = []
+        for rec in history_recs:
+            history_data.append({
+                'timestamp': rec.timestamp.strftime('%Y-%m-%d %H:%M'),
+                'crop': rec.recommended_crop
+            })
+        
+        # Reverse to make it chronological (oldest to newest)
+        history_data.reverse()
+        crop_history_json = json.dumps(history_data)
+
     context = {
         'user_profile': profile,
         'workspace': user_workspaces,
         'profile_picture_url': profile_picture_url,
         'selected_workspace': selected_workspace,
+        'esp32_data': esp32_data,
+        'crop_history_json': crop_history_json,
     }
 
     return render(request, 'dashboard.html', context)
@@ -1887,3 +1921,143 @@ def get_user_role(request):
             })
 
     return JsonResponse({'users': user_data})
+
+@csrf_exempt
+def analyze_soil(request):
+    """
+    API endpoint to analyze soil data and provide crop recommendations.
+    Expects a POST request with JSON body containing soil parameters.
+    """
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            
+            # Extract soil parameters
+            nitrogen = data.get('nitrogen')
+            phosphorus = data.get('phosphorus')
+            potassium = data.get('potassium')
+            temperature = data.get('temperature')
+            moisture = data.get('moisture')
+            ph = data.get('ph')
+            conductivity = data.get('conductivity')
+            
+            # Validate required parameters
+            # Check if any parameter is None (0 is a valid value, so don't use 'if not param')
+            params = [nitrogen, phosphorus, potassium, temperature, moisture, ph, conductivity]
+            if any(p is None for p in params):
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'All soil parameters are required: nitrogen, phosphorus, potassium, temperature, moisture, ph, conductivity'
+                }, status=400)
+            
+            # Get crop recommendations using the service
+            recommendations = crop_service.get_crop_recommendations(
+                nitrogen=nitrogen,
+                phosphorus=phosphorus,
+                potassium=potassium,
+                temperature=temperature,
+                moisture=moisture,
+                ph=ph,
+                conductivity=conductivity
+            )
+            
+            # Get soil analysis using the service
+            soil_analysis = soil_service.analyze_soil(
+                nitrogen=nitrogen,
+                phosphorus=phosphorus,
+                potassium=potassium,
+                temperature=temperature,
+                moisture=moisture,
+                ph=ph,
+                conductivity=conductivity
+            )
+
+            # Save to database if workspace_id is provided
+            workspace_id = data.get('workspace_id')
+            if workspace_id:
+                try:
+                    from .models import CropRecommendation, Workspace
+                    workspace = Workspace.objects.get(id=workspace_id)
+                    
+                    # Get the top recommendation
+                    top_crop = recommendations[0]['name'] if recommendations else "Unknown"
+                    top_confidence = recommendations[0]['confidence'] if recommendations else 0.0
+
+                    CropRecommendation.objects.create(
+                        workspace=workspace,
+                        nitrogen=nitrogen,
+                        phosphorus=phosphorus,
+                        potassium=potassium,
+                        temperature=temperature,
+                        moisture=moisture,
+                        ph=ph,
+                        conductivity=conductivity,
+                        recommended_crop=top_crop,
+                        confidence=top_confidence,
+                        all_recommendations=recommendations
+                    )
+                except Workspace.DoesNotExist:
+                    print(f"Workspace with ID {workspace_id} not found.")
+                except Exception as e:
+                    print(f"Error saving crop recommendation: {e}")
+            
+            return JsonResponse({
+                'status': 'success',
+                'soil_analysis': soil_analysis,
+                'crop_recommendations': recommendations
+            })
+            
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Invalid JSON data'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Only POST requests are allowed'
+    }, status=405)
+
+@login_required
+def start_soil_testing(request):
+    """
+    API endpoint to trigger soil testing on the ESP32.
+    """
+    if request.method == 'POST':
+        try:
+            # Logic to send command to ESP32
+            # Option 1: If using WebSockets, send a message to the device group
+            # channel_layer = get_channel_layer()
+            # async_to_sync(channel_layer.group_send)(
+            #     "device_group",
+            #     {
+            #         "type": "device.command",
+            #         "command": "start_test"
+            #     }
+            # )
+            
+            # Option 2: If using MQTT, publish a message
+            # mqtt_client.publish("soilution/commands", "start_test")
+            
+            # For now, we'll just simulate a success response
+            # In a real scenario, you might wait for a response or just acknowledge the command
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Soil testing command sent to device.'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+            
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Only POST requests are allowed'
+    }, status=405)

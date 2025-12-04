@@ -444,8 +444,16 @@
               </tr>
             </thead>
             <tbody id="crop-history-table">
-              <!-- Rows will be populated by JS -->
+              {% for rec in crop_history %}
+              <tr class="{% cycle 'bg-gray-50' 'bg-white' %}">
+                <td class="py-2 px-4 border-b text-gray-700 font-medium">{{ rec.timestamp|date:"Y-m-d H:i" }}</td>
+                <td class="py-2 px-4 border-b text-gray-700 font-medium">{{ rec.recommended_crop }}</td>
               </tr>
+              {% empty %}
+              <tr>
+                <td colspan="2" class="py-4 px-4 text-center text-gray-500">No crop recommendations found for this workspace.</td>
+              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -1409,33 +1417,7 @@
 
   <script>
 document.addEventListener("DOMContentLoaded", function () {
-
-  const cropHistoryData = [
-    { timestamp: "2025-10-15 10:12", crop: "Corn" },
-    { timestamp: "2025-10-15 11:25", crop: "Rice" },
-    { timestamp: "2025-10-15 12:40", crop: "Corn" },
-    { timestamp: "2025-10-16 08:15", crop: "Wheat" },
-    { timestamp: "2025-10-16 09:30", crop: "Corn" },
-    { timestamp: "2025-10-16 11:00", crop: "Rice" },
-    { timestamp: "2025-10-17 14:00", crop: "Soybean" },
-    { timestamp: "2025-10-17 15:20", crop: "Corn" },
-    { timestamp: "2025-10-17 17:10", crop: "Wheat" },
-    { timestamp: "2025-10-17 18:45", crop: "Rice" },
-  ];
-
-  const tableBody = document.getElementById("crop-history-table");
-  if (tableBody) {
-    cropHistoryData.forEach((rec, idx) => {
-      const tr = document.createElement("tr");
-      tr.className = idx % 2 === 0 ? "bg-gray-50" : "bg-white"; // alternate row colors
-      tr.innerHTML = `
-        <td class="py-2 px-4 border-b text-gray-700 font-medium">${rec.timestamp}</td>
-        <td class="py-2 px-4 border-b text-gray-700 font-medium">${rec.crop}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
-  }
-
+  // Data is now rendered server-side via Django templates
 });
 </script>
 
