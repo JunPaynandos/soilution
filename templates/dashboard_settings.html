@@ -501,6 +501,15 @@
 {{ selected_workspace.description }}</textarea>
                 </div>
 
+                <div class="mt-4">
+                  <label for="workspace-device-id" class="block font-semibold text-lg">Device ID (Serial Number)</label>
+                  <p class="text-sm text-gray-500 mb-1">Enter the unique ID found on your ESP32 device sticker (e.g., 246F28A1B2C3).</p>
+                  <input id="workspace-device-id" name="device_id" type="text"
+                    class="h-10 truncate type-interface-01 w-full m-0 py-2.5 px-3 placeholder:input-text--placeholder focus-visible:outline focus-visible:outline-focus-action outline-none border border-gray-300 rounded appearance-none input-border input-background input-text bg-gray-200 focus:ring-[#0e9272] focus:border-[#0e9272]"
+                    value="{{ selected_workspace.device_id|default:'' }}" placeholder="Device ID" autocomplete="off"
+                    readonly />
+                </div>
+
                 <!-- Save & Cancel Buttons -->
                 <div id="action-buttons" class="mt-4 flex justify-end gap-4 hidden">
                   <button type="button" id="cancel-btn"
@@ -1283,13 +1292,16 @@
       const actionButtons = document.getElementById("action-buttons");
       const input = document.getElementById("edit-workspace-name-field");
       const description = document.getElementById("workspace-description");
+      const deviceId = document.getElementById("workspace-device-id");
       const originalInputValue = input.value;
       const originalDescriptionValue = description.value;
+      const originalDeviceIdValue = deviceId.value;
       const editTrigger = document.getElementById("edit-trigger");
 
       editBtn.addEventListener("click", () => {
         input.removeAttribute("readonly");
         description.removeAttribute("readonly");
+        deviceId.removeAttribute("readonly");
         actionButtons.classList.remove("hidden");
         editTrigger.classList.add("hidden");
         input.focus();
@@ -1298,8 +1310,10 @@
       cancelBtn.addEventListener("click", () => {
         input.setAttribute("readonly", true);
         description.setAttribute("readonly", true);
+        deviceId.setAttribute("readonly", true);
         input.value = originalInputValue;
         description.value = originalDescriptionValue;
+        deviceId.value = originalDeviceIdValue;
         actionButtons.classList.add("hidden");
         editTrigger.classList.remove("hidden");
       });

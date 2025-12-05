@@ -450,7 +450,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Soil Moisture</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.moisture|default:"0"|floatformat:2 }}%
+                <span id="live-moisture">{{ esp32_data.moisture|default:"0"|floatformat:2 }}</span>%
               </p>
             </div>
             <img src="{% static 'images/sea.png' %}" alt="moisture_icon"
@@ -463,7 +463,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Temperature</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.temperature|default:"0"|floatformat:2 }}°C
+                <span id="live-temperature">{{ esp32_data.temperature|default:"0"|floatformat:2 }}</span>°C
               </p>
             </div>
             <img src="{% static 'images/thermometer3.png' %}" alt="thermometer_icon"
@@ -476,7 +476,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Humidity</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.humidity|default:"0"|floatformat:2 }}%
+                <span id="live-humidity">{{ esp32_data.humidity|default:"0"|floatformat:2 }}</span>%
               </p>
             </div>
             <img src="{% static 'images/humidity.png' %}" alt="humidity_icon"
@@ -489,7 +489,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">pH Level</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.pH|default:"0"|floatformat:2 }}
+                <span id="live-ph">{{ esp32_data.pH|default:"0"|floatformat:2 }}</span>
               </p>
             </div>
             <img src="{% static 'images/windows.png' %}" alt="windows_icon"
@@ -507,7 +507,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Nitrogen</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.nitrogen|default:"0"|floatformat:2 }} mg/kg
+                <span id="live-nitrogen">{{ esp32_data.nitrogen|default:"0"|floatformat:2 }}</span> mg/kg
               </p>
             </div>
             <img src="{% static 'images/nitrogen.png' %}" alt="nitrogen_icon"
@@ -521,7 +521,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Phosphorus</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.phosphorus|default:"0"|floatformat:2 }} mg/kg
+                <span id="live-phosphorus">{{ esp32_data.phosphorus|default:"0"|floatformat:2 }}</span> mg/kg
               </p>
             </div>
             <img src="{% static 'images/phosphorus.png' %}" alt="phosphorus_icon"
@@ -535,7 +535,7 @@
             <div class="ml-3 mt-3 md:ml-0 md:mt-0">
               <p class="text-xs md:text-2xl font-semibold md:ml-4">Potassium</p>
               <p class="text-sm md:text-2xl md:ml-4 mt-1 md:mt-0">
-                {{ esp32_data.potassium|default:"0"|floatformat:2 }} mg/kg
+                <span id="live-potassium">{{ esp32_data.potassium|default:"0"|floatformat:2 }}</span> mg/kg
               </p>
             </div>
             <img src="{% static 'images/potassium.png' %}" alt="potassium_icon"
@@ -1751,7 +1751,16 @@ function connectDevice() {
   })
   .catch(error => {
     console.error('Error:', error);
-    alert('Failed to connect to device. Ensure you are on the same network and the IP is correct.');
+    let errorMsg = 'Failed to connect to device.\n\n';
+    errorMsg += 'Possible reasons:\n';
+    errorMsg += '1. You are not on the same WiFi network as the ESP32.\n';
+    errorMsg += '2. The IP address is incorrect.\n';
+    
+    if (window.location.protocol === 'https:') {
+      errorMsg += '3. SECURITY RESTRICTION: This site is HTTPS, but your device is HTTP. Your browser blocked the request. \n\nPLEASE USE THE MANUAL CONFIGURATION METHOD (Enter Workspace ID directly into your device code).';
+    }
+    
+    alert(errorMsg);
   })
   .finally(() => {
     btn.disabled = false;
@@ -1766,8 +1775,19 @@ function connectDevice() {
     <div class="mt-3 text-center">
       <h3 class="text-lg leading-6 font-medium text-gray-900">Connect ESP32 Device</h3>
       <div class="mt-2 px-7 py-3">
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 text-left">
+          <p class="text-xs text-yellow-700">
+            <strong>Note:</strong> Automatic connection only works if you are on the same local network as the ESP32.
+          </p>
+          <p class="text-xs text-yellow-700 mt-2">
+            If you are remote, please configure your ESP32 manually with this Workspace ID:
+          </p>
+          <p class="text-lg font-bold text-center mt-1 select-all bg-white border p-1 rounded">
+            {{ selected_workspace.id }}
+          </p>
+        </div>
         <p class="text-sm text-gray-500 mb-4">
-          Enter the device credentials to link it to this workspace.
+          Or try connecting automatically (Local Network Only):
         </p>
         <input type="text" id="deviceIp" placeholder="ESP32 IP Address (e.g. 192.168.1.15)" class="mb-3 px-3 py-2 border rounded w-full focus:outline-none focus:ring-2 focus:ring-emerald-500">
         <input type="text" id="deviceName" placeholder="Device Name" class="mb-3 px-3 py-2 border rounded w-full focus:outline-none focus:ring-2 focus:ring-emerald-500">
@@ -1785,7 +1805,45 @@ function connectDevice() {
   </div>
 </div>
 
+<script>
+  // Polling for sensor data
+  const workspaceId = "{{ selected_workspace.id }}";
+  
+  function fetchSensorData() {
+    if (!workspaceId) return;
+    
+    fetch(`{% url 'get_latest_sensor_data' %}?workspace_id=${workspaceId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (Object.keys(data).length > 0) {
+           const update = (id, val) => {
+              const el = document.getElementById(id);
+              if (el && val !== undefined && val !== null) {
+                el.innerText = parseFloat(val).toFixed(2);
+                
+                // Optional: Add a flash effect to show update
+                el.style.color = '#0e9272'; // Green flash
+                setTimeout(() => el.style.color = '', 500);
+              }
+            };
 
+            update('live-moisture', data.moisture);
+            update('live-temperature', data.temperature);
+            // update('live-humidity', data.humidity); // Not in ESP32 payload
+            update('live-ph', data.ph);
+            update('live-nitrogen', data.nitrogen);
+            update('live-phosphorus', data.phosphorus);
+            update('live-potassium', data.potassium);
+        }
+      })
+      .catch(err => console.error("Error fetching sensor data:", err));
+  }
+
+  // Poll every 5 seconds
+  setInterval(fetchSensorData, 5000);
+  // Initial fetch
+  fetchSensorData();
+</script>
 
 </body>
 

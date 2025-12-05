@@ -964,6 +964,7 @@ def update_workspace(request):
         workspace_id = request.POST.get('workspace')
         name = request.POST.get('name')
         description = request.POST.get('description', '')
+        device_id = request.POST.get('device_id', '').strip()
 
         if len(description) > 100:
             messages.error(request, 'Description must not exceed 100 characters.')
@@ -973,6 +974,7 @@ def update_workspace(request):
 
         workspace.name = name
         workspace.description = description
+        workspace.device_id = device_id
         workspace.save()
         # logger.info(f"User {request.user.username} updated workspace '{workspace.name}' (ID: {workspace.id}).")
         Log.objects.create(
@@ -1899,10 +1901,11 @@ def get_admin_users(request):
     admin_data = []
     
     for admin in admins:
+        profile = getattr(admin, 'profile', None)
         admin_data.append({
             'id': admin.id,
             'username': admin.username,
-            'profile_image': admin.profile.get_profile_image() if admin.profile else None,
+            'profile_image': profile.get_profile_image() if profile else None,
         })
     
     return JsonResponse({'admins': admin_data})
@@ -2061,3 +2064,118 @@ def start_soil_testing(request):
         'status': 'error',
         'message': 'Only POST requests are allowed'
     }, status=405)
+
+@csrf_exempt
+def receive_sensor_data(request):
+    """
+    API endpoint to receive sensor data from ESP32.
+    """
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            
+            # Extract soil parameters
+            nitrogen = data.get('nitrogen')
+            phosphorus = data.get('phosphorus')
+            potassium = data.get('potassium')
+            temperature = data.get('temperature')
+            moisture = data.get('moisture')
+            ph = data.get('pH')
+            conductivity = data.get('conductivity')
+            
+            # Validate required parameters
+            params = [nitrogen, phosphorus, potassium, temperature, moisture, ph, conductivity]
+            if any(p is None for p in params):
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'All soil parameters are required'
+                }, status=400)
+            
+            # Get crop recommendations
+            recommendations = crop_service.get_crop_recommendations(
+                nitrogen=nitrogen,
+                phosphorus=phosphorus,
+                potassium=potassium,
+                temperature=temperature,
+                moisture=moisture,
+                ph=ph,
+                conductivity=conductivity
+            )
+            
+            # Find a workspace to attach this data to
+            # Since ESP32 doesn't send ID, we pick the first available workspace
+            workspace = Workspace.objects.first()
+            
+            if workspace:
+                top_crop = recommendations[0]['name'] if recommendations else "Unknown"
+                top_confidence = recommendations[0]['confidence'] if recommendations else 0.0
+
+                from .models import CropRecommendation
+                CropRecommendation.objects.create(
+                    workspace=workspace,
+                    nitrogen=nitrogen,
+                    phosphorus=phosphorus,
+                    potassium=potassium,
+                    temperature=temperature,
+                    moisture=moisture,
+                    ph=ph,
+                    conductivity=conductivity,
+                    recommended_crop=top_crop,
+                    confidence=top_confidence,
+                    all_recommendations=recommendations
+                )
+                return JsonResponse({'status': 'success', 'message': 'Data received and saved'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'No workspace found to save data'}, status=404)
+                
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            
+    return JsonResponse({'status': 'error', 'message': 'Only POST requests are allowed'}, status=405)
+
+@login_required
+def get_latest_sensor_data(request):
+    """
+    API endpoint to get the latest sensor data for the dashboard polling.
+    """
+    workspace_id = request.GET.get('workspace_id')
+    user = request.user
+    
+    workspace = None
+    if workspace_id:
+        try:
+            workspace = Workspace.objects.get(id=workspace_id, user=user)
+        except Workspace.DoesNotExist:
+            pass
+            
+    if not workspace:
+        # Try session
+        workspace_id = request.session.get('selected_workspace_id')
+        if workspace_id:
+            try:
+                workspace = Workspace.objects.get(id=workspace_id, user=user)
+            except Workspace.DoesNotExist:
+                pass
+                
+    if not workspace:
+        # Fallback
+        workspace = Workspace.objects.filter(user=user).first()
+        
+    if workspace:
+        from .models import CropRecommendation
+        latest = CropRecommendation.objects.filter(workspace=workspace).order_by('-timestamp').first()
+        if latest:
+            return JsonResponse({
+                'moisture': latest.moisture,
+                'temperature': latest.temperature,
+                'conductivity': latest.conductivity,
+                'ph': latest.ph,
+                'nitrogen': latest.nitrogen,
+                'phosphorus': latest.phosphorus,
+                'potassium': latest.potassium,
+                'timestamp': latest.timestamp.isoformat()
+            })
+            
+    return JsonResponse({})

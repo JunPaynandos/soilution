@@ -18,6 +18,7 @@ class PasswordReset(models.Model):
 class Workspace(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=100, blank=True, null=True)
+    device_id = models.CharField(max_length=100, blank=True, null=True, help_text="Unique Serial Number of the ESP32 Device")
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, related_name='workspaces', on_delete=models.CASCADE)
 
